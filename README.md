@@ -1,2 +1,3 @@
 # galaxyline.nvim
-neovim statusline plugin written in lua 
+
+Will be stable in three days later.
