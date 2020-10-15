@@ -1,6 +1,7 @@
 local M = {}
 local helper = require('helper')
 
+-- extension for scoll bar
 function M.scrollbar_instance()
   local current_line = vim.fn.line('.') - 1
   local total_lines = vim.fn.line('$') - 1
@@ -17,6 +18,16 @@ function M.scrollbar_instance()
     index = vim.fn.float2nr(line_no_fraction * #scroll_bar_chars)
   end
   return scroll_bar_chars[index]
+end
+
+-- extension for vista.vim
+-- show current function or method
+-- see https://github.com/liuchengxu/vista.vim
+function M.vista_nearest()
+  local has_vista,vista_info = pcall(vim.fn.nvim_buf_get_var,0,'vista_nearest_method_or_function')
+  if not has_vista then return end
+  local vista_icon = helper.get_plugin_variable('_function_icon','✪')
+  return vista_icon .. vista_info
 end
 
 return M

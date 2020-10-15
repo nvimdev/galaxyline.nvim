@@ -1,6 +1,7 @@
 local M = {}
 local helper = require('helper')
 
+-- coc error
 function M.diagnostic_coc_error()
   local has_info,info = pcall(vim.fn.nvim_buf_get_var,0,'coc_diagnostic_info')
   local error_sign = helper.get_plugin_variable('diagnostic_error_sign','●')
@@ -12,6 +13,7 @@ function M.diagnostic_coc_error()
   return ''
 end
 
+-- coc warning
 function M.diagnostic_coc_warn()
   local has_info,info = pcall(vim.fn.nvim_buf_get_var,0,'coc_diagnostic_info')
   local warn_sign = helper.get_plugin_variable('diagnostic_warn_sign','●')
@@ -23,6 +25,7 @@ function M.diagnostic_coc_warn()
   return ''
 end
 
+-- coc ok
 function M.diagnostic_coc_ok()
   local has_info,info = pcall(vim.fn.nvim_buf_get_var,0,'coc_diagnostic_info')
   local ok_sign = helper.get_plugin_variable('diagnostic_ok_sign','')
