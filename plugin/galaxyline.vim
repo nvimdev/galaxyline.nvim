@@ -12,5 +12,10 @@ endif
 
 let g:loaded_galaxyline = 1
 
+" augroup galaxyline
+"   autocmd!
+"   autocmd WinEnter,BufEnter,BufDelete,SessionLoadPost,FileChangedShellPost * lua require('galaxyline').load_galaxyline()
+" augroup END
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

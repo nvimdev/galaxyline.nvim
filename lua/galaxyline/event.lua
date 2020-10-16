@@ -15,8 +15,8 @@ end
 function event.galaxyline_augroups()
   local definition = {
     galaxyline = {
-        {'BufNewFile,BufReadPost','*','lua require("galaxyline.com_vcs").gitbranch_detect(expand('<amatch>:p:h')'}
-    }
+        {'BufNewFile,BufReadPost','*','lua require("galaxyline.com_vcs").gitbranch_detect(expand("<amatch>:p:h")'}
+    };
   }
   nvim_create_augroups(definition)
 end
