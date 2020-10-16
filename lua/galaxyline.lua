@@ -5,78 +5,9 @@ local vimmode = require('galaxyline.component_vim')
 local vcs = require('galaxyline.component_vcs')
 local fileinfo = require('galaxyline.component_fileinfo')
 local M = {}
+M.section = require('section_test')
 
--- section setup
--- test data
-M.section = {
-  left = {
-    ViMode = {
-      command = 'ShowVimMode',
-      separator = '',
-      highlight = {'#008080','#fabd2f'},
-      icon = {n = 'Normal'}
-    },
-    FileName = {
-      command = 'FileName',
-      separator = '',
-      second = {
-        DiagnositcOk = {
-          command = 'DiagnosticOk',
-          icon = '',
-        }
-      }
-    },
-    FileSize = {
-      command = 'FileSize',
-      icon = '',
-      separator = '',
-      highlight = {},
-      emptyshow = false,
-      switch = {
-        DiagnositcError = {
-          command = 'DiagnositcError',
-          icon = '',
-          highlight = {},
-        },
-        DiagnosticWarn = {
-          command = 'DiagnosticWarn',
-          icon = '',
-          highlight = {}
-        }
-      }
-    },
-    GitBranch = {
-      command = 'GitBranch',
-      icon = '',
-      separator = '',
-      highlight = {},
-    },
-    Diff = {
-      command = 'DiffAdd',
-      emptyshow = false,
-      separator = '',
-      highlight = {},
-      icon = '',
-    }
-  };
-  right = {
-    FileInfo = {},
-    LineInfo = {
-      command = 'LineColumn',
-      separator = '',
-      highlight = {'#008080','#fabd2f'},
-      second = {
-        CurrentPercent = {
-          provider = 'LinePercent',
-          icon = '',
-        }
-      }
-    };
-    ScrollBar = {},
-  }
-}
-
-local default_provider = {
+local provider_group = {
   ShowVimMode = vimmode.show_vim_mode,
   DiagnosticError = diagnostic.diagnostic_error,
   DiagnosticWarn = diagnostic.diagnostic_warn,
@@ -101,7 +32,7 @@ local function check_component_exists(component_name)
   return false,nil
 end
 
-local function exec_command(icon,cmd)
+local function exec_provider(icon,cmd)
   if type(icon) == 'string' then
     return icon .. cmd()
   elseif type(icon) == 'table' then
@@ -112,33 +43,33 @@ end
 
 -- component decorator
 -- that will output the component result with icon
--- component command and icon can be string or table
+-- component provider and icon can be string or table
 function M.component_decorator(component_name)
   -- if section doesn't have component just return
   local ok,position = check_component_exists(component_name)
   if not ok then return end
-  local cmd = M.section[position][component_name].command or ''
+  local provider = M.section[position][component_name].provider or ''
   local icon = M.section[position][component_name].icon or ''
-  if type(cmd) == 'string' then
-    if default_provider[cmd] == nil then
-      print(string.format('Does not found the command in default command provider in %s'),component_name)
+  if type(provider) == 'string' then
+    if provider_group[provider] == nil then
+      print(string.format('Does not found the provider in default provider provider in %s'),component_name)
     end
-    return exec_command(icon,default_provider[cmd])
-  elseif type(cmd) == 'function' then
-    return exec_command(icon,cmd)
-  elseif type(cmd) == 'table' then
+    return exec_provider(icon,provider_group[provider])
+  elseif type(provider) == 'function' then
+    return exec_provider(icon,provider)
+  elseif type(provider) == 'table' then
     local output = ''
     for _,v in pairs(table) do
       if type(v) == 'string' then
-        if default_provider[v] == nil then
-          print(string.format('Does not found the command in default command provider in %s'),component_name)
+        if provider_group[v] == nil then
+          print(string.format('Does not found the provider in default provider provider in %s'),component_name)
           return
         end
-        output = output + exec_command(icon,default_provider[cmd])
+        output = output + exec_provider(icon,provider_group[provider])
       elseif type(v) == 'function' then
-        output = output + exec_command(icon,cmd)
+        output = output + exec_provider(icon,provider)
       else
-        print(string.format('Wrong command type in %s'),component_name)
+        print(string.format('Wrong provider type in %s'),component_name)
       end
     end
   end
