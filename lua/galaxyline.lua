@@ -1,9 +1,9 @@
 local vim = vim
 local autocmd = require('galaxyline.event')
-local diagnostic = require('galaxyline.component_diagnostic')
-local vimmode = require('galaxyline.component_vim')
-local vcs = require('galaxyline.component_vcs')
-local fileinfo = require('galaxyline.component_fileinfo')
+local diagnostic = require('galaxyline.provider_diagnostic')
+local vimmode = require('galaxyline.provider_vim')
+local vcs = require('galaxyline.provider_vcs')
+local fileinfo = require('galaxyline.provider_fileinfo')
 local M = {}
 M.section = require('section_test')
 
