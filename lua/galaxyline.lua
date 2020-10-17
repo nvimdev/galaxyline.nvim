@@ -21,7 +21,7 @@ local provider_group = {
   FileFormat = fileinfo.get_file_format,
   FileEncode = fileinfo.get_file_encode,
   FileSize = fileinfo.get_file_size,
-  FIleIcon = fileinfo.get_file_icon,
+  FileIcon = fileinfo.get_file_icon,
   LinePercent = fileinfo.current_line_percent,
 }
 
@@ -71,7 +71,7 @@ function M.component_decorator(component_name)
   end
   if type(provider) == 'string' then
     if provider_group[provider] == nil then
-      print(string.format('Does not found the provider in default provider provider in %s'),component_name)
+      print(string.format('Does not found the provider in default provider provider in %s',component_name))
     end
     return exec_provider(icon,aliasby,provider_group[provider])
   elseif type(provider) == 'function' then
@@ -127,7 +127,8 @@ end
 local function generate_section(component_name)
   local line = ''
   line = line .. '%#'..component_name..'#'
-  line = line .. [[%{luaeval('require("galaxyline").component_decorator')]]..'("'..component_name..'")'.. '}'
+  line = line .. [[%{luaeval('require("galaxyline").component_decorator')]]..'("'..component_name..'")}'
+          ..' '
   return line
 end
 
@@ -139,36 +140,36 @@ local function generate_separator_section(component_name,separator)
 end
 
 
+local sline = ''
 local function section_complete_with_option(component,component_info)
-  local line = ''
-  local emptyshow = component_info.emptyshow or true
+  local condition = component_info.condition or ''
   local dynamicswitch = component_info.dynamicswitch or {}
-  if emptyshow then
-    line = line .. generate_section(component)
+  if string.len(condition) > 0 then
+    sline = sline .. generate_section(component)
     local separator = component_info.separator or ''
     if string.len(separator) ~= 0 then
-      line = line .. generate_separator_section(component,separator)
+      sline = sline .. generate_separator_section(component,separator)
     end
   else
     if string.len(M.component_decorator(component)) ~= 0 then
-      line = line .. generate_section(component)
+      sline = sline .. generate_section(component)
       local separator = component_info.separator or ''
       if string.len(separator) ~= 0 then
-        line = line .. generate_separator_section(component,separator)
+        sline = sline .. generate_separator_section(component,separator)
       end
     end
   end
-  if #dynamicswitch == 0 then return line end
+  if #dynamicswitch == 0 then return sline end
   for k,_ in pairs(dynamicswitch) do
     if string.len(M.component_decorator(k)) ~= 0 then
-      line = generate_section(k)
+      sline = generate_section(k)
       local separator = k.separator or ''
       if string.len(separator) ~= 0 then
-        line = line .. generate_separator_section(separator)
+        sline = sline .. generate_separator_section(separator)
       end
     end
   end
-  return line
+  return sline
 end
 
 -- TODO: event
@@ -196,9 +197,10 @@ end
 
 function M.load_galaxyline()
   local line = ''
-  for component,component_info in pairs(M.section.left) do
-    print(component)
-    line = section_complete_with_option(component,component_info)
+  if M.section.left ~= nil then
+    for component,component_info in pairs(M.section.left) do
+      line = section_complete_with_option(component,component_info)
+    end
   end
   line = line .. '%='
   if M.section.right ~= nil then

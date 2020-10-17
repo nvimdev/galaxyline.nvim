@@ -2,11 +2,17 @@
 -- test data
 local M= {
   left = {
-    ViMode = {
-      provider = 'ShowVimMode',
+    -- ViMode = {
+    --   provider = 'ShowVimMode',
+    --   separator = '',
+    --   highlight = {'#008080','#fabd2f'},
+    --   aliasby = {n = 'Normal'}
+    -- },
+    FileIcon = {
+      provider = 'FileIcon',
+      condition = vim.fn.expand('%:t'),
       separator = '',
-      highlight = {'#008080','#fabd2f'},
-      aliasby = {n = 'Normal'}
+      highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color(),''}
     },
   };
 }
@@ -22,7 +28,7 @@ local test= {
     FileIcon = {
       provider = 'FileIcon',
       separator = '',
-      highlight = {require('galaxyline.provider').get_file_icon_color(),''}
+      highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color(),''}
     },
     FileName = {
       provider = {'DiagnosticOk','FileName'},
