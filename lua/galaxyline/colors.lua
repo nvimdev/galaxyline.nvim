@@ -8,8 +8,8 @@ function M.get_background_color()
 end
 
 function M.set_highlight(group, color)
-    local fg = color.fg and 'guifg=' .. color.fg or 'guifg=NONE'
-    local bg = color.bg and 'guibg=' .. color.bg or 'guibg=NONE'
+    local fg = color[1] and 'guifg=' .. color[1] or 'guifg=NONE'
+    local bg = color[2] and 'guibg=' .. color[2] or 'guibg=NONE'
     vim.api.nvim_command('highlight ' .. group .. ' ' .. fg .. ' ' .. bg)
 end
 return M

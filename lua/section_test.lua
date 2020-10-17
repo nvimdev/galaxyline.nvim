@@ -8,6 +8,11 @@ local M= {
       highlight = {'#008080','#fabd2f'},
       aliasby = {n = 'Normal'}
     },
+    FileIcon = {
+      provider = 'FileIcon',
+      separator = '',
+      highlight = {require('galaxyline.provider').get_file_icon_color(),''}
+    },
     FileName = {
       provider = {'DiagnosticOk','FileName'},
       separator = '',
@@ -18,7 +23,7 @@ local M= {
       separator = '',
       highlight = {},
       emptyshow = false,
-      switch = {
+      dynamicswitch = {
         DiagnositcError = {
           provider = 'DiagnositcError',
           icon = '',

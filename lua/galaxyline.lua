@@ -26,9 +26,17 @@ local provider_group = {
 }
 
 local function check_component_exists(component_name)
-  for k,v in pairs(M.section) do
+  for _,v in pairs(M.section) do
     if v[component_name] ~= nil then
-      return true,k
+      return true,v[component_name]
+    end
+    for _,j in pairs(v) do
+      local dynamicswitch = j.dynamicswitch or {}
+      if #dynamicswitch ~= 0 then
+        if dynamicswitch[component_name] ~= nil then
+          return true,dynamicswitch[component_name]
+        end
+      end
     end
   end
   return false,nil
@@ -47,14 +55,14 @@ end
 -- component provider and icon can be string or table
 function M.component_decorator(component_name)
   -- if section doesn't have component just return
-  local ok,position = check_component_exists(component_name)
+  local ok,component_info = check_component_exists(component_name)
   if not ok then
     print(string.format('Does not found this component: %s'),component_name)
     return
   end
-  local provider = M.section[position][component_name].provider or ''
-  local icon = M.section[position][component_name].icon or ''
-  local aliasby = M.section[position][component_name].aliasby or {}
+  local provider = component_info.provider or ''
+  local icon = component_info.icon or ''
+  local aliasby = component_info.aliasby or {}
   if string.len(icon) ~= 0 and #aliasby ~= 0 then
     print(string.format("Icon option and aliasbyicon option can not be set at the same time in %s"),component_name)
     return
@@ -85,38 +93,84 @@ function M.component_decorator(component_name)
   end
 end
 
-function M.build_line(component_name)
+function M.init_theme()
+  for pos,_ in pairs(M.section) do
+    for component_name,component_info in pairs(M.section[pos]) do
+      local highlight = component_info.highlight
+      if highlight ~= nil or type(highlight) ~= 'table' then
+        print(string.format("Wrong highlight value in component:%s",component_name))
+        return
+      end
+      colors.set_highlight(component_name,highlight)
+      local dynamicswitch = component_info.dynamicswitch or {}
+      if #dynamicswitch ~= 0 then
+        for i,j in pairs(dynamicswitch) do
+          if j.highlight == nil then
+            print(string.format("Wrong highlight value in component:%s",i))
+            return
+          end
+          colors.set_highlight(i,j.highlight)
+        end
+      end
+    end
+  end
+end
+
+local function generate_section(component_name)
   local line = ''
   line = line .. '%#'..component_name..'#'
   line = line .. '%{luaeval(require("galaxyline").component_decorator,'..component_name..')()'.. '}'
-  print(line)
   return line
 end
 
-function M.init_theme(component_name)
-  local ok,pos = check_component_exists(component_name)
-  if not ok then
-    print(string.format('Does not found this component: %s'),component_name)
-    return
+local function generate_separator_section(component_name,separator)
+  local separator_name = component_name .. 'Separator'
+  local line = ''
+  line = line .. '%#'..separator_name..'#' .. separator
+  return line
+end
+
+
+local function section_complete_with_option(component,component_info)
+  local line = ''
+  local emptyshow = component_info.emptyshow or true
+  local dynamicswitch = component_info.dynamicswitch or {}
+  if emptyshow then
+    line = line .. generate_section(component)
+    local separator = component_info.separator or ''
+    if string.len(separator) ~= 0 then
+      line = line .. generate_separator_section(component,separator)
+    end
+  else
+    if string.len(M.component_decorator(component)) ~= 0 then
+      line = line .. generate_section(component)
+      local separator = component_info.separator or ''
+      if string.len(separator) ~= 0 then
+        line = line .. generate_separator_section(component,separator)
+      end
+    end
   end
-  local hi_group = {}
-  colors = M.section[pos][component_name].highlight or {}
-  if type(colors) == 'function' then
-    hi_group[1],hi_group[2] = colors()
-  elseif type(colors) == 'table' then
-    hi_group = colors
+  if #dynamicswitch == 0 then return line end
+  for k,_ in pairs(dynamicswitch) do
+    if string.len(M.component_decorator(k)) ~= 0 then
+      line = generate_section(k)
+      local separator = k.separator or ''
+      if string.len(separator) ~= 0 then
+        line = line .. generate_separator_section(separator)
+      end
+    end
   end
-  colors.set_highlight(component_name,hi_group)
+  return line
 end
 
 function M.load_galaxyline()
   local line = ''
-  for key,_ in pairs(M.section.left) do
-    line = line .. M.build_line(key)
+  for component,component_info in pairs(M.section.left) do
+    section_complete_with_option(component,component_info)
   end
   line = line .. '%='
-  for key,_ in pairs(M.section.right) do
-    line = line .. M.build_line(key)
+  for component,component_info in pairs(M.section.right) do
+    section_complete_with_option(component,component_info)
   end
   vim.o.statusline = line
   autocmd.galaxyline_augroups()
