@@ -4,6 +4,7 @@ local diagnostic = require('galaxyline.provider_diagnostic')
 local vimmode = require('galaxyline.provider_vim')
 local vcs = require('galaxyline.provider_vcs')
 local fileinfo = require('galaxyline.provider_fileinfo')
+local colors = require('galaxyline.colors')
 local M = {}
 M.section = require('section_test')
 
@@ -32,12 +33,11 @@ local function check_component_exists(component_name)
   return false,nil
 end
 
-local function exec_provider(icon,cmd)
-  if type(icon) == 'string' then
+local function exec_provider(icon,aliasby,cmd)
+  if string.len(icon) ~= 0 then
     return icon .. cmd()
-  elseif type(icon) == 'table' then
-    local output = cmd()
-    return icon[output]
+  elseif #aliasby ~= 0 then
+    return aliasby[cmd()]
   end
 end
 
@@ -47,31 +47,40 @@ end
 function M.component_decorator(component_name)
   -- if section doesn't have component just return
   local ok,position = check_component_exists(component_name)
-  if not ok then return end
+  if not ok then
+    print(string.format('Does not found this component: %s'),component_name)
+    return
+  end
   local provider = M.section[position][component_name].provider or ''
   local icon = M.section[position][component_name].icon or ''
+  local aliasby = M.section[position][component_name].aliasby or {}
+  if string.len(icon) ~= 0 and #aliasby ~= 0 then
+    print(string.format("Icon option and aliasbyicon option can not be set at the same time in %s"),component_name)
+    return
+  end
   if type(provider) == 'string' then
     if provider_group[provider] == nil then
       print(string.format('Does not found the provider in default provider provider in %s'),component_name)
     end
-    return exec_provider(icon,provider_group[provider])
+    return exec_provider(icon,aliasby,provider_group[provider])
   elseif type(provider) == 'function' then
-    return exec_provider(icon,provider)
+    return exec_provider(icon,aliasby,provider)
   elseif type(provider) == 'table' then
     local output = ''
-    for _,v in pairs(table) do
+    for _,v in pairs(provider) do
       if type(v) == 'string' then
         if provider_group[v] == nil then
           print(string.format('Does not found the provider in default provider provider in %s'),component_name)
           return
         end
-        output = output + exec_provider(icon,provider_group[provider])
+        output = output + exec_provider(icon,aliasby,provider_group[provider])
       elseif type(v) == 'function' then
-        output = output + exec_provider(icon,provider)
+        output = output + exec_provider(icon,aliasby,provider)
       else
         print(string.format('Wrong provider type in %s'),component_name)
       end
     end
+    return output
   end
 end
 
@@ -81,6 +90,22 @@ function M.build_line(component_name)
   line = line .. '%{luaeval(require("galaxyline").component_decorator,'..component_name..')()'.. '}'
   print(line)
   return line
+end
+
+function M.init_theme(component_name)
+  local ok,pos = check_component_exists(component_name)
+  if not ok then
+    print(string.format('Does not found this component: %s'),component_name)
+    return
+  end
+  local hi_group = {}
+  colors = M.section[pos][component_name].highlight or {}
+  if type(colors) == 'function' then
+    hi_group[1],hi_group[2] = colors()
+  elseif type(colors) == 'table' then
+    hi_group = colors
+  end
+  colors.set_highlight(component_name,hi_group)
 end
 
 function M.load_galaxyline()

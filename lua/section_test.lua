@@ -6,17 +6,11 @@ local M= {
       provider = 'ShowVimMode',
       separator = '',
       highlight = {'#008080','#fabd2f'},
-      icon = {n = 'Normal'}
+      aliasby = {n = 'Normal'}
     },
     FileName = {
-      provider = 'FileName',
+      provider = {'DiagnosticOk','FileName'},
       separator = '',
-      second = {
-        DiagnositcOk = {
-          provider = 'DiagnosticOk',
-          icon = '',
-        }
-      }
     },
     FileSize = {
       provider = 'FileSize',
