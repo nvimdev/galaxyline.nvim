@@ -45,9 +45,11 @@ end
 local function exec_provider(icon,aliasby,cmd)
   if string.len(icon) ~= 0 then
     return icon .. cmd()
-  elseif #aliasby ~= 0 then
-    return aliasby[cmd()]
+  elseif vim.fn.empty(aliasby) == 0 then
+    local output = cmd()
+    return aliasby[output]
   end
+  return cmd()
 end
 
 -- component decorator
@@ -57,13 +59,13 @@ function M.component_decorator(component_name)
   -- if section doesn't have component just return
   local ok,component_info = check_component_exists(component_name)
   if not ok then
-    print(string.format('Does not found this component: %s'),component_name)
+    print(string.format('Does not found this component: %s',component_name))
     return
   end
   local provider = component_info.provider or ''
   local icon = component_info.icon or ''
   local aliasby = component_info.aliasby or {}
-  if string.len(icon) ~= 0 and #aliasby ~= 0 then
+  if string.len(icon) ~= 0 and vim.fn.empty(aliasby) == 0 then
     print(string.format("Icon option and aliasbyicon option can not be set at the same time in %s"),component_name)
     return
   end
@@ -125,7 +127,7 @@ end
 local function generate_section(component_name)
   local line = ''
   line = line .. '%#'..component_name..'#'
-  line = line .. '%{luaeval(require("galaxyline").component_decorator,'..component_name..')()'.. '}'
+  line = line .. [[%{luaeval('require("galaxyline").component_decorator')]]..'("'..component_name..'")'.. '}'
   return line
 end
 
@@ -169,17 +171,42 @@ local function section_complete_with_option(component,component_info)
   return line
 end
 
+-- TODO: event
+function M.load_galaxyline_autocmd()
+  local au_event = {}
+  local count = 0
+  for pos,_ in pairs(M.section) do
+    for _,component_info in pairs(M.section[pos]) do
+      local event = component_info.event
+      if event ~= nil and au_event[event] ~= 0 then
+        au_event[event] = count + 1
+      end
+      local dynamicswitch = component_info.dynamicswitch or {}
+      if #dynamicswitch ~= 0 then
+        for _,j in pairs(dynamicswitch) do
+          if j.event ~= nil and au_event[j.event] ~= 0 then
+            au_event[j.event] = count + 1
+          end
+        end
+      end
+    end
+  end
+  autocmd.nvim_create_augroups(au_event)
+end
+
 function M.load_galaxyline()
   local line = ''
   for component,component_info in pairs(M.section.left) do
-    section_complete_with_option(component,component_info)
+    print(component)
+    line = section_complete_with_option(component,component_info)
   end
   line = line .. '%='
-  for component,component_info in pairs(M.section.right) do
-    section_complete_with_option(component,component_info)
+  if M.section.right ~= nil then
+    for component,component_info in pairs(M.section.right) do
+      line = section_complete_with_option(component,component_info)
+    end
   end
   vim.o.statusline = line
-  autocmd.galaxyline_augroups()
 end
 
 return M

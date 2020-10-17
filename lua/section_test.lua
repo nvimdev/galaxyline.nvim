@@ -8,6 +8,17 @@ local M= {
       highlight = {'#008080','#fabd2f'},
       aliasby = {n = 'Normal'}
     },
+  };
+}
+
+local test= {
+  left = {
+    ViMode = {
+      provider = 'ShowVimMode',
+      separator = '',
+      highlight = {'#008080','#fabd2f'},
+      aliasby = {n = 'Normal'}
+    },
     FileIcon = {
       provider = 'FileIcon',
       separator = '',
