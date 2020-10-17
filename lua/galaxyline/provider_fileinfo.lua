@@ -1,3 +1,4 @@
+local vim = vim
 local M = {}
 
 -- get current file name
@@ -54,6 +55,67 @@ function M.current_line_percent()
   local byte = vim.fn.line2byte(vim.fn.line('.')) + vim.fn.col('.') - 1
   local size = (vim.fn.line2byte(vim.fn.line('$') + 1) - 1)
   return (byte * 100) / size .. '%'
+end
+
+local icon_colors = {
+   Brown        = '905532',
+   Aqua         = '3AFFDB',
+   Blue         = '689FB6',
+   Darkblue     = '44788E',
+   Purple       = '834F79',
+   Red          = 'AE403F',
+   Beige        = 'F5C06F',
+   Yellow       = 'F09F17',
+   Orange       = 'D4843E',
+   Darkorange   = 'F16529',
+   Pink         = 'CB6F6F',
+   Salmon       = 'EE6E73',
+   Green        = '8FAA54',
+   Lightgreen   = '31B53E',
+   White        = 'FFFFFF',
+   LightBlue    = '5fd7ff',
+}
+
+local icons = {
+    Brown        = {''},
+    Aqua         = {''},
+    LightBlue    = {''},
+    Blue         = {'','','','','','','','','','','',''},
+    Darkblue     = {'',''},
+    Purple       = {'','','','','',''},
+    Red          = {'','','','','',''},
+    Beige        = {'','',''},
+    Yellow       = {'','','λ','',''},
+    Orange       = {''},
+    Darkorange   = {'','','','',''},
+    Pink         = {'',''},
+    Salmon       = {''},
+    Green        = {'','','','','',''},
+    Lightgreen   = {'','',''},
+    White        = {'','','','','',''},
+}
+
+function M.get_file_icon()
+  local icon = ''
+  if vim.fn.exists("*WebDevIconsGetFileTypeSymbol") == 1 then
+    icon = vim.fn.WebDevIconsGetFileTypeSymbol()
+    return icon
+  end
+  local ok,devicons = pcall(require,'nvim-web-devicons')
+  if not ok then print('Does not found any icon plugin') return end
+  local f_name,f_extension = vim.fn.expand('%:t'),vim.fn.expand('%:e')
+  icon = devicons.get_icon(f_name,f_extension)
+  if icon == nil then icon = '' end
+  return icon
+end
+
+function M.get_file_icon_color()
+  local icon = M.get_file_icon()
+  for k,_ in pairs(icons) do
+    if vim.fn.index(icons[k],icon) ~= -1 then
+      return icon_colors[k]
+    end
+  end
 end
 
 return M

@@ -21,6 +21,7 @@ local provider_group = {
   FileFormat = fileinfo.get_file_format,
   FileEncode = fileinfo.get_file_encode,
   FileSize = fileinfo.get_file_size,
+  FIleIcon = fileinfo.get_file_icon,
   LinePercent = fileinfo.current_line_percent,
 }
 
