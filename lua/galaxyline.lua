@@ -102,6 +102,9 @@ function M.init_theme()
         return
       end
       colors.set_highlight(component_name,highlight)
+      if component_info.separator ~= nil and #component_info.iconhighlight ~= 0 then
+        colors.set_highlight(component_name..'Separator',component_info.iconhighlight)
+      end
       local dynamicswitch = component_info.dynamicswitch or {}
       if #dynamicswitch ~= 0 then
         for i,j in pairs(dynamicswitch) do
@@ -110,6 +113,9 @@ function M.init_theme()
             return
           end
           colors.set_highlight(i,j.highlight)
+          if j.separator ~= nil and #j.iconhighlight ~= 0 then
+            colors.set_highlight(i..'Separator',j.iconhighlight)
+          end
         end
       end
     end

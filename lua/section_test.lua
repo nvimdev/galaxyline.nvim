@@ -20,6 +20,7 @@ local M= {
     FileSize = {
       provider = 'FileSize',
       icon = '',
+      iconhighlight = {},
       separator = '',
       highlight = {},
       emptyshow = false,
