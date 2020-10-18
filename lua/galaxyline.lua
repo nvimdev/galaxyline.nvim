@@ -1,9 +1,10 @@
 local vim = vim
-local autocmd = require('galaxyline.event')
+local autocmd = require('galaxyline.common')
 local diagnostic = require('galaxyline.provider_diagnostic')
 local vimmode = require('galaxyline.provider_vim')
 local vcs = require('galaxyline.provider_vcs')
 local fileinfo = require('galaxyline.provider_fileinfo')
+local extension = require('galaxyline.provider_extensions')
 local colors = require('galaxyline.colors')
 local M = {}
 
@@ -25,7 +26,10 @@ local provider_group = {
   FileEncode = fileinfo.get_file_encode,
   FileSize = fileinfo.get_file_size,
   FileIcon = fileinfo.get_file_icon,
+  FileName = fileinfo.get_current_file_name,
   LinePercent = fileinfo.current_line_percent,
+  ScrollBar = extension.scrollbar_instance,
+  VistaPlugin = extension.vista_nearest,
 }
 
 local function get_section()
@@ -108,7 +112,6 @@ local function generate_section(component_name)
   local line = ''
   line = line .. '%#'..component_name..'#'
   line = line .. [[%{luaeval('require("galaxyline").component_decorator')]]..'("'..component_name..'")}'
-          ..' '
   return line
 end
 
@@ -180,16 +183,22 @@ function M.load_galaxyline()
   local left_section = ''
   local right_section = ''
   if M.section.left ~= nil then
-    for _,component in pairs(M.section.left) do
+    for idx,component in pairs(M.section.left) do
       for component_name,component_info in pairs(component) do
         left_section = left_section .. section_complete_with_option(component_name,component_info)
+        if idx ~= #M.section.left then
+          left_section = left_section .. ' '
+        end
       end
     end
   end
   if M.section.right ~= nil then
-    for _,component in pairs(M.section.right) do
+    for idx,component in pairs(M.section.right) do
       for component_name,component_info in pairs(component) do
         right_section = right_section .. section_complete_with_option(component_name,component_info)
+        if idx ~= #M.section.right then
+          right_section = right_section .. ' '
+        end
       end
     end
   end

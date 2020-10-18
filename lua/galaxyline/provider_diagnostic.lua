@@ -6,7 +6,7 @@ function M.diagnostic_error()
     M.diagnostic_coc_error()
   elseif vim.fn.exists('*ale#toggle#Enable') == 1 then
     M.diagnostic_ale_error()
-  else
+  elseif lsp.buf_get_clients(0) ~= nil then
     M.diagnostic_nvim_lsp_error()
   end
 end
@@ -16,8 +16,8 @@ function M.diagnostic_warn()
     M.diagnostic_coc_warn()
   elseif vim.fn.exists('*ale#toggle#Enable') == 1 then
     M.diagnostic_ale_warn()
-  else
-    M.diagnostic_ale_warn()
+  elseif lsp.buf_get_clients(0) ~= nil then
+    M.diagnostic_nvim_lsp_warn()
   end
 end
 
@@ -26,9 +26,10 @@ function M.diagnostic_ok()
     M.diagnostic_coc_ok()
   elseif vim.fn.exists('*ale#toggle#Enable') ==1 then
     M.diagnostic_ale_ok()
-  else
+  elseif lsp.buf_get_clients(0) ~= nil then
     M.diagnostic_nvim_lsp_ok()
   end
+  return ''
 end
 
 -- coc error
@@ -64,7 +65,7 @@ end
 -- nvim-lspconfig
 -- see https://github.com/neovim/nvim-lspconfig
 function M.diagnostic_nvim_lsp_error()
-  if lsp.util.buf_get_client(0) ~= 0 then return end
+  if lsp.buf_get_clients(0) ~= 0 then return end
   local count = lsp.util.buf_diagnostics_count('Error')
   if count ~= 0 then return count end
 end
@@ -72,7 +73,7 @@ end
 -- nvim-lspconfig
 -- see https://github.com/neovim/nvim-lspconfig
 function M.diagnostic_nvim_lsp_warn()
-  if lsp.util.buf_get_client(0) ~= 0 then return end
+  if lsp.buf_get_clients(0) ~= 0 then return end
   local count = lsp.util.buf_diagnostics_count('Warning')
   if count ~= 0 then return count end
 end
@@ -80,7 +81,7 @@ end
 -- nvim-lspconfig
 -- see https://github.com/neovim/nvim-lspconfig
 function M.diagnostic_nvim_lsp_ok()
-  if lsp.util.buf_get_client(0) ~= 0 then return end
+  if lsp.buf_get_clients(0) ~= 0 then return end
   local error_count = lsp.util.buf_diagnostics_count('Error')
   local warn_count = lsp.util.buf_diagnostics_count('')
   if error_count == 0 and warn_count ==0 then return '' end

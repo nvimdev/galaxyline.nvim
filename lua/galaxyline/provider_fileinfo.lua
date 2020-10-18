@@ -1,10 +1,28 @@
 local vim = vim
 local M = {}
 
+local function file_readonly()
+  if vim.o.filetype == 'help' then
+    return ''
+  end
+  if vim.o.readonly == true then
+    return ""
+  end
+  return ''
+end
+
 -- get current file name
-function M.current_file_name()
-  local file = vim.fn.expand('%:p')
+function M.get_current_file_name()
+  local file = vim.fn.expand('%:t')
   if vim.fn.empty(file) == 1 then return '' end
+  if string.len(file_readonly()) ~= 0 then
+    return file .. ' ' .. file_readonly()
+  end
+  if vim.o.modifiable then
+    if vim.bo.modified then
+      return file .. ' '
+    end
+  end
   return file
 end
 
@@ -27,8 +45,8 @@ function M.format_file_size(file)
 end
 
 function M.get_file_size()
-  local file = M.current_file_name()
-  if vim.fn.empty(file) == 1 then return end
+  local file = M.get_current_file_name()
+  if vim.fn.empty(file) == 1 then return '' end
   return M.format_file_size(file)
 end
 
@@ -52,28 +70,28 @@ end
 
 -- show current line percent of all lines
 function M.current_line_percent()
-  local byte = vim.fn.line2byte(vim.fn.line('.')) + vim.fn.col('.') - 1
-  local size = (vim.fn.line2byte(vim.fn.line('$') + 1) - 1)
-  return (byte * 100) / size .. '%'
+  local byte = vim.fn.line2byte(vim.fn.line('.') + 1)
+  local size = vim.fn.line2byte(vim.fn.line('$')+1)
+  return byte / size .. '%'
 end
 
 local icon_colors = {
-   Brown        = '905532',
-   Aqua         = '3AFFDB',
-   Blue         = '689FB6',
-   Darkblue     = '44788E',
-   Purple       = '834F79',
-   Red          = 'AE403F',
-   Beige        = 'F5C06F',
-   Yellow       = 'F09F17',
-   Orange       = 'D4843E',
-   Darkorange   = 'F16529',
-   Pink         = 'CB6F6F',
-   Salmon       = 'EE6E73',
-   Green        = '8FAA54',
-   Lightgreen   = '31B53E',
-   White        = 'FFFFFF',
-   LightBlue    = '5fd7ff',
+   Brown        = '#905532',
+   Aqua         = '#3AFFDB',
+   Blue         = '#689FB6',
+   Darkblue     = '#44788E',
+   Purple       = '#834F79',
+   Red          = '#AE403F',
+   Beige        = '#F5C06F',
+   Yellow       = '#F09F17',
+   Orange       = '#D4843E',
+   Darkorange   = '#F16529',
+   Pink         = '#CB6F6F',
+   Salmon       = '#EE6E73',
+   Green        = '#8FAA54',
+   Lightgreen   = '#31B53E',
+   White        = '#FFFFFF',
+   LightBlue    = '#5fd7ff',
 }
 
 local icons = {
