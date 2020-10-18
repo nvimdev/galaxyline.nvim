@@ -1,17 +1,19 @@
-local vim = vim
 -- section setup
 -- test data
 -- TODO: the order of component
-local M= {
-  left = {
-    ViMode = {
-      provider = 'ShowVimMode',
-      separator = '',
-      separator_highlight = {'#008080','#fabd2f'},
-      highlight = {'#008080','#fabd2f'},
-      aliasby = {n = 'Normal',i = 'Insert',c = 'Command'}
-    },
-    FileIcon = {
+local left,right = {},{}
+
+left[1] = {
+  ViMode = {
+    provider = 'ShowVimMode',
+    separator = '',
+    separator_highlight = {'#008080','#fabd2f'},
+    highlight = {'#008080','#fabd2f'},
+    aliasby = {n = 'Normal',i = 'Insert',c = 'Command'}
+  },
+}
+left[2] ={
+  FileIcon = {
       provider = 'FileIcon',
       condition = function()
         if vim.fn.empty(vim.fn.expand('%:t')) ~= 1 then
@@ -21,87 +23,22 @@ local M= {
       end,
       separator = '',
       highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color(),'NONE'}
-    },
-  };
-  right = {
-    LineInfo = {
-      provider = 'LineColumn',
-      separator = ' | ',
-      highlight = {'#008080','#fabd2f'},
-    },
-    PerCent = {
-      provider = 'LinePercent',
-      highlight = {'#008080','#fabd2f'},
-    }
+  },
+};
+right[1] = {
+  LineInfo = {
+    provider = 'LineColumn',
+    separator = ' | ',
+    highlight = {'#008080','#fabd2f'},
   },
 }
-
-local test= {
-  left = {
-    ViMode = {
-      provider = 'ShowVimMode',
-      separator = '',
+right[2] = {
+  PerCent = {
+      provider = 'LinePercent',
       highlight = {'#008080','#fabd2f'},
-      aliasby = {n = 'Normal'}
-    },
-    FileIcon = {
-      provider = 'FileIcon',
-      separator = '',
-      highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color(),''}
-    },
-    FileName = {
-      provider = {'DiagnosticOk','FileName'},
-      separator = '',
-    },
-    FileSize = {
-      provider = 'FileSize',
-      icon = '',
-      iconhighlight = {},
-      separator = '',
-      highlight = {},
-      emptyshow = false,
-      dynamicswitch = {
-        DiagnositcError = {
-          provider = 'DiagnositcError',
-          icon = '',
-          highlight = {},
-        },
-        DiagnosticWarn = {
-          provider = 'DiagnosticWarn',
-          icon = '',
-          highlight = {}
-        }
-      }
-    },
-    GitBranch = {
-      provider = 'GitBranch',
-      icon = '',
-      separator = '',
-      highlight = {},
-    },
-    Diff = {
-      provider = 'DiffAdd',
-      emptyshow = false,
-      separator = '',
-      highlight = {},
-      icon = '',
-    }
-  };
-  right = {
-    FileInfo = {},
-    LineInfo = {
-      provider = 'LineColumn',
-      separator = '',
-      highlight = {'#008080','#fabd2f'},
-      second = {
-        CurrentPercent = {
-          provider = 'LinePercent',
-          icon = '',
-        }
-      }
-    };
-    ScrollBar = {},
   }
 }
 
-return M
+return {
+  left,right
+}

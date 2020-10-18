@@ -6,7 +6,10 @@ local vcs = require('galaxyline.provider_vcs')
 local fileinfo = require('galaxyline.provider_fileinfo')
 local colors = require('galaxyline.colors')
 local M = {}
-M.section = require('section_test')
+
+M.section = {}
+M.section.left = require('section_test')[1]
+M.section.right = require('section_test')[2]
 
 local provider_group = {
   ShowVimMode = vimmode.show_vim_mode,
@@ -30,15 +33,17 @@ local function get_section()
 end
 
 local function check_component_exists(component_name)
-  for _,v in pairs(M.section) do
-    if v[component_name] ~= nil then
-      return true,v[component_name]
-    end
-    for _,j in pairs(v) do
-      local dynamicswitch = j.dynamicswitch or {}
-      if #dynamicswitch ~= 0 then
-        if dynamicswitch[component_name] ~= nil then
-          return true,dynamicswitch[component_name]
+  for _,pos_value in pairs(M.section) do
+    for _,v in pairs(pos_value) do
+      if v[component_name] ~= nil then
+        return true,v[component_name]
+      end
+      for _,j in pairs(v) do
+        local dynamicswitch = j.dynamicswitch or {}
+        if #dynamicswitch ~= 0 then
+          if dynamicswitch[component_name] ~= nil then
+            return true,dynamicswitch[component_name]
+          end
         end
       end
     end
@@ -175,13 +180,17 @@ function M.load_galaxyline()
   local left_section = ''
   local right_section = ''
   if M.section.left ~= nil then
-    for component,component_info in pairs(M.section.left) do
-      left_section = left_section .. section_complete_with_option(component,component_info)
+    for _,component in pairs(M.section.left) do
+      for component_name,component_info in pairs(component) do
+        left_section = left_section .. section_complete_with_option(component_name,component_info)
+      end
     end
   end
   if M.section.right ~= nil then
-    for component,component_info in pairs(M.section.right) do
-      right_section = right_section .. section_complete_with_option(component,component_info)
+    for _,component in pairs(M.section.right) do
+      for component_name,component_info in pairs(component) do
+        right_section = right_section .. section_complete_with_option(component_name,component_info)
+      end
     end
   end
   vim.o.statusline = left_section .. '%=' .. right_section
