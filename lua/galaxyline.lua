@@ -66,12 +66,12 @@ function M.component_decorator(component_name)
   local icon = component_info.icon or ''
   local aliasby = component_info.aliasby or {}
   if string.len(icon) ~= 0 and vim.fn.empty(aliasby) == 0 then
-    print(string.format("Icon option and aliasbyicon option can not be set at the same time in %s"),component_name)
+    print(string.format("Icon option and aliasby option can not be set at the same time in %s"),component_name)
     return
   end
   if type(provider) == 'string' then
     if provider_group[provider] == nil then
-      print(string.format('Does not found the provider in default provider provider in %s',component_name))
+      print(string.format('Does not found the %s provider in default provider',component_name))
     end
     return exec_provider(icon,aliasby,provider_group[provider])
   elseif type(provider) == 'function' then
@@ -140,36 +140,37 @@ local function generate_separator_section(component_name,separator)
 end
 
 
-local sline = ''
 local function section_complete_with_option(component,component_info)
-  local condition = component_info.condition or ''
+  local tmp_line = ''
+  -- get the component condition and dynamicswitch
+  local condition = component_info.condition or nil
   local dynamicswitch = component_info.dynamicswitch or {}
-  if string.len(condition) > 0 then
-    sline = sline .. generate_section(component)
-    local separator = component_info.separator or ''
-    if string.len(separator) ~= 0 then
-      sline = sline .. generate_separator_section(component,separator)
-    end
-  else
-    if string.len(M.component_decorator(component)) ~= 0 then
-      sline = sline .. generate_section(component)
+  if condition ~= nil then
+    if condition() then
+      tmp_line = tmp_line .. generate_section(component)
       local separator = component_info.separator or ''
       if string.len(separator) ~= 0 then
-        sline = sline .. generate_separator_section(component,separator)
+        tmp_line = tmp_line .. generate_separator_section(component,separator)
       end
     end
+  else
+    tmp_line = tmp_line .. generate_section(component)
+    local separator = component_info.separator or ''
+    if string.len(separator) ~= 0 then
+      tmp_line = tmp_line .. generate_separator_section(component,separator)
+    end
   end
-  if #dynamicswitch == 0 then return sline end
+  if #dynamicswitch == 0 then return tmp_line end
   for k,_ in pairs(dynamicswitch) do
     if string.len(M.component_decorator(k)) ~= 0 then
-      sline = generate_section(k)
+      tmp_line = generate_section(k)
       local separator = k.separator or ''
       if string.len(separator) ~= 0 then
-        sline = sline .. generate_separator_section(separator)
+        tmp_line = tmp_line .. generate_separator_section(separator)
       end
     end
   end
-  return sline
+  return tmp_line
 end
 
 -- TODO: event
@@ -196,19 +197,19 @@ function M.load_galaxyline_autocmd()
 end
 
 function M.load_galaxyline()
-  local line = ''
+  local left_section = ''
+  local right_section = ''
   if M.section.left ~= nil then
     for component,component_info in pairs(M.section.left) do
-      line = section_complete_with_option(component,component_info)
+      left_section = left_section .. section_complete_with_option(component,component_info)
     end
   end
-  line = line .. '%='
   if M.section.right ~= nil then
     for component,component_info in pairs(M.section.right) do
-      line = section_complete_with_option(component,component_info)
+      right_section = right_section .. section_complete_with_option(component,component_info)
     end
   end
-  vim.o.statusline = line
+  vim.o.statusline = left_section .. '%=' .. right_section
 end
 
 return M

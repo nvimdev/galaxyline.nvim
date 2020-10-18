@@ -1,20 +1,34 @@
+local vim = vim
 -- section setup
 -- test data
+-- TODO: the order of component
 local M= {
   left = {
-    -- ViMode = {
-    --   provider = 'ShowVimMode',
-    --   separator = '',
-    --   highlight = {'#008080','#fabd2f'},
-    --   aliasby = {n = 'Normal'}
-    -- },
+    ViMode = {
+      provider = 'ShowVimMode',
+      separator = '',
+      highlight = {'#008080','#fabd2f'},
+      aliasby = {n = 'Normal',i = 'Insert',c = 'Command'}
+    },
     FileIcon = {
       provider = 'FileIcon',
-      condition = vim.fn.expand('%:t'),
+      condition = function()
+        if vim.fn.empty(vim.fn.expand('%:t')) ~= 1 then
+          return true
+        end
+        return false
+      end,
       separator = '',
       highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color(),''}
     },
   };
+  right = {
+    LineInfo = {
+      provider = 'LineColumn',
+      separator = '',
+      highlight = {'#008080','#fabd2f'},
+    }
+  },
 }
 
 local test= {
