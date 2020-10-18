@@ -25,6 +25,10 @@ local provider_group = {
   LinePercent = fileinfo.current_line_percent,
 }
 
+local function get_section()
+  return M.section
+end
+
 local function check_component_exists(component_name)
   for _,v in pairs(M.section) do
     if v[component_name] ~= nil then
@@ -92,35 +96,6 @@ function M.component_decorator(component_name)
       end
     end
     return output
-  end
-end
-
-function M.init_theme()
-  for pos,_ in pairs(M.section) do
-    for component_name,component_info in pairs(M.section[pos]) do
-      local highlight = component_info.highlight
-      if highlight ~= nil or type(highlight) ~= 'table' then
-        print(string.format("Wrong highlight value in component:%s",component_name))
-        return
-      end
-      colors.set_highlight(component_name,highlight)
-      if component_info.separator ~= nil and #component_info.iconhighlight ~= 0 then
-        colors.set_highlight(component_name..'Separator',component_info.iconhighlight)
-      end
-      local dynamicswitch = component_info.dynamicswitch or {}
-      if #dynamicswitch ~= 0 then
-        for i,j in pairs(dynamicswitch) do
-          if j.highlight == nil then
-            print(string.format("Wrong highlight value in component:%s",i))
-            return
-          end
-          colors.set_highlight(i,j.highlight)
-          if j.separator ~= nil and #j.iconhighlight ~= 0 then
-            colors.set_highlight(i..'Separator',j.iconhighlight)
-          end
-        end
-      end
-    end
   end
 end
 
@@ -210,6 +185,7 @@ function M.load_galaxyline()
     end
   end
   vim.o.statusline = left_section .. '%=' .. right_section
+  colors.init_theme(get_section)
 end
 
 return M

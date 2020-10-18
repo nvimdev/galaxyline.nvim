@@ -7,6 +7,7 @@ local M= {
     ViMode = {
       provider = 'ShowVimMode',
       separator = '',
+      separator_highlight = {'#008080','#fabd2f'},
       highlight = {'#008080','#fabd2f'},
       aliasby = {n = 'Normal',i = 'Insert',c = 'Command'}
     },
@@ -19,13 +20,17 @@ local M= {
         return false
       end,
       separator = '',
-      highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color(),''}
+      highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color(),'NONE'}
     },
   };
   right = {
     LineInfo = {
       provider = 'LineColumn',
-      separator = '',
+      separator = ' | ',
+      highlight = {'#008080','#fabd2f'},
+    },
+    PerCent = {
+      provider = 'LinePercent',
       highlight = {'#008080','#fabd2f'},
     }
   },
