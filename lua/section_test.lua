@@ -75,11 +75,52 @@ left[5] = {
     separator_highlight = {colors.purple,colors.darkblue}
   }
 }
+left[6] = {
+  GitIcon = {
+    provider = function() return '  ' end,
+    highlight = {colors.orange,colors.darkblue},
+  }
+}
+left[7] = {
+  GitBranch = {
+    provider = 'GitBranch',
+    highlight = {colors.grey,colors.darkblue},
+  }
+}
+left[8] = {
+  DiffAdd = {
+    provider = 'DiffAdd',
+    icon = ' ',
+    highlight = {colors.green,colors.darkblue},
+  }
+}
+left[9] = {
+  DiffModified = {
+    provider = 'DiffModified',
+    icon = ' ',
+    highlight = {colors.orange,colors.darkblue},
+  }
+}
+left[10] = {
+  DiffRemove = {
+    provider = 'DiffRemove',
+    icon = ' ',
+    highlight = {colors.red,colors.darkblue},
+  }
+}
+left[11] = {
+  LeftEnd = {
+    provider = function() return '' end,
+    separator = '',
+    separator_highlight = {colors.purple,colors.purple},
+    highlight = {colors.purple,colors.darkblue}
+  }
+}
 right[1]= {
   FileFormat = {
     provider = 'FileFormat',
     separator = '',
-    separator_highlight = {colors.darkblue,colors.purple},
+    separator_highlight = {colors.purple,colors.purple},
     highlight = {colors.grey,colors.purple},
   }
 }
@@ -102,7 +143,7 @@ right[3] = {
 right[4] = {
   ScrollBar = {
     provider = 'ScrollBar',
-    highlight = {colors.yellow,colors.darkblue},
+    highlight = {colors.yellow,colors.purple},
   }
 }
 

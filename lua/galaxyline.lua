@@ -17,7 +17,7 @@ local provider_group = {
   DiagnosticError = diagnostic.diagnostic_error,
   DiagnosticWarn = diagnostic.diagnostic_warn,
   DiagnosticOk = diagnostic.diagnostic_ok,
-  GitBranch = vcs.git_branch,
+  GitBranch = vcs.get_git_branch,
   DiffAdd = vcs.diff_add,
   DiffModified = vcs.diff_modified,
   DiffRemove = vcs.diff_remove,
@@ -56,10 +56,14 @@ local function check_component_exists(component_name)
 end
 
 local function exec_provider(icon,aliasby,cmd)
+  local output
   if string.len(icon) ~= 0 then
-    return icon .. cmd()
+    output = cmd()
+    if string.len(output) ~= 0 then
+      return icon .. cmd()
+    end
   elseif vim.fn.empty(aliasby) == 0 then
-    local output = cmd()
+    output = cmd()
     return aliasby[output]
   end
   return cmd()
