@@ -8,13 +8,16 @@ function M.scrollbar_instance(scroll_bar_chars)
   local chars = scroll_bar_chars or default_chars
   local index = 1
 
-  if current_line == 0 then
+  if  current_line == 1 then
     index = 1
   elseif current_line == total_lines then
     index = #chars
   else
     local line_no_fraction = vim.fn.floor(current_line) / vim.fn.floor(total_lines)
     index = vim.fn.float2nr(line_no_fraction * #chars)
+    if index == 0 then
+      index = 1
+    end
   end
   return chars[index]
 end

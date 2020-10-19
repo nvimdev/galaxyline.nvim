@@ -29,7 +29,7 @@ function M.diagnostic_ok()
   elseif lsp.buf_get_clients(0) ~= nil then
     M.diagnostic_nvim_lsp_ok()
   end
-  return ''
+  return ' '
 end
 
 -- coc error

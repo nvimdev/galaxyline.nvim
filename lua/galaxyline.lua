@@ -123,7 +123,7 @@ local function generate_separator_section(component_name,separator)
 end
 
 
-local function section_complete_with_option(component,component_info)
+local function section_complete_with_option(component,component_info,position)
   local tmp_line = ''
   -- get the component condition and dynamicswitch
   local condition = component_info.condition or nil
@@ -133,14 +133,22 @@ local function section_complete_with_option(component,component_info)
       tmp_line = tmp_line .. generate_section(component)
       local separator = component_info.separator or ''
       if string.len(separator) ~= 0 then
-        tmp_line = tmp_line .. generate_separator_section(component,separator)
+        if position == 'left' then
+          tmp_line = tmp_line .. generate_separator_section(component,separator)
+        else
+          tmp_line = generate_separator_section(component,separator) .. tmp_line
+        end
       end
     end
   else
     tmp_line = tmp_line .. generate_section(component)
     local separator = component_info.separator or ''
     if string.len(separator) ~= 0 then
-      tmp_line = tmp_line .. generate_separator_section(component,separator)
+      if position == 'left' then
+        tmp_line = tmp_line .. generate_separator_section(component,separator)
+      else
+        tmp_line = generate_separator_section(component,separator) .. tmp_line
+      end
     end
   end
   if #dynamicswitch == 0 then return tmp_line end
@@ -149,7 +157,11 @@ local function section_complete_with_option(component,component_info)
       tmp_line = generate_section(k)
       local separator = k.separator or ''
       if string.len(separator) ~= 0 then
-        tmp_line = tmp_line .. generate_separator_section(separator)
+        if position == 'left' then
+          tmp_line = tmp_line .. generate_separator_section(separator)
+        else
+          tmp_line = generate_separator_section(separator) .. tmp_line
+        end
       end
     end
   end
@@ -183,22 +195,16 @@ function M.load_galaxyline()
   local left_section = ''
   local right_section = ''
   if M.section.left ~= nil then
-    for idx,component in pairs(M.section.left) do
+    for _,component in pairs(M.section.left) do
       for component_name,component_info in pairs(component) do
-        left_section = left_section .. section_complete_with_option(component_name,component_info)
-        if idx ~= #M.section.left then
-          left_section = left_section .. ' '
-        end
+        left_section = left_section .. section_complete_with_option(component_name,component_info,'left')
       end
     end
   end
   if M.section.right ~= nil then
-    for idx,component in pairs(M.section.right) do
+    for _,component in pairs(M.section.right) do
       for component_name,component_info in pairs(component) do
-        right_section = right_section .. section_complete_with_option(component_name,component_info)
-        if idx ~= #M.section.right then
-          right_section = right_section .. ' '
-        end
+        right_section = right_section .. section_complete_with_option(component_name,component_info,'right')
       end
     end
   end

@@ -6,7 +6,7 @@ local function file_readonly()
     return ''
   end
   if vim.o.readonly == true then
-    return ""
+    return " "
   end
   return ''
 end
@@ -16,14 +16,14 @@ function M.get_current_file_name()
   local file = vim.fn.expand('%:t')
   if vim.fn.empty(file) == 1 then return '' end
   if string.len(file_readonly()) ~= 0 then
-    return file .. ' ' .. file_readonly()
+    return file .. file_readonly()
   end
   if vim.o.modifiable then
     if vim.bo.modified then
       return file .. ' '
     end
   end
-  return file
+  return file .. ' '
 end
 
 -- format print current file size
@@ -35,18 +35,18 @@ function M.format_file_size(file)
   if size < 1024 then
     size = size .. 'b'
   elseif size < 1024 * 1024 then
-    size = string.format('%f',size/1024.0) .. 'k'
+    size = string.format('%.1f',size/1024) .. 'k'
   elseif size < 1024 * 1024 * 1024 then
-    size = string.format('%f',size/1024.0/1024.0) .. 'm'
+    size = string.format('%.1f',size/1024/1024) .. 'm'
   else
-    size = string.format('%f',size/1024.0/1024.0/1024.0) .. 'g'
+    size = string.format('%.1f',size/1024/1024/1024) .. 'g'
   end
-  return size
+  return size .. ' '
 end
 
 function M.get_file_size()
-  local file = M.get_current_file_name()
-  if vim.fn.empty(file) == 1 then return '' end
+  local file = vim.fn.expand('%:p')
+  if string.len(file) == 0 then return '' end
   return M.format_file_size(file)
 end
 
@@ -70,9 +70,15 @@ end
 
 -- show current line percent of all lines
 function M.current_line_percent()
-  local byte = vim.fn.line2byte(vim.fn.line('.') + 1)
-  local size = vim.fn.line2byte(vim.fn.line('$')+1)
-  return byte / size .. '%'
+  local current_line = vim.fn.line('.')
+  local total_line = vim.fn.line('$')
+  if current_line == 1 then
+    return ' Top '
+  elseif current_line == vim.fn.line('$') then
+    return ' Bot '
+  end
+  local result,_ = math.modf((current_line/total_line)*100)
+  return ' '.. result .. '% '
 end
 
 local icon_colors = {
@@ -117,18 +123,18 @@ function M.get_file_icon()
   local icon = ''
   if vim.fn.exists("*WebDevIconsGetFileTypeSymbol") == 1 then
     icon = vim.fn.WebDevIconsGetFileTypeSymbol()
-    return icon
+    return icon .. ' '
   end
   local ok,devicons = pcall(require,'nvim-web-devicons')
   if not ok then print('Does not found any icon plugin') return end
   local f_name,f_extension = vim.fn.expand('%:t'),vim.fn.expand('%:e')
   icon = devicons.get_icon(f_name,f_extension)
   if icon == nil then icon = '' end
-  return icon
+  return icon .. ' '
 end
 
 function M.get_file_icon_color()
-  local icon = M.get_file_icon()
+  local icon = M.get_file_icon():match('%S+')
   for k,_ in pairs(icons) do
     if vim.fn.index(icons[k],icon) ~= -1 then
       return icon_colors[k]

@@ -2,13 +2,23 @@
 -- test data
 -- TODO: the order of component
 local left,right = {},{}
+local colors = {
+  yellow = '#fabd2f',
+  cyan = '#008080',
+  darkblue = '#081633',
+  green = '#afd700',
+  orange = '#FF8800',
+  purple = '#5d4d7a',
+  magenta = '#d16d9e',
+  grey = '#c0c0c0',
+}
 
 left[1] = {
   ViMode = {
     provider = 'ShowVimMode',
-    separator = '',
-    separator_highlight = {'#fabd2f','#5d4d7a'},
-    highlight = {'#008080','#fabd2f'},
+    separator = ' ',
+    separator_highlight = {colors.yellow,colors.darkblue},
+    highlight = {colors.cyan,colors.yellow},
     aliasby = {n = 'Normal',i = 'Insert',c = 'Command'}
   },
 }
@@ -21,7 +31,7 @@ left[2] ={
       end
       return false
     end,
-    highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color(),'#5d4d7a'},
+    highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color(),colors.darkblue},
   },
 }
 left[3] = {
@@ -33,9 +43,9 @@ left[3] = {
       end
       return false
     end,
-    separator = ' ',
-    separator_highlight = {'#fabd2f','#5d4d7a'},
-    highlight = {'#FF8800','#5d4d7a'}
+    separator = '',
+    separator_highlight = {colors.purple,colors.darkblue},
+    highlight = {colors.magenta,colors.darkblue}
   }
 }
 left[4] = {
@@ -48,7 +58,7 @@ left[4] = {
       return false
     end,
     icon = ' ',
-    highlight = {'#afd700','#fabd2f'}
+    highlight = {colors.green,colors.purple}
   }
 }
 left[5] = {
@@ -60,40 +70,39 @@ left[5] = {
       end
       return false
     end,
-    highlight = {'#afd700','#fabd2f'}
+    highlight = {colors.green,colors.purple},
+    separator = '',
+    separator_highlight = {colors.purple,colors.darkblue}
   }
 }
 right[1]= {
   FileFormat = {
     provider = 'FileFormat',
-    separator = '',
-    highlight = {'#008080','#fabd2f'},
+    separator = '',
+    separator_highlight = {colors.darkblue,colors.purple},
+    highlight = {colors.grey,colors.purple},
   }
 }
 right[2] = {
-  FileEncode = {
-    provider = 'FileEncode',
-    separator = '',
-    highlight = {'#008080','#fabd2f'},
-  }
-}
-right[3] = {
   LineInfo = {
     provider = 'LineColumn',
-    separator = '',
-    highlight = {'#008080','#fabd2f'},
+    separator = ' | ',
+    separator_highlight = {colors.darkblue,colors.purple},
+    highlight = {colors.grey,colors.purple},
   },
 }
-right[4] = {
+right[3] = {
   PerCent = {
-      provider = 'LinePercent',
-      highlight = {'#008080','#fabd2f'},
+    provider = 'LinePercent',
+    separator = '',
+    separator_highlight = {colors.darkblue,colors.purple},
+    highlight = {colors.grey,colors.darkblue},
   }
 }
-right[5] = {
+right[4] = {
   ScrollBar = {
     provider = 'ScrollBar',
-    highlight = {'#008080','#fabd2f'},
+    highlight = {colors.yellow,colors.darkblue},
   }
 }
 
