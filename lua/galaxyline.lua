@@ -55,18 +55,12 @@ local function check_component_exists(component_name)
   return false,nil
 end
 
-local function exec_provider(icon,aliasby,cmd)
-  local output
-  if string.len(icon) ~= 0 then
-    output = cmd()
-    if string.len(output) ~= 0 then
-      return icon .. cmd()
-    end
-  elseif vim.fn.empty(aliasby) == 0 then
-    output = cmd()
-    return aliasby[output]
+local function exec_provider(icon,cmd)
+  local output = cmd()
+  if string.len(icon) ~= 0 and string.len(output) ~= 0 then
+    return icon .. cmd()
   end
-  return cmd()
+  return output
 end
 
 -- component decorator
@@ -81,18 +75,13 @@ function M.component_decorator(component_name)
   end
   local provider = component_info.provider or ''
   local icon = component_info.icon or ''
-  local aliasby = component_info.aliasby or {}
-  if string.len(icon) ~= 0 and vim.fn.empty(aliasby) == 0 then
-    print(string.format("Icon option and aliasby option can not be set at the same time in %s"),component_name)
-    return
-  end
   if type(provider) == 'string' then
     if provider_group[provider] == nil then
       print(string.format('Does not found the %s provider in default provider',component_name))
     end
-    return exec_provider(icon,aliasby,provider_group[provider])
+    return exec_provider(icon,provider_group[provider])
   elseif type(provider) == 'function' then
-    return exec_provider(icon,aliasby,provider)
+    return exec_provider(icon,provider)
   elseif type(provider) == 'table' then
     local output = ''
     for _,v in pairs(provider) do
@@ -101,9 +90,9 @@ function M.component_decorator(component_name)
           print(string.format('Does not found the provider in default provider provider in %s'),component_name)
           return
         end
-        output = output + exec_provider(icon,aliasby,provider_group[provider])
+        output = output + exec_provider(icon,provider_group[provider])
       elseif type(v) == 'function' then
-        output = output + exec_provider(icon,aliasby,provider)
+        output = output + exec_provider(icon,provider)
       else
         print(string.format('Wrong provider type in %s'),component_name)
       end

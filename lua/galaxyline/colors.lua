@@ -8,9 +8,24 @@ function M.get_background_color()
 end
 
 local function set_highlight(group, color)
-  local fg = color[1] and 'guifg=' .. color[1] or 'guifg=NONE'
-  local bg = color[2] and 'guibg=' .. color[2] or 'guibg=NONE'
-  vim.api.nvim_command('highlight ' .. group .. ' ' .. fg .. ' ' .. bg)
+  local fg,bg,style
+  if type(color[1]) == 'function' then
+    fg = 'guifg='..color[1]()
+  else
+    fg = color[1] and 'guifg=' .. color[1] or 'guifg=NONE'
+  end
+  if type(color[2]) == 'function' then
+    bg = color[2]()
+  else
+    bg = color[2] and 'guibg=' .. color[2] or 'guibg=NONE'
+  end
+  if type(color[3]) == 'function' then
+    style = color[3]()
+  else
+    style = color[3] and 'gui=' .. color[3] or ' '
+  end
+
+  vim.api.nvim_command('highlight ' .. group .. ' ' .. fg .. ' ' .. bg .. ' '..style)
 end
 
 function M.init_theme(get_section)

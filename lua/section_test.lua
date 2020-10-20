@@ -11,15 +11,18 @@ local colors = {
   purple = '#5d4d7a',
   magenta = '#d16d9e',
   grey = '#c0c0c0',
+  blue = '#61AFEF',
 }
 
 left[1] = {
   ViMode = {
-    provider = 'ShowVimMode',
+    provider = function()
+      local alias = {n = 'NORMAL',i = 'INSERT',c= 'COMMAND',V= 'VISUAL'}
+      return alias[vim.fn.mode()]
+    end,
     separator = ' ',
     separator_highlight = {colors.yellow,colors.darkblue},
-    highlight = {colors.cyan,colors.yellow},
-    aliasby = {n = 'Normal',i = 'Insert',c = 'Command'}
+    highlight = {colors.magenta,colors.yellow,'bold'},
   },
 }
 left[2] ={
@@ -31,7 +34,7 @@ left[2] ={
       end
       return false
     end,
-    highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color(),colors.darkblue},
+    highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color,colors.darkblue},
   },
 }
 left[3] = {
@@ -87,9 +90,19 @@ left[7] = {
     highlight = {colors.grey,colors.darkblue},
   }
 }
+
+local checkwidth = function()
+  local squeeze_width  = vim.fn.winwidth(0) / 2
+  if squeeze_width > 40 then
+    return true
+  end
+  return false
+end
+
 left[8] = {
   DiffAdd = {
     provider = 'DiffAdd',
+    condition = checkwidth,
     icon = ' ',
     highlight = {colors.green,colors.darkblue},
   }
@@ -97,6 +110,7 @@ left[8] = {
 left[9] = {
   DiffModified = {
     provider = 'DiffModified',
+    condition = checkwidth,
     icon = ' ',
     highlight = {colors.orange,colors.darkblue},
   }
@@ -104,6 +118,7 @@ left[9] = {
 left[10] = {
   DiffRemove = {
     provider = 'DiffRemove',
+    condition = checkwidth,
     icon = ' ',
     highlight = {colors.red,colors.darkblue},
   }

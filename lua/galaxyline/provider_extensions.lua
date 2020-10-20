@@ -4,7 +4,7 @@ local M = {}
 function M.scrollbar_instance(scroll_bar_chars)
   local current_line = vim.fn.line('.')
   local total_lines = vim.fn.line('$')
-  local default_chars = {'▁▁', '▁▁', '▂▂', '▃▃', '▄▄', '▅▅', '▆▆', '▇▇', '██'}
+  local default_chars = {'__', '▁▁', '▂▂', '▃▃', '▄▄', '▅▅', '▆▆', '▇▇', '██'}
   local chars = scroll_bar_chars or default_chars
   local index = 1
 
