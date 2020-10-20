@@ -160,46 +160,24 @@ local function section_complete_with_option(component,component_info,position)
   return tmp_line
 end
 
-function M.galaxyline_short_line()
+local function load_section(section_area,pos)
+  local section = ''
+  if section_area ~= nil then
+    for _,component in pairs(section_area) do
+      for component_name,component_info in pairs(component) do
+        local ls = section_complete_with_option(component_name,component_info,pos)
+        section = section .. ls
+      end
+    end
+  end
+  return section
 end
 
 function M.load_galaxyline()
-  local left_section = ''
-  local right_section = ''
-  local short_left_section = ''
-  local short_right_section = ''
-  if M.section.left ~= nil then
-    for _,component in pairs(M.section.left) do
-      for component_name,component_info in pairs(component) do
-        local ls = section_complete_with_option(component_name,component_info,'left')
-        left_section = left_section .. ls
-      end
-    end
-  end
-  if M.section.right ~= nil then
-    for _,component in pairs(M.section.right) do
-      for component_name,component_info in pairs(component) do
-        local rs = section_complete_with_option(component_name,component_info,'right')
-        right_section = right_section .. rs
-      end
-    end
-  end
-  if M.section.short_line_left ~= nil then
-    for _,component in pairs(M.section.short_line_left) do
-      for component_name,component_info in pairs(component) do
-        local ls = section_complete_with_option(component_name,component_info,'left')
-        short_left_section = short_left_section .. ls
-      end
-    end
-  end
-  if M.section.short_line_right ~= nil then
-    for _,component in pairs(M.section.short_line_right) do
-      for component_name,component_info in pairs(component) do
-        local rs = section_complete_with_option(component_name,component_info,'right')
-        short_right_section = short_right_section .. rs
-      end
-    end
-  end
+  local left_section = load_section(M.section.left,'left')
+  local right_section = load_section(M.section.right,'right')
+  local short_left_section = load_section(M.section.short_line_left,'left')
+  local short_right_section = load_section(M.section.short_line_right,'right')
   local list = {'defx','coc-explorer','dbui','vista','vista_markdown','Mundo','MundoDiff'}
   if common.has_value(list,vim.bo.filetype) then
     vim.o.statusline = short_left_section .. '%=' .. short_right_section
