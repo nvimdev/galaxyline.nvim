@@ -1,7 +1,7 @@
 -- section setup
 -- test data
 -- TODO: the order of component
-local left,right = {},{}
+local left,right,short_line_left,short_line_right = {},{},{},{}
 local colors = {
   yellow = '#fabd2f',
   cyan = '#008080',
@@ -11,10 +11,17 @@ local colors = {
   purple = '#5d4d7a',
   magenta = '#d16d9e',
   grey = '#c0c0c0',
-  blue = '#61AFEF',
+  blue = '#0087d7',
+  red = '#ec5f67'
 }
 
 left[1] = {
+  FirstElement = {
+    provider = function() return '▋' end,
+    highlight = {colors.blue,colors.yellow}
+  },
+}
+left[2] = {
   ViMode = {
     provider = function()
       local alias = {n = 'NORMAL',i = 'INSERT',c= 'COMMAND',V= 'VISUAL'}
@@ -25,7 +32,7 @@ left[1] = {
     highlight = {colors.magenta,colors.yellow,'bold'},
   },
 }
-left[2] ={
+left[3] ={
   FileIcon = {
     provider = 'FileIcon',
     condition = function()
@@ -37,7 +44,7 @@ left[2] ={
     highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color,colors.darkblue},
   },
 }
-left[3] = {
+left[4] = {
   FileName = {
     provider = 'FileName',
     condition = function()
@@ -51,19 +58,6 @@ left[3] = {
     highlight = {colors.magenta,colors.darkblue}
   }
 }
-left[4] = {
-  DiagnosticOk = {
-    provider = 'DiagnosticOk',
-    condition = function()
-      if vim.fn.empty(vim.fn.expand('%:t')) ~= 1 then
-        return true
-      end
-      return false
-    end,
-    icon = ' ',
-    highlight = {colors.green,colors.purple}
-  }
-}
 left[5] = {
   FileSize = {
     provider = 'FileSize',
@@ -73,9 +67,22 @@ left[5] = {
       end
       return false
     end,
+    icon = '   ',
     highlight = {colors.green,colors.purple},
     separator = '',
-    separator_highlight = {colors.purple,colors.darkblue}
+    separator_highlight = {colors.purple,colors.darkblue},
+    dynamicswitch = {
+      DiagnosticError = {
+        provider = 'DiagnosticError',
+        icon = ' ',
+        highlight = {colors.red,colors.purple}
+      },
+      DiagnosticWarn = {
+        provider = 'DiagnosticWarn',
+        icon = ' ',
+        highlight = {colors.blue,colors.purple}
+      }
+    }
   }
 }
 left[6] = {
@@ -162,6 +169,19 @@ right[4] = {
   }
 }
 
+short_line_left[1] = {
+  FileTypeName = {
+    provider = 'FileTypeName',
+    highlight = {colors.orange,colors.purple}
+  }
+}
+short_line_right[1] = {
+  BufferIcon = {
+    provider = 'BufferIcon',
+    highlight = {colors.orange,colors.purple}
+  }
+}
+
 return {
-  left,right
+  left,right,short_line_left,short_line_right
 }

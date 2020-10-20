@@ -3,12 +3,12 @@ local common = require('galaxyline.common')
 local M = {}
 
 local function get_git_dir(dir)
-  if common.isdir(dir..'/.git') then
+  if dir == os.getenv('HOME') then return '' end
+  if common.is_dir(dir..'/.git') then
     return dir
   else
     local d = vim.fn.fnamemodify(dir,':h')
-    if d == os.getenv('HOME') then return end
-    get_git_dir(d)
+    return get_git_dir(d)
   end
 end
 

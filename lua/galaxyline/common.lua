@@ -13,9 +13,18 @@ function M.exists(file)
 end
 
 --- Check if a directory exists in this path
-function M.isdir(path)
+function M.is_dir(path)
   -- "/" works on both Unix and Windows
   return M.exists(path.."/")
+end
+
+function M.has_value (tab, val)
+  for _, value in ipairs(tab) do
+    if value == val then
+      return true
+    end
+  end
+  return false
 end
 
 function M.nvim_create_augroups(definition)

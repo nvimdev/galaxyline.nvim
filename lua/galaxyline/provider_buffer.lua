@@ -14,4 +14,24 @@ function M.get_buffer_number()
   return num_bufs
 end
 
+local buf_icon = {
+  help             = '  ',
+  defx             = '  ',
+  nerdtree         = '  ',
+  denite           = '  ',
+  ['vim-plug']     = '  ',
+  vista            = ' 識',
+  vista_kind       = '  ',
+  dbui             = '  ',
+  magit            = '  ',
+}
+
+function M.get_buffer_type_icon()
+  return buf_icon[vim.bo.filetype]
+end
+
+function M.get_buffer_filetype()
+  return vim.bo.filetype:upper()
+end
+
 return M
