@@ -174,22 +174,12 @@ local function load_section(section_area,pos)
 end
 
 function M.inactive_galaxyline()
-  local short_left_section = load_section(M.section.short_line_left,'left')
-  local short_right_section = load_section(M.section.short_line_right,'right')
-  vim.o.statusline = short_left_section .. '%=' .. short_right_section
 end
 
 function M.load_galaxyline()
   local left_section = load_section(M.section.left,'left')
   local right_section = load_section(M.section.right,'right')
-  local short_left_section = load_section(M.section.short_line_left,'left')
-  local short_right_section = load_section(M.section.short_line_right,'right')
-  local list = {'defx','coc-explorer','dbui','vista','vista_markdown','Mundo','MundoDiff'}
-  if common.has_value(list,vim.bo.filetype) then
-    vim.o.statusline = short_left_section .. '%=' .. short_right_section
-  else
-    vim.o.statusline = left_section .. '%=' .. right_section
-  end
+  vim.o.statusline = left_section .. '%=' .. right_section
   colors.init_theme(get_section)
 end
 

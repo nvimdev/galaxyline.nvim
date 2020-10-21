@@ -12,10 +12,15 @@ local function get_git_dir(dir)
   end
 end
 
+-- TODO:
 function M.get_git_branch()
   local current_dir = vim.fn.expand('%:p:h')
+  local has_gitbranch,gitbranch_pwd = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_pwd')
+  if has_gitbranch then
+    if gitbranch_pwd:find(current_dir) then  return  gitbranch_pwd end
+  end
   local git_root = get_git_dir(current_dir)
-  if string.len(git_root) == 0 then return end
+  if not git_root then return end
   local git_dir = git_root .. '/.git'
 
   -- If git directory not found then we're probably outside of repo
@@ -30,7 +35,9 @@ function M.get_git_branch()
   -- otherwise it is a detached commit
   local branch_name = HEAD:match('ref: refs/heads/(.+)')
 
-  return branch_name .. ' '
+  vim.api.nvim_buf_set_var(0,'gitbranch_pwd',branch_name)
+
+  return branch_name
 end
 
 -- get diff datas
