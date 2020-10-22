@@ -2,24 +2,34 @@ local vim,api = vim,vim.api
 local common = require('galaxyline.common')
 local M = {}
 
-local function get_git_dir(dir)
-  if dir == os.getenv('HOME') then return '' end
-  if common.is_dir(dir..'/.git') then
+local function find_git_root()
+  local dir = vim.fn.expand('%:p:h')
+  if dir == os.getenv('HOME') then return end
+  if common.is_dir(dir .. '/.git') then
     return dir
-  else
-    local d = vim.fn.fnamemodify(dir,':h')
-    return get_git_dir(d)
   end
+  while true do
+    dir = vim.fn.fnamemodify(dir,':h')
+    if dir == os.getenv('HOME') then break end
+    if common.is_dir(dir .. '/.git') then
+      break
+    end
+    dir = vim.fn.fnamemodify(dir,':h')
+  end
+  return dir
 end
 
--- TODO:
 function M.get_git_branch()
+  if vim.bo.filetype == 'help' then return end
   local current_dir = vim.fn.expand('%:p:h')
-  local has_gitbranch,gitbranch_pwd = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_pwd')
-  if has_gitbranch then
-    if gitbranch_pwd:find(current_dir) then  return  gitbranch_pwd end
+  local ok,gitbranch_pwd = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_pwd')
+  local ok1,gitbranch_path = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_path')
+  if ok and ok1 then
+    if gitbranch_path:find(current_dir) and string.len(gitbranch_pwd) ~= 0 then
+      return  gitbranch_pwd
+    end
   end
-  local git_root = get_git_dir(current_dir)
+  local git_root = find_git_root()
   if not git_root then return end
   local git_dir = git_root .. '/.git'
 
@@ -36,8 +46,9 @@ function M.get_git_branch()
   local branch_name = HEAD:match('ref: refs/heads/(.+)')
 
   vim.api.nvim_buf_set_var(0,'gitbranch_pwd',branch_name)
+  vim.api.nvim_buf_set_var(0,'gitbranch_path',git_root)
 
-  return branch_name
+  return branch_name .. ' '
 end
 
 -- get diff datas
@@ -74,17 +85,17 @@ local function get_hunks_data()
 end
 
 function M.diff_add()
-  if get_hunks_data()[1] == 0 then return '' end
+  if get_hunks_data()[1] <= 0 then return '' end
   return get_hunks_data()[1] .. ' '
 end
 
 function M.diff_modified()
-  if get_hunks_data()[2] == 0 then return '' end
+  if get_hunks_data()[2] <= 0 then return '' end
   return get_hunks_data()[2] .. ' '
 end
 
 function M.diff_remove()
-  if get_hunks_data()[3] == 0 then return '' end
+  if get_hunks_data()[3] <= 0 then return '' end
   return get_hunks_data()[3]
 end
 

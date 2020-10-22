@@ -1,7 +1,7 @@
 -- section setup
 -- test data
 -- TODO: the order of component
-local left,right = {},{}
+local left,right,short_left,short_right,inactive_left,inactive_right = {},{},{},{},{},{}
 local colors = {
   yellow = '#fabd2f',
   cyan = '#008080',
@@ -169,6 +169,33 @@ right[4] = {
   }
 }
 
+short_left[1] = {
+  BufferType = {
+    provider = 'FileTypeName',
+    highlight = {colors.magenta,colors.purple}
+  }
+}
+
+short_right[1] = {
+  BufferIcon = {
+    provider= 'BufferIcon',
+    highlight = {colors.magenta,colors.purple}
+  }
+}
+
+inactive_left[1] = {
+  BufferType = {
+    provider = 'FileTypeName',
+    highlight = {colors.magenta,colors.purple}
+  }
+}
+
+inactive_right[1] = {
+  BufferIcon = {
+    provider= 'BufferIcon',
+    highlight = {colors.magenta,colors.purple}
+  }
+}
 return {
-  left,right
+  left,right,short_left,short_right,inactive_left,inactive_right
 }

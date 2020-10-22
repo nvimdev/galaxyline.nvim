@@ -10,13 +10,18 @@ local buffer = require('galaxyline.provider_buffer')
 local M = {}
 
 M.section = {}
-M.section.left = require('section_test')[1]
-M.section.right = require('section_test')[2]
-M.section.short_line_left = require('section_test')[3]
-M.section.short_line_right = require('section_test')[4]
+M.section.left = {}
+M.section.right = {}
+M.section.short_line_left = {}
+M.section.short_line_right = {}
+M.section.inactive_left = {}
+M.section.inactive_right = {}
+M.short_line_list = {}
+
 
 local provider_group = {
   BufferIcon  = buffer.get_buffer_type_icon,
+  BufferNumber = buffer.get_buffer_number,
   FileTypeName = buffer.get_buffer_filetype,
   ShowVimMode = vimmode.show_vim_mode,
   GitBranch = vcs.get_git_branch,
@@ -174,12 +179,21 @@ local function load_section(section_area,pos)
 end
 
 function M.inactive_galaxyline()
+  local left_section = load_section(M.section.inactive_left,'left')
+  local right_section = load_section(M.section.inactive_right,'right')
+  vim.wo.statusline = left_section .. '%=' .. right_section
 end
 
 function M.load_galaxyline()
   local left_section = load_section(M.section.left,'left')
   local right_section = load_section(M.section.right,'right')
-  vim.o.statusline = left_section .. '%=' .. right_section
+  local short_left_section = load_section(M.section.short_line_left,'left')
+  local short_right_section = load_section(M.section.short_line_right,'right')
+  if common.has_value(M.short_line_list,vim.bo.filetype) then
+    vim.wo.statusline = short_left_section .. '%=' .. short_right_section
+  else
+    vim.wo.statusline = left_section .. '%=' .. right_section
+  end
   colors.init_theme(get_section)
 end
 
