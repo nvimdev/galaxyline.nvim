@@ -4,6 +4,15 @@ galaxyline componentizes vim's statusline, the text of each area is provided by 
 
 Means you can use the api provided by galaxyline to make the statusline that you want easily.
 
+## Install
+
+```vim
+Plug `glepnir/galaxyline-nvim`
+
+If you like icon
+Plug `kyazdani42/nvim-web-devicons` or Plug `ryanoasis/vim-devicons`
+```
+
 ## Api
 
 ### Section Variables
