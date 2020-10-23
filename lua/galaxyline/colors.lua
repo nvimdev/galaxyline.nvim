@@ -15,12 +15,12 @@ local function set_highlight(group, color)
     fg = color[1] and 'guifg=' .. color[1] or 'guifg=NONE'
   end
   if type(color[2]) == 'function' then
-    bg = color[2]()
+    bg = 'guibg=' .. color[2]()
   else
     bg = color[2] and 'guibg=' .. color[2] or 'guibg=NONE'
   end
   if type(color[3]) == 'function' then
-    style = color[3]()
+    style = 'gui='.. color[3]()
   else
     style = color[3] and 'gui=' .. color[3] or ' '
   end

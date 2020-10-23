@@ -96,11 +96,11 @@ function M.component_decorator(component_name)
     local output = ''
     for _,v in pairs(provider) do
       if type(v) == 'string' then
-        if provider_group[v] == nil then
-          print(string.format('Does not found the provider in default provider provider in %s'),component_name)
+        if type(provider_group[v]) ~= 'function' then
+          print(string.format('Does not found the provider in default provider provider in %s',component_name))
           return
         end
-        output = output + exec_provider(icon,provider_group[provider])
+        output = output .. exec_provider(icon,provider_group[v])
       elseif type(v) == 'function' then
         output = output + exec_provider(icon,provider)
       else
@@ -132,10 +132,10 @@ local function section_complete_with_option(component,component_info,position)
   -- get the component condition and dynamicswitch
   local condition = component_info.condition or nil
   local dynamicswitch = component_info["dynamicswitch"] or {}
+  local separator = component_info.separator or ''
   if condition ~= nil then
     if condition() then
       tmp_line = tmp_line .. generate_section(component)
-      local separator = component_info.separator or ''
       if next(dynamicswitch) ~= nil then
         for k,v in pairs(dynamicswitch) do
           if type(v.provider) ~= 'function' then
@@ -156,7 +156,7 @@ local function section_complete_with_option(component,component_info,position)
           tmp_line = generate_separator_section(component,separator) .. tmp_line
           dyan_line = generate_separator_section(component,separator) .. dyan_line
         end
-      end
+    end
     end
     if Target == true then
       return dyan_line
@@ -164,7 +164,6 @@ local function section_complete_with_option(component,component_info,position)
     return tmp_line
   else
     tmp_line = tmp_line .. generate_section(component)
-    local separator = component_info.separator or ''
     if string.len(separator) ~= 0 then
       if position == 'left' then
         tmp_line = tmp_line .. generate_separator_section(component,separator)
@@ -190,25 +189,28 @@ local function load_section(section_area,pos)
 end
 
 function M.inactive_galaxyline()
-  local combina = function ()
+  local combin = function ()
     local left_section = load_section(M.section.inactive_left,'left')
     local right_section = load_section(M.section.inactive_right,'right')
     local line = left_section .. '%=' .. right_section
     return line
   end
-  vim.wo.statusline = combina()
+  vim.wo.statusline = combin()
 end
 
 function M.load_galaxyline()
-  local left_section = load_section(M.section.left,'left')
-  local right_section = load_section(M.section.right,'right')
-  local short_left_section = load_section(M.section.short_line_left,'left')
-  local short_right_section = load_section(M.section.short_line_right,'right')
-  if common.has_value(M.short_line_list,vim.bo.filetype) then
-    vim.wo.statusline = short_left_section .. '%=' .. short_right_section
-  else
-    vim.wo.statusline = left_section .. '%=' .. right_section
+  local combination = function()
+    local left_section = load_section(M.section.left,'left')
+    local right_section = load_section(M.section.right,'right')
+    local short_left_section = load_section(M.section.short_line_left,'left')
+    local short_right_section = load_section(M.section.short_line_right,'right')
+    if common.has_value(M.short_line_list,vim.bo.filetype) then
+      return short_left_section .. '%=' .. short_right_section
+    else
+      return  left_section .. '%=' .. right_section
+    end
   end
+  vim.wo.statusline = combination()
   colors.init_theme(get_section)
 end
 

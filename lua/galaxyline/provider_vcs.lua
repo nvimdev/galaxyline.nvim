@@ -2,7 +2,7 @@ local vim,api = vim,vim.api
 local common = require('galaxyline.common')
 local M = {}
 
-local function find_git_root()
+function M.find_git_root()
   local dir = vim.fn.expand('%:p:h')
   if dir == os.getenv('HOME') then return end
   if common.is_dir(dir .. '/.git') then
@@ -29,7 +29,7 @@ function M.get_git_branch()
       return  gitbranch_pwd
     end
   end
-  local git_root = find_git_root()
+  local git_root = M.find_git_root()
   if not git_root then return end
   local git_dir = git_root .. '/.git'
 

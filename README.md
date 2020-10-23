@@ -109,4 +109,6 @@ require('galaxyline').section.left[1]= {
 - `separator_highlight` same as highlight
 
 
-you can check the [section_test](./section_test.lua) file to see useage.
+you can check the [spaceline.lua](./example/spaceline.lua) file to see how can I use galaxyline to 
+
+archive the [spaceline.vim](https://github.com/glepnir/spaceline.vim)
