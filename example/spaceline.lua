@@ -32,7 +32,7 @@ gls.left[1] = {
 gls.left[2] = {
   ViMode = {
     provider = function()
-      local alias = {n = 'NORMAL',i = 'INSERT',c= 'COMMAND',V= 'VISUAL'}
+      local alias = {n = 'NORMAL',i = 'INSERT',c= 'COMMAND',V= 'VISUAL', [''] = 'VISUAL'}
       return alias[vim.fn.mode()]
     end,
     separator = '',
