@@ -10,16 +10,13 @@ local buffer = require('galaxyline.provider_buffer')
 local M = {}
 
 M.section = {}
+M.section.left = {}
+M.section.right = {}
 M.section.short_line_left = {}
 M.section.short_line_right = {}
 M.section.inactive_left = {}
 M.section.inactive_right = {}
 M.short_line_list = {}
-
-M.section.left = require('section_test')[1]
-M.section.right = require('section_test')[2]
-M.section.short_line_left = require('section_test')[3]
-M.section.short_line_right = require('section_test')[4]
 
 local provider_group = {
   BufferIcon  = buffer.get_buffer_type_icon,
