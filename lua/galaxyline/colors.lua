@@ -42,7 +42,7 @@ function M.init_theme(get_section)
         end
 
         local dynamicswitch = component_info.dynamicswitch or {}
-        if #dynamicswitch ~= 0 then
+        if next(dynamicswitch) ~= 0 then
           for i,j in pairs(dynamicswitch) do
             if j.highlight == nil then
               print(string.format("Wrong highlight value in component:%s",i))

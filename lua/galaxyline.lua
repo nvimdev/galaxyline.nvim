@@ -10,14 +10,16 @@ local buffer = require('galaxyline.provider_buffer')
 local M = {}
 
 M.section = {}
-M.section.left = {}
-M.section.right = {}
 M.section.short_line_left = {}
 M.section.short_line_right = {}
 M.section.inactive_left = {}
 M.section.inactive_right = {}
 M.short_line_list = {}
 
+M.section.left = require('section_test')[1]
+M.section.right = require('section_test')[2]
+M.section.short_line_left = require('section_test')[3]
+M.section.short_line_right = require('section_test')[4]
 
 local provider_group = {
   BufferIcon  = buffer.get_buffer_type_icon,
@@ -128,6 +130,8 @@ end
 
 local function section_complete_with_option(component,component_info,position)
   local tmp_line = ''
+  local dyan_line = ''
+  Target = false
   -- get the component condition and dynamicswitch
   local condition = component_info.condition or nil
   local dynamicswitch = component_info["dynamicswitch"] or {}
@@ -135,22 +139,32 @@ local function section_complete_with_option(component,component_info,position)
     if condition() then
       tmp_line = tmp_line .. generate_section(component)
       local separator = component_info.separator or ''
-      if string.len(separator) ~= 0 then
-        if position == 'left' then
-          tmp_line = tmp_line .. generate_separator_section(component,separator)
-        else
-          tmp_line = generate_separator_section(component,separator) .. tmp_line
-        end
-      end
       if next(dynamicswitch) ~= nil then
-        for k,_ in pairs(dynamicswitch) do
-          local output = M.component_decorator(k)
-          if string.len(output) ~= nil and string.len(output) ~= 0 then
-            tmp_line = generate_separator_section(component,separator)
+        for k,v in pairs(dynamicswitch) do
+          if type(v.provider) ~= 'function' then
+            print(string.format('%s dynamicswitch only support function provider',component))
+            return
+          end
+          if v.provider() ~= nil and string.len(v.provider()) > 0 then
+            Target = true
+            dyan_line = dyan_line .. generate_section(k)
           end
         end
       end
+      if string.len(separator) ~= 0 then
+        if position == 'left' then
+          tmp_line = tmp_line .. generate_separator_section(component,separator)
+          dyan_line = dyan_line .. generate_separator_section(component,separator)
+        else
+          tmp_line = generate_separator_section(component,separator) .. tmp_line
+          dyan_line = generate_separator_section(component,separator) .. dyan_line
+        end
+      end
     end
+    if Target == true then
+      return dyan_line
+    end
+    return tmp_line
   else
     tmp_line = tmp_line .. generate_section(component)
     local separator = component_info.separator or ''
@@ -179,9 +193,13 @@ local function load_section(section_area,pos)
 end
 
 function M.inactive_galaxyline()
-  local left_section = load_section(M.section.inactive_left,'left')
-  local right_section = load_section(M.section.inactive_right,'right')
-  vim.wo.statusline = left_section .. '%=' .. right_section
+  local combina = function ()
+    local left_section = load_section(M.section.inactive_left,'left')
+    local right_section = load_section(M.section.inactive_right,'right')
+    local line = left_section .. '%=' .. right_section
+    return line
+  end
+  vim.wo.statusline = combina()
 end
 
 function M.load_galaxyline()

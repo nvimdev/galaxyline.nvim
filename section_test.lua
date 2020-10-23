@@ -73,12 +73,20 @@ left[5] = {
     separator_highlight = {colors.purple,colors.darkblue},
     dynamicswitch = {
       DiagnosticError = {
-        provider = 'DiagnosticError',
+        provider = function()
+          if vim.tbl_isempty(vim.lsp.buf_get_clients(0)) then return '' end
+          local count = vim.lsp.util.buf_diagnostics_count('Error')
+          if count ~= 0 then return count end
+        end,
         icon = ' ',
         highlight = {colors.red,colors.purple}
       },
       DiagnosticWarn = {
-        provider = 'DiagnosticWarn',
+        provider = function ()
+          if vim.tbl_isempty(vim.lsp.buf_get_clients(0)) then return '' end
+          local count = vim.lsp.util.buf_diagnostics_count('Warning')
+          if count ~= 0 then return count end
+        end,
         icon = ' ',
         highlight = {colors.blue,colors.purple}
       }
