@@ -14,8 +14,6 @@ M.section.left = {}
 M.section.right = {}
 M.section.short_line_left = {}
 M.section.short_line_right = {}
-M.section.inactive_left = {}
-M.section.inactive_right = {}
 M.short_line_list = {}
 
 local provider_group = {
@@ -190,9 +188,9 @@ end
 
 function M.inactive_galaxyline()
   local combin = function ()
-    local left_section = load_section(M.section.inactive_left,'left')
-    local right_section = load_section(M.section.inactive_right,'right')
-    local line = left_section .. '%=' .. right_section
+    local short_left_section = load_section(M.section.short_line_left,'left')
+    local short_right_section = load_section(M.section.short_line_right,'right')
+    local line = short_left_section .. '%=' .. short_right_section
     return line
   end
   vim.wo.statusline = combin()
