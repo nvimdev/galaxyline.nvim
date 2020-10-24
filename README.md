@@ -76,9 +76,9 @@ require('galaxyline').section.left[1]= {
     FileTypeName = buffer.get_buffer_filetype,
     ShowVimMode = vimmode.show_vim_mode,
     GitBranch = vcs.get_git_branch,
-    DiffAdd = vcs.diff_add,
-    DiffModified = vcs.diff_modified,
-    DiffRemove = vcs.diff_remove,
+    DiffAdd = vcs.diff_add,             -- support vim-gitgutter vim-signify coc-git
+    DiffModified = vcs.diff_modified,   -- support vim-gitgutter vim-signify coc-git
+    DiffRemove = vcs.diff_remove,       -- support vim-gitgutter vim-signify coc-git
     LineColumn = fileinfo.line_column,
     FileFormat = fileinfo.get_file_format,
     FileEncode = fileinfo.get_file_encode,
@@ -88,8 +88,8 @@ require('galaxyline').section.left[1]= {
     LinePercent = fileinfo.current_line_percent,
     ScrollBar = extension.scrollbar_instance,
     VistaPlugin = extension.vista_nearest,
-    DiagnosticError = diagnostic.get_diagnostic_error,
-    DiagnosticWarn = diagnostic.get_diagnostic_warn,
+    DiagnosticError = diagnostic.get_diagnostic_error, -- support nvim-lsp coc ale
+    DiagnosticWarn = diagnostic.get_diagnostic_warn,   -- support nvim-lsp coc ale
   ```
   Also you can use source of provider  function.
 
