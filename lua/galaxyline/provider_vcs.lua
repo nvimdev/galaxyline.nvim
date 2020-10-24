@@ -4,18 +4,10 @@ local M = {}
 
 function M.find_git_root()
   local dir = vim.fn.expand('%:p:h')
-  if dir == os.getenv('HOME') then return end
-  if common.is_dir(dir .. '/.git') then
-    return dir
-  end
-  while true do
+  repeat
     dir = vim.fn.fnamemodify(dir,':h')
-    if dir == os.getenv('HOME') then break end
-    if common.is_dir(dir .. '/.git') then
-      break
-    end
-    dir = vim.fn.fnamemodify(dir,':h')
-  end
+    if dir == os.getenv('HOME') then return end
+  until common.is_dir(dir .. '/.git')
   return dir
 end
 
