@@ -26,9 +26,9 @@ Type of these variables both are array table
 
 - `require('galaxyline').section.right` is the stautsline right section.
 
-- `require('galaxyline').section.short_left` statusline left section when filetype in `short_line_list`
+- `require('galaxyline').section.short_line_left` statusline left section when filetype in `short_line_list`
 
-- `require('galaxyline').section.short_right` statusline right section when filetype in `short_line_list`
+- `require('galaxyline').section.short_line_right` statusline right section when filetype in `short_line_list`
 
 
 ### Component keyword
