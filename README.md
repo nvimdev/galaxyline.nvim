@@ -30,10 +30,6 @@ Type of these variables both are array table
 
 - `require('galaxyline').section.short_right` statusline right section when filetype in `short_line_list`
 
-- `require('galaxyline').section.inactive_left` statusline left in inactive stautsline
-
-- `require('galaxyline').section.inactive_right` statusline right in inactive statusline
-
 
 ### Component keyword
 
