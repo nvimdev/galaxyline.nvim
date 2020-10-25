@@ -39,6 +39,23 @@ local function diagnostic_nvim_lsp_warn()
   if count ~= 0 then return count end
 end
 
+-- nvim-lspconfig
+-- see https://github.com/neovim/nvim-lspconfig
+local function diagnostic_nvim_lsp_hint()
+  if vim.tbl_isempty(lsp.buf_get_clients(0)) then return '' end
+  local count = lsp.util.buf_diagnostics_count('Hint')
+  if count ~= 0 then return count end
+end
+
+
+-- nvim-lspconfig
+-- see https://github.com/neovim/nvim-lspconfig
+local function diagnostic_nvim_lsp_info()
+  if vim.tbl_isempty(lsp.buf_get_clients(0)) then return '' end
+  local count = lsp.util.buf_diagnostics_count('Information')
+  if count ~= 0 then return count end
+end
+
 -- ale
 -- see https://github.com/dense-analysis/ale
 local function diagnostic_ale_error()
@@ -78,6 +95,18 @@ function M.get_diagnostic_warn()
     return diagnostic_nvim_lsp_warn()
   end
   return ''
+end
+
+function M.get_diagnostic_hint()
+  if not vim.tbl_isempty(lsp.buf_get_clients(0)) then
+    return diagnostic_nvim_lsp_hint()
+  end
+end
+
+function M.get_diagnostic_info()
+  if not vim.tbl_isempty(lsp.buf_get_clients(0)) then
+    return diagnostic_nvim_lsp_info()
+  end
 end
 
 return M
