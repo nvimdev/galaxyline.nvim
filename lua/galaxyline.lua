@@ -111,7 +111,7 @@ end
 
 local function generate_section(component_name)
   local line = ''
-  line = line .. '%#'..component_name..'#'
+  line = line .. '%#'..'Galaxy'.. component_name..'#'
   line = line .. [[%{luaeval('require("galaxyline").component_decorator')]]..'("'..component_name..'")}'
   return line
 end
