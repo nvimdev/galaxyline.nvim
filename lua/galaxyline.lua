@@ -36,6 +36,8 @@ local provider_group = {
   VistaPlugin = extension.vista_nearest,
   DiagnosticError = diagnostic.get_diagnostic_error,
   DiagnosticWarn = diagnostic.get_diagnostic_warn,
+  DiagnosticHint = diagnostic.get_diagnostic_hint,
+  DiagnosticInfo = diagnostic.get_diagnostic_info,
 }
 
 local function get_section()
