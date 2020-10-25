@@ -7,10 +7,11 @@ Means you can use the api provided by galaxyline to make the statusline that you
 ## Install
 
 ```vim
-Plug `glepnir/galaxyline-nvim`
+Plug 'glepnir/galaxyline.nvim'
 
-If you like icon
-Plug `kyazdani42/nvim-web-devicons` or Plug `ryanoasis/vim-devicons`
+" If you want icons use one of these:
+Plug 'kyazdani42/nvim-web-devicons' " lua
+Plug 'ryanoasis/vim-devicons' " vimscript
 ```
 
 ## Api
