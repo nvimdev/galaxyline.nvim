@@ -35,7 +35,7 @@ function M.init_theme(get_section)
       for component_name,component_info in pairs(comps) do
         local highlight = component_info.highlight or {}
         local separator_highlight = component_info.separator_highlight or {}
-        set_highlight(component_name,highlight)
+        set_highlight('Galaxy' .. component_name,highlight)
 
         if #separator_highlight ~= 0 then
           set_highlight(component_name..'Separator',separator_highlight)
