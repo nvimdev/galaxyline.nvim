@@ -3,10 +3,12 @@ local common = require('galaxyline.common')
 local M = {}
 
 function M.find_git_root()
+  local home = os.getenv("HOME")
   local dir = vim.fn.expand('%:p:h')
+  if dir == home then return end
   repeat
     dir = vim.fn.fnamemodify(dir,':h')
-    if dir == os.getenv('HOME') then return end
+    if dir == home then return end
   until common.is_dir(dir .. '/.git')
   return dir
 end
