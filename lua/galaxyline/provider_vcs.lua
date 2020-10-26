@@ -6,6 +6,7 @@ function M.find_git_root()
   local home = os.getenv("HOME")
   local dir = vim.fn.expand('%:p:h')
   if dir == home then return end
+  if common.is_dir(dir .. '/.git') then return dir end
   repeat
     dir = vim.fn.fnamemodify(dir,':h')
     if dir == home then return end
