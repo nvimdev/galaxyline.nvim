@@ -16,7 +16,7 @@ local colors = {
   red = '#ec5f67'
 }
 
-local empty_buffer = function()
+local buffer_not_empty = function()
   if vim.fn.empty(vim.fn.expand('%:t')) ~= 1 then
     return true
   end
@@ -37,7 +37,7 @@ gls.left[2] = {
     end,
     separator = '',
     separator_highlight = {colors.yellow,function()
-      if not empty_buffer() then
+      if not buffer_not_empty() then
         return colors.purple
       end
       return colors.darkblue
@@ -48,14 +48,14 @@ gls.left[2] = {
 gls.left[3] ={
   FileIcon = {
     provider = 'FileIcon',
-    condition = empty_buffer,
+    condition = buffer_not_empty,
     highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color,colors.darkblue},
   },
 }
 gls.left[4] = {
   FileName = {
     provider = {'FileName','FileSize'},
-    condition = empty_buffer,
+    condition = buffer_not_empty,
     separator = '',
     separator_highlight = {colors.purple,colors.darkblue},
     highlight = {colors.magenta,colors.darkblue}
@@ -65,14 +65,14 @@ gls.left[4] = {
 gls.left[5] = {
   GitIcon = {
     provider = function() return '  ' end,
-    condition = empty_buffer,
+    condition = buffer_not_empty,
     highlight = {colors.orange,colors.purple},
   }
 }
 gls.left[6] = {
   GitBranch = {
     provider = 'GitBranch',
-    condition = empty_buffer,
+    condition = buffer_not_empty,
     highlight = {colors.grey,colors.purple},
   }
 }
