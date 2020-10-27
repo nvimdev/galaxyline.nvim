@@ -147,6 +147,11 @@ local function get_hunks_data()
       end
     end
     return diff_data
+  elseif vim.fn.exists('b:gitsigns_status_dict') == 1 then
+    local gitsigns_dict = vim.api.nvim_buf_get_var(0, 'gitsigns_status_dict')
+    diff_data[1] = gitsigns_dict['added']
+    diff_data[2] = gitsigns_dict['changed']
+    diff_data[3] = gitsigns_dict['removed']
   end
   return diff_data
 end
