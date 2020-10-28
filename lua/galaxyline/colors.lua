@@ -9,6 +9,7 @@ end
 
 local function set_highlight(group, color)
   local fg,bg,style
+
   if type(color[1]) == 'function' then
     if color[1]() ~= nil then
       fg = 'guifg=' .. color[1]()
@@ -18,15 +19,17 @@ local function set_highlight(group, color)
   else
     fg = color[1] and 'guifg=' .. color[1] or 'guifg=NONE'
   end
+
   if type(color[2]) == 'function' then
     if color[2]() ~= nil then
-      fg = 'guibg=' .. color[2]()
+      bg = 'guibg=' .. color[2]()
     else
-      fg = 'guibg=NONE'
+      bg = 'guibg=NONE'
     end
   else
     bg = color[2] and 'guibg=' .. color[2] or 'guibg=NONE'
   end
+
   if type(color[3]) == 'function' then
     style = 'gui='.. color[3]()
   else
