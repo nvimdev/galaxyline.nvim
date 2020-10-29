@@ -20,7 +20,7 @@ function M.get_current_file_name()
   end
   if vim.o.modifiable then
     if vim.bo.modified then
-      return file .. ' '
+      return file .. '   '
     end
   end
   return file .. ' '
