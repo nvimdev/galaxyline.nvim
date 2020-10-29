@@ -45,7 +45,7 @@ local function get_dir_contains(path, dirname)
 end
 
 -- adapted from from clink-completions' git.lua
-local function get_git_dir(path)
+function M.get_git_dir(path)
 
     -- return parent path for specified entry (either file or directory)
     local function pathname(path)
@@ -83,7 +83,7 @@ local function get_git_dir(path)
     return has_git_dir(path)
         or has_git_file(path)
         -- Otherwise go up one level and make a recursive call
-        or (parent_path ~= path and get_git_dir(parent_path) or nil)
+        or (parent_path ~= path and M.get_git_dir(parent_path) or nil)
 end
 
 function M.get_git_branch()
@@ -96,7 +96,7 @@ function M.get_git_branch()
       return  gitbranch_pwd
     end
   end
-  local git_root = get_git_dir(current_dir)
+  local git_root = M.get_git_dir(current_dir)
   if not git_root then return end
   local git_dir = git_root .. '/.git'
 
