@@ -5,7 +5,6 @@ local M = {}
 local function diagnostic_coc_error()
   local has_info,info = pcall(vim.fn.nvim_buf_get_var,0,'coc_diagnostic_info')
   if not has_info then return end
-  if vim.fn.empty(info) then return end
   if info.error > 0 then
     return info.error
   end
@@ -16,7 +15,6 @@ end
 local function diagnostic_coc_warn()
   local has_info,info = pcall(vim.fn.nvim_buf_get_var,0,'coc_diagnostic_info')
   if not has_info then return end
-  if vim.fn.empty(info) then return end
   if info.warning > 0 then
     return  info.warning
   end

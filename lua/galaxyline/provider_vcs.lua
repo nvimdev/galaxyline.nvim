@@ -117,16 +117,27 @@ function M.get_git_branch()
 
   return branch_name .. ' '
 end
-
+local function dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. ','
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
+end
 -- get diff datas
 -- support plugins: vim-gitgutter vim-signify coc-git
 local function get_hunks_data()
   -- diff data 1:add 2:modified 3:remove
   local diff_data = {0,0,0}
   if vim.fn.exists('*GitGutterGetHunkSummary') == 1 then
-    diff_data[1] = vim.fn.GitGutterGetHunkSummary()
-    diff_data[2] = vim.fn.GitGutterGetHunkSummary()
-    diff_data[3] = vim.fn.GitGutterGetHunkSummary()
+    for idx,v in pairs(vim.fn.GitGutterGetHunkSummary()) do
+      diff_data[idx] = v
+    end
     return diff_data
   elseif vim.fn.exists('*sy#repo#get_stats') == 1 then
     diff_data[1] = vim.fn['sy#repo#get_stats']()[1]
@@ -157,18 +168,24 @@ local function get_hunks_data()
 end
 
 function M.diff_add()
-  if get_hunks_data()[1] <= 0 then return '' end
-  return get_hunks_data()[1] .. ' '
+  local add = get_hunks_data()[1]
+  if add > 0 then
+    return add .. ' '
+  end
 end
 
 function M.diff_modified()
-  if get_hunks_data()[2] <= 0 then return '' end
-  return get_hunks_data()[2] .. ' '
+  local modified = get_hunks_data()[2]
+  if modified > 0 then
+    return modified .. ' '
+  end
 end
 
 function M.diff_remove()
-  if get_hunks_data()[3] <= 0 then return '' end
-  return get_hunks_data()[3]
+  local removed = get_hunks_data()[3]
+  if removed > 0 then
+    return removed .. ' '
+  end
 end
 
 return M
