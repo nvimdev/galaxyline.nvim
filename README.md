@@ -16,12 +16,12 @@ Plug 'ryanoasis/vim-devicons' " vimscript
 * packer.nvim
 ```lua
 use {
-	'glepnir/galaxyline.nvim',
-		branch = 'main',
-		-- your statusline
-		config = function() require'my_statusline' end,
-		-- some optional icons
-		requires = {'kyazdani42/nvim-web-devicons', opt = true}
+  'glepnir/galaxyline.nvim',
+    branch = 'main',
+    -- your statusline
+    config = function() require'my_statusline' end,
+    -- some optional icons
+    requires = {'kyazdani42/nvim-web-devicons', opt = true}
 }
 ```
 
@@ -49,19 +49,19 @@ like a FileSize component in left section.
 
 ```lua
 require('galaxyline').section.left[1]= {
-	FileSize = {
-		provider = 'FileSize',
-		condition = function()
-			if vim.fn.empty(vim.fn.expand('%:t')) ~= 1 then
-				return true
-					end
-					return false
-					end,
-					icon = '   ',
-					highlight = {colors.green,colors.purple},
-					separator = '',
-					separator_highlight = {colors.purple,colors.darkblue},
-	}
+  FileSize = {
+    provider = 'FileSize',
+    condition = function()
+      if vim.fn.empty(vim.fn.expand('%:t')) ~= 1 then
+        return true
+      end
+      return false
+      end,
+    icon = '   ',
+    highlight = {colors.green,colors.purple},
+    separator = '',
+    separator_highlight = {colors.purple,colors.darkblue},
+  }
 }
 ```
 - `provider` can be string or function or table. When it's string,it will match the default provider
@@ -84,37 +84,42 @@ local buffer = require('galaxyline.provider_buffer')
 
 -- provider 
 BufferIcon  = buffer.get_buffer_type_icon,
-			BufferNumber = buffer.get_buffer_number,
-			FileTypeName = buffer.get_buffer_filetype,
-			ShowVimMode = vimmode.show_vim_mode,
-			GitBranch = vcs.get_git_branch,
-			DiffAdd = vcs.diff_add,             -- support vim-gitgutter vim-signify coc-git
-			DiffModified = vcs.diff_modified,   -- support vim-gitgutter vim-signify coc-git
-			DiffRemove = vcs.diff_remove,       -- support vim-gitgutter vim-signify coc-git
-			LineColumn = fileinfo.line_column,
-			FileFormat = fileinfo.get_file_format,
-			FileEncode = fileinfo.get_file_encode,
-			FileSize = fileinfo.get_file_size,
-			FileIcon = fileinfo.get_file_icon,
-			FileName = fileinfo.get_current_file_name,
-			LinePercent = fileinfo.current_line_percent,
-			ScrollBar = extension.scrollbar_instance,
-			VistaPlugin = extension.vista_nearest,
-			DiagnosticError = diagnostic.get_diagnostic_error, -- support nvim-lsp coc ale
-			DiagnosticWarn = diagnostic.get_diagnostic_warn,   -- support nvim-lsp coc ale
-			```
-			Also you can use source of provider  function.
+BufferNumber = buffer.get_buffer_number,
+FileTypeName = buffer.get_buffer_filetype,
+ShowVimMode = vimmode.show_vim_mode,
+GitBranch = vcs.get_git_branch,
+DiffAdd = vcs.diff_add,             -- support vim-gitgutter vim-signify coc-git
+DiffModified = vcs.diff_modified,   -- support vim-gitgutter vim-signify coc-git
+DiffRemove = vcs.diff_remove,       -- support vim-gitgutter vim-signify coc-git
+LineColumn = fileinfo.line_column,
+FileFormat = fileinfo.get_file_format,
+FileEncode = fileinfo.get_file_encode,
+FileSize = fileinfo.get_file_size,
+FileIcon = fileinfo.get_file_icon,
+FileName = fileinfo.get_current_file_name,
+LinePercent = fileinfo.current_line_percent,
+ScrollBar = extension.scrollbar_instance,
+VistaPlugin = extension.vista_nearest,
+DiagnosticError = diagnostic.get_diagnostic_error, -- support nvim-lsp coc ale
+DiagnosticWarn = diagnostic.get_diagnostic_warn,   -- support nvim-lsp coc ale
 
-			- `condition` is a function , It must return a boolean. when it return true that will load this
-			component.
+-- public libs
+require('galaxyline.provider_vcs').get_git_dir() -- find git root
+require('galaxyline.provider_fileinfo').get_file_icon_color -- get file icon color
+```
 
-			- `icon` is a string, It will add to head of the provider result.
+Also you can use source of provider  function.
 
-			- `highlight` the first element is `fg`,second is `bg`,third is `gui`
+- `condition` is a function , It must return a boolean. when it return true that will load this
+component.
 
-			- `separator` string
+- `icon` is a string, It will add to head of the provider result.
 
-			- `separator_highlight` same as highlight
+- `highlight` the first element is `fg`,second is `bg`,third is `gui`
+
+- `separator` string
+
+- `separator_highlight` same as highlight
 
 
 ## Example
