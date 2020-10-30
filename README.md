@@ -20,8 +20,8 @@ use {
 		branch = 'main',
 		-- your statusline
 		config = function() require'my_statusline' end,
-		-- some optional icons baby
-			requires = {'kyazdani42/nvim-web-devicons', opt = true}
+		-- some optional icons
+		requires = {'kyazdani42/nvim-web-devicons', opt = true}
 }
 ```
 
