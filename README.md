@@ -116,4 +116,8 @@ require('galaxyline').section.left[1]= {
 
 ![spaceline](https://user-images.githubusercontent.com/41671631/97022368-9d12fb80-1586-11eb-868b-f0230c0b02e4.png)
 
+[scnvimline.lua](./example/scnvimline.lua)
+
+![scnvimline.gif](https://user-images.githubusercontent.com/12082586/97629596-970d9680-1a2e-11eb-8fdf-a2d74dddb7be.gif)
+![scnvimline.png](https://user-images.githubusercontent.com/12082586/97647190-e44f2f80-1a51-11eb-95ee-63ec888fcc0f.png)
 
