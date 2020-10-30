@@ -126,10 +126,10 @@ component.
 
 [eviline.lua](./example/eviline.lua)
 
-	![eviline](https://user-images.githubusercontent.com/41671631/97547528-dfb25900-1a08-11eb-944d-d22365ebc242.gif)
+![eviline](https://user-images.githubusercontent.com/41671631/97547528-dfb25900-1a08-11eb-944d-d22365ebc242.gif)
 
 [spaceline.lua](./example/spaceline.lua)
 
-	![spaceline](https://user-images.githubusercontent.com/41671631/97022368-9d12fb80-1586-11eb-868b-f0230c0b02e4.png)
+![spaceline](https://user-images.githubusercontent.com/41671631/97022368-9d12fb80-1586-11eb-868b-f0230c0b02e4.png)
 
 
