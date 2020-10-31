@@ -50,14 +50,6 @@ local function check_component_exists(component_name)
       if v[component_name] ~= nil then
         return true,v[component_name]
       end
-      for _,j in pairs(v) do
-        local dynamicswitch = j.dynamicswitch or {}
-        if next(dynamicswitch) ~= nil then
-          if dynamicswitch[component_name] ~= nil then
-            return true,dynamicswitch[component_name]
-          end
-        end
-      end
     end
   end
   return false,nil
@@ -127,39 +119,20 @@ end
 
 local function section_complete_with_option(component,component_info,position)
   local tmp_line = ''
-  local dyan_line = ''
   Target = false
   -- get the component condition and dynamicswitch
   local condition = component_info.condition or nil
-  local dynamicswitch = component_info["dynamicswitch"] or {}
   local separator = component_info.separator or ''
   if condition ~= nil then
     if condition() then
       tmp_line = tmp_line .. generate_section(component)
-      if next(dynamicswitch) ~= nil then
-        for k,v in pairs(dynamicswitch) do
-          if type(v.provider) ~= 'function' then
-            print(string.format('%s dynamicswitch only support function provider',component))
-            return
-          end
-          if v.provider() ~= nil and string.len(v.provider()) > 0 then
-            Target = true
-            dyan_line = dyan_line .. generate_section(k)
-          end
-        end
-      end
       if string.len(separator) ~= 0 then
         if position == 'left' then
           tmp_line = tmp_line .. generate_separator_section(component,separator)
-          dyan_line = dyan_line .. generate_separator_section(component,separator)
         else
           tmp_line = generate_separator_section(component,separator) .. tmp_line
-          dyan_line = generate_separator_section(component,separator) .. dyan_line
         end
     end
-    end
-    if Target == true then
-      return dyan_line
     end
     return tmp_line
   else

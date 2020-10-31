@@ -52,19 +52,6 @@ function M.init_theme(get_section)
           set_highlight(component_name..'Separator',separator_highlight)
         end
 
-        local dynamicswitch = component_info.dynamicswitch or {}
-        if next(dynamicswitch) ~= 0 then
-          for i,j in pairs(dynamicswitch) do
-            if j.highlight == nil then
-              print(string.format("Wrong highlight value in component:%s",i))
-              return
-            end
-            set_highlight(i,j.highlight)
-            if j.separator_highlight ~= nil and #j.separator_highlight ~= 0 then
-              set_highlight(i..'Separator', j.separator_highlight)
-            end
-          end
-        end
       end
     end
   end
