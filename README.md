@@ -106,6 +106,11 @@ DiagnosticWarn = diagnostic.get_diagnostic_warn,   -- support nvim-lsp coc ale
 -- public libs
 require('galaxyline.provider_vcs').get_git_dir() -- find git root
 require('galaxyline.provider_fileinfo').get_file_icon_color -- get file icon color
+-- custom file icon with color
+local my_icons = require('galaxyline.provider_fileinfo').define_file_icon() -- get file icon color
+my_icons['your file type here'] = { color code, icon}
+-- if your filetype does not define in neovim  you can use file extensions
+my_icons['your file ext  in here'] = { color code, icon}
 ```
 
 Also you can use source of provider  function.
