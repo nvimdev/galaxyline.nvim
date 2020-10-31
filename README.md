@@ -31,7 +31,7 @@ use {
 
 Type of these variables both are array table
 
-- `require('galaxyline').short_line_list`  some special filetypes tha show a short statusline like 
+- `require('galaxyline').short_line_list` some special filetypes tha show a short statusline like 
 `LuaTree defx coc-explorer vista` etc.
 
 - `require('galaxyline').section.left` is the statusline left section.
@@ -45,7 +45,7 @@ Type of these variables both are array table
 
 ### Component keyword
 
-like a FileSize component in left section.
+Like a FileSize component in left section.
 
 ```lua
 require('galaxyline').section.left[1]= {
@@ -70,7 +70,7 @@ group.If not match,you will got an error. Also you can use mulitple default prov
 
 then you must use an array table for `provider`.
 
-defualt provider group:
+default provider group:
 
 ```lua
 -- source provider function
