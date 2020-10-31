@@ -119,6 +119,13 @@ local icons = {
     White        = {'','','','','',''},
 }
 
+-- filetype or extensions : { colors ,icon}
+local user_icons = {}
+
+function M.define_file_icon()
+  return  user_icons
+end
+
 function M.get_file_icon()
   local icon = ''
   if vim.fn.exists("*WebDevIconsGetFileTypeSymbol") == 1 then
@@ -129,16 +136,32 @@ function M.get_file_icon()
   if not ok then print('Does not found any icon plugin') return end
   local f_name,f_extension = vim.fn.expand('%:t'),vim.fn.expand('%:e')
   icon = devicons.get_icon(f_name,f_extension)
-  if icon == nil then icon = '' end
+  if icon == nil then
+    if user_icons[vim.bo.filetype] ~= nil then
+      icon = user_icons[vim.bo.filetype][2]
+    elseif user_icons[f_extension] ~= nil then
+      icon = user_icons[f_extension][2]
+    else
+      icon = ''
+    end
+  end
   return icon .. ' '
 end
 
 function M.get_file_icon_color()
   local icon = M.get_file_icon():match('%S+')
-  for k,_ in pairs(icons) do
-    if vim.fn.index(icons[k],icon) ~= -1 then
-      return icon_colors[k]
+  local filetype = vim.bo.filetype
+  local f_ext = vim.fn.expand('%:e')
+  if user_icons[filetype] == nil and user_icons[f_ext] == nil then
+    for k,_ in pairs(icons) do
+      if vim.fn.index(icons[k],icon) ~= -1 then
+        return icon_colors[k]
+      end
     end
+  elseif user_icons[filetype] ~= nil then
+    return user_icons[filetype][1]
+  elseif user_icons[f_ext] ~= nil then
+    return user_icons[f_ext][1]
   end
 end
 
