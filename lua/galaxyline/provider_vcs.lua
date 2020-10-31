@@ -144,25 +144,13 @@ local function get_hunks_data()
     diff_data[2] = vim.fn['sy#repo#get_stats']()[2]
     diff_data[3] = vim.fn['sy#repo#get_stats']()[3]
     return diff_data
-  elseif vim.fn.exists('*coc#rpc#start_server') == 1 then
-    local tmp_data = vim.fn.split(api.nvim_buf_get_var(0,'coc_git_status'),' ')
-    local flags = {'+','~','-'}
-    if #tmp_data ~= 0 then
-      for _,v in pairs(tmp_data) do
-        for k,flag in pairs(flags) do
-          local pos = v:find(flag)
-          if pos ~= nil then
-            diff_data[k] = v:sub(pos+1,-1)
-          end
-        end
-      end
-    end
-    return diff_data
   elseif vim.fn.exists('b:gitsigns_status_dict') == 1 then
     local gitsigns_dict = vim.api.nvim_buf_get_var(0, 'gitsigns_status_dict')
     diff_data[1] = gitsigns_dict['added']
     diff_data[2] = gitsigns_dict['changed']
     diff_data[3] = gitsigns_dict['removed']
+  else
+    print('Galaxyline not found any git sign plugins')
   end
   return diff_data
 end
