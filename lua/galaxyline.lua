@@ -1,7 +1,6 @@
 local vim = vim
 local common = require('galaxyline.common')
 local diagnostic = require('galaxyline.provider_diagnostic')
-local vimmode = require('galaxyline.provider_vim')
 local vcs = require('galaxyline.provider_vcs')
 local fileinfo = require('galaxyline.provider_fileinfo')
 local extension = require('galaxyline.provider_extensions')
@@ -20,7 +19,6 @@ local provider_group = {
   BufferIcon  = buffer.get_buffer_type_icon,
   BufferNumber = buffer.get_buffer_number,
   FileTypeName = buffer.get_buffer_filetype,
-  ShowVimMode = vimmode.show_vim_mode,
   GitBranch = vcs.get_git_branch,
   DiffAdd = vcs.diff_add,
   DiffModified = vcs.diff_modified,
