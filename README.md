@@ -1,6 +1,6 @@
 # galaxyline.nvim
 
-galaxyline componentizes vim's statusline, the text of each area is provided by a component.
+galaxyline is a light-weight and super fast statusline plugin ,galaxyline componentizes vim's statusline, the text of each area is provided by a component.
 
 Means you can use the api provided by galaxyline to make the statusline that you want easily.
 
