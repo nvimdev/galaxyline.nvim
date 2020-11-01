@@ -19,7 +19,6 @@ local provider_group = {
   BufferIcon  = buffer.get_buffer_type_icon,
   BufferNumber = buffer.get_buffer_number,
   FileTypeName = buffer.get_buffer_filetype,
-  ShowVimMode = vimmode.show_vim_mode,
   GitBranch = vcs.get_git_branch,
   DiffAdd = vcs.diff_add,
   DiffModified = vcs.diff_modified,
