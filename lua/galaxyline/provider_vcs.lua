@@ -117,18 +117,7 @@ function M.get_git_branch()
 
   return branch_name .. ' '
 end
-local function dump(o)
-   if type(o) == 'table' then
-      local s = '{ '
-      for k,v in pairs(o) do
-         if type(k) ~= 'number' then k = '"'..k..'"' end
-         s = s .. '['..k..'] = ' .. dump(v) .. ','
-      end
-      return s .. '} '
-   else
-      return tostring(o)
-   end
-end
+
 -- get diff datas
 -- support plugins: vim-gitgutter vim-signify coc-git
 local function get_hunks_data()
@@ -149,8 +138,6 @@ local function get_hunks_data()
     diff_data[1] = gitsigns_dict['added']
     diff_data[2] = gitsigns_dict['changed']
     diff_data[3] = gitsigns_dict['removed']
-  else
-    print('Galaxyline not found any git sign plugins')
   end
   return diff_data
 end
