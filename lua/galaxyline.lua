@@ -1,7 +1,6 @@
 local vim = vim
 local common = require('galaxyline.common')
 local diagnostic = require('galaxyline.provider_diagnostic')
-local vimmode = require('galaxyline.provider_vim')
 local vcs = require('galaxyline.provider_vcs')
 local fileinfo = require('galaxyline.provider_fileinfo')
 local extension = require('galaxyline.provider_extensions')
