@@ -31,6 +31,16 @@ local function diagnostic_coc_hint()
   return ''
 end
 
+-- coc info
+local function diagnostic_coc_info()
+  local has_info,info = pcall(vim.fn.nvim_buf_get_var,0,'coc_diagnostic_info')
+  if not has_info then return end
+  if info.information > 0 then
+    return  info.information
+  end
+  return ''
+end
+
 -- nvim-lspconfig
 -- see https://github.com/neovim/nvim-lspconfig
 local function diagnostic_nvim_lsp_error()
@@ -115,9 +125,12 @@ function M.get_diagnostic_hint()
 end
 
 function M.get_diagnostic_info()
-  if not vim.tbl_isempty(lsp.buf_get_clients(0)) then
+  if vim.fn.exists('*coc#rpc#start_server') == 1 then
+    return diagnostic_coc_info()
+  elseif not vim.tbl_isempty(lsp.buf_get_clients(0)) then
     return diagnostic_nvim_lsp_info()
   end
+  return ''
 end
 
 return M
