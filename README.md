@@ -107,7 +107,9 @@ DiagnosticHint = diagnostic.get_diagnostic_hint,
 DiagnosticInfo = diagnostic.get_diagnostic_info,
 
 -- public libs
-require('galaxyline.provider_vcs').get_git_dir() -- find git root
+
+-- find git root,you can use check project has .git folde 
+require('galaxyline.provider_vcs').get_git_dir(path) 
 require('galaxyline.provider_fileinfo').get_file_icon_color -- get file icon color
 -- custom file icon with color
 local my_icons = require('galaxyline.provider_fileinfo').define_file_icon() -- get file icon color
