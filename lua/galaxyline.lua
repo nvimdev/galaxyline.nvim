@@ -159,6 +159,20 @@ local function load_section(section_area,pos)
   return section
 end
 
+local function register_user_events()
+  local user_events = {}
+  for _,section in pairs(M.section) do
+    for _,component_info in pairs(section) do
+      local event = component_info['event'] or ''
+      if string.len(event) > 0 then
+        table.insert(user_events,event)
+      end
+    end
+  end
+  if next(user_events) == nil then return end
+  common.nvim_create_augroups(user_events)
+end
+
 function M.inactive_galaxyline()
   local combin = function ()
     local short_left_section = load_section(M.section.short_line_left,'left')
@@ -183,6 +197,7 @@ function M.load_galaxyline()
   end
   vim.wo.statusline = combination()
   colors.init_theme(get_section)
+  register_user_events()
 end
 
 return M

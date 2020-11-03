@@ -131,6 +131,8 @@ component.
 
 - `separator_highlight` same as highlight
 
+- `event` type is string ,you config some plugins event that reload statusline.
+
 
 ## Example
 
