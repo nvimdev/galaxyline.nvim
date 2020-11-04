@@ -145,3 +145,21 @@ component.
 ![spaceline](https://user-images.githubusercontent.com/41671631/97022368-9d12fb80-1586-11eb-868b-f0230c0b02e4.png)
 
 
+
+# Donate
+
+Hey ♥️  Open Source is free.But If you want buy a coffee.you can check here paypal link
+
+Because the Github Sponsores does not support China.
+
+Paypal Buy me a coffee
+
+[![Support via PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://www.paypal.me/bobbyhub)
+
+| Wechat                                                                                                          | AliPay                                                                                                       |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| ![wechat](https://user-images.githubusercontent.com/41671631/84404718-c8312a00-ac39-11ea-90d7-ee679fbb3705.png) | ![ali](https://user-images.githubusercontent.com/41671631/84403276-1a714b80-ac38-11ea-8607-8492df84e516.png) |
+
+# License
+
+MIT
