@@ -29,6 +29,7 @@ local provider_group = {
   FileSize = fileinfo.get_file_size,
   FileIcon = fileinfo.get_file_icon,
   FileName = fileinfo.get_current_file_name,
+  FilePath = fileinfo.get_current_file_path,
   LinePercent = fileinfo.current_line_percent,
   ScrollBar = extension.scrollbar_instance,
   VistaPlugin = extension.vista_nearest,
