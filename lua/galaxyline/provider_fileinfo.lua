@@ -26,6 +26,21 @@ function M.get_current_file_name()
   return file .. ' '
 end
 
+-- get current file path
+function M.get_current_file_path()
+  local file = vim.fn.expand('%')
+  if vim.fn.empty(file) == 1 then return '' end
+  if string.len(file_readonly()) ~= 0 then
+    return file .. file_readonly()
+  end
+  if vim.o.modifiable then
+    if vim.bo.modified then
+      return file .. '   '
+    end
+  end
+  return file .. ' '
+end
+
 -- format print current file size
 function M.format_file_size(file)
   local size = vim.fn.getfsize(file)
