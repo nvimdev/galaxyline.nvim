@@ -92,7 +92,7 @@ function M.component_decorator(component_name)
         end
         output = output .. exec_provider(icon,provider_group[v])
       elseif type(v) == 'function' then
-        output = output + exec_provider(icon,provider)
+        output = output .. exec_provider(icon,v)
       else
         print(string.format('Wrong provider type in %s'),component_name)
       end
