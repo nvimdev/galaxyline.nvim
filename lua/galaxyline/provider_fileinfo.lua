@@ -52,7 +52,7 @@ end
 
 -- get file encode
 function M.get_file_encode()
-  local encode = vim.bo.fenc ~= '' and vim.bo.fenc or vim.bo.enc
+  local encode = vim.bo.fenc ~= '' and vim.bo.fenc or vim.o.enc
   return ' ' .. encode
 end
 
