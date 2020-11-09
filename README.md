@@ -127,7 +127,7 @@ component.
 
 - `highlight` the first element is `fg`,second is `bg`,third is `gui`
 
-- `separator` string
+- `separator` string. Not just a separator, any statusline item, like `%<`,`%{}`,`%n` and so on, you can define in here.
 
 - `separator_highlight` same as highlight
 
