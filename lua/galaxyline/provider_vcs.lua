@@ -111,6 +111,7 @@ function M.get_git_branch()
   -- if HEAD matches branch expression, then we're on named branch
   -- otherwise it is a detached commit
   local branch_name = HEAD:match('ref: refs/heads/(.+)')
+  if branch_name == nil then return  end
 
   vim.api.nvim_buf_set_var(0,'gitbranch_pwd',branch_name)
   vim.api.nvim_buf_set_var(0,'gitbranch_path',git_root)
