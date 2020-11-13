@@ -25,7 +25,7 @@ function M.get_diagnostic_error()
   if vim.fn.exists('*coc#rpc#start_server') == 1 then
     return get_coc_diagnostic('error')
   elseif not vim.tbl_isempty(lsp.buf_get_clients(0)) then
-    return get_nvim_lsp_diagnostic(1)
+    return get_nvim_lsp_diagnostic('Error')
   end
   return ''
 end
@@ -34,7 +34,7 @@ function M.get_diagnostic_warn()
   if vim.fn.exists('*coc#rpc#start_server') == 1 then
     return get_coc_diagnostic('warning')
   elseif not vim.tbl_isempty(lsp.buf_get_clients(0)) then
-    return get_nvim_lsp_diagnostic(2)
+    return get_nvim_lsp_diagnostic('Warning')
   end
   return ''
 end
@@ -43,7 +43,7 @@ function M.get_diagnostic_hint()
   if vim.fn.exists('*coc#rpc#start_server') == 1 then
     return get_coc_diagnostic('hint')
   elseif not vim.tbl_isempty(lsp.buf_get_clients(0)) then
-    return get_nvim_lsp_diagnostic(3)
+    return get_nvim_lsp_diagnostic('Hint')
   end
   return ''
 end
@@ -52,7 +52,7 @@ function M.get_diagnostic_info()
   if vim.fn.exists('*coc#rpc#start_server') == 1 then
     return get_coc_diagnostic('information')
   elseif not vim.tbl_isempty(lsp.buf_get_clients(0)) then
-    return get_nvim_lsp_diagnostic(4)
+    return get_nvim_lsp_diagnostic('Information')
   end
   return ''
 end
