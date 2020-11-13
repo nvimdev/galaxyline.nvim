@@ -1,4 +1,4 @@
-local vim,lsp = vim,vim.lsp
+local vim,lsp,api = vim,vim.lsp,vim.api
 local M = {}
 
 -- coc diagnostic
@@ -15,7 +15,9 @@ end
 -- see https://github.com/neovim/nvim-lspconfig
 local function get_nvim_lsp_diagnostic(diag_type)
   if vim.tbl_isempty(lsp.buf_get_clients(0)) then return '' end
-  local count = lsp.util.buf_diagnostics_count(diag_type)
+  local client_id = lsp.buf_get_clients()[1].id
+  local bufnr = api.nvim_get_current_buf()
+  local count = lsp.diagnostic.get_count(bufnr,diag_type,client_id)
   if count ~= 0 then return count end
 end
 
@@ -23,7 +25,7 @@ function M.get_diagnostic_error()
   if vim.fn.exists('*coc#rpc#start_server') == 1 then
     return get_coc_diagnostic('error')
   elseif not vim.tbl_isempty(lsp.buf_get_clients(0)) then
-    return get_nvim_lsp_diagnostic('Error')
+    return get_nvim_lsp_diagnostic(1)
   end
   return ''
 end
@@ -32,7 +34,7 @@ function M.get_diagnostic_warn()
   if vim.fn.exists('*coc#rpc#start_server') == 1 then
     return get_coc_diagnostic('warning')
   elseif not vim.tbl_isempty(lsp.buf_get_clients(0)) then
-    return get_nvim_lsp_diagnostic('Warning')
+    return get_nvim_lsp_diagnostic(2)
   end
   return ''
 end
@@ -41,7 +43,7 @@ function M.get_diagnostic_hint()
   if vim.fn.exists('*coc#rpc#start_server') == 1 then
     return get_coc_diagnostic('hint')
   elseif not vim.tbl_isempty(lsp.buf_get_clients(0)) then
-    return get_nvim_lsp_diagnostic('Hint')
+    return get_nvim_lsp_diagnostic(3)
   end
   return ''
 end
@@ -50,7 +52,7 @@ function M.get_diagnostic_info()
   if vim.fn.exists('*coc#rpc#start_server') == 1 then
     return get_coc_diagnostic('information')
   elseif not vim.tbl_isempty(lsp.buf_get_clients(0)) then
-    return get_nvim_lsp_diagnostic('Information')
+    return get_nvim_lsp_diagnostic(4)
   end
   return ''
 end
