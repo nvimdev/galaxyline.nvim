@@ -15,7 +15,7 @@ end
 -- see https://github.com/neovim/nvim-lspconfig
 local function get_nvim_lsp_diagnostic(diag_type)
   if vim.tbl_isempty(lsp.buf_get_clients(0)) then return '' end
-  local client_id = lsp.buf_get_clients()[1].id
+  local client_id = lsp.get_active_clients()[1].id
   local bufnr = api.nvim_get_current_buf()
   local count = lsp.diagnostic.get_count(bufnr,diag_type,client_id)
   if count ~= 0 then return count end
