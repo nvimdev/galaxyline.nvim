@@ -12,13 +12,7 @@ endif
 
 let g:loaded_galaxyline = 1
 
-augroup galaxyline
-  autocmd!
-  autocmd FileType,BufWinEnter,BufReadPost,BufWritePost * lua require('galaxyline').load_galaxyline()
-  autocmd BufEnter,WinEnter,BufEnter,FileChangedShellPost  * lua require('galaxyline').load_galaxyline()
-  autocmd VimResized * lua require('galaxyline').load_galaxyline()
-  autocmd WinLeave * lua require('galaxyline').inactive_galaxyline()
-augroup END
+lua require('galaxyline').galaxyline_augroup()
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

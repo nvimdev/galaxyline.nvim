@@ -200,4 +200,23 @@ function M.load_galaxyline()
   register_user_events()
 end
 
+function M.disable_galaxyline()
+  vim.wo.statusline = ''
+  vim.api.nvim_command('augroup galaxyline')
+  vim.api.nvim_command('autocmd!')
+  vim.api.nvim_command('augroup END!')
+end
+
+function M.galaxyline_augroup()
+  local events = { 'FileType','BufWinEnter','BufReadPost','BufWritePost','BufEnter','WinEnter','FileChangedShellPost','VimResized' }
+  vim.api.nvim_command('augroup galaxyline')
+  vim.api.nvim_command('autocmd!')
+  for _, def in ipairs(events) do
+    local command = string.format('autocmd %s * lua require("galaxyline").load_galaxyline()',def)
+    vim.api.nvim_command(command)
+  end
+  vim.api.nvim_command('autocmd WinLeave * lua require("galaxyline").inactive_galaxyline()')
+  vim.api.nvim_command('augroup END')
+end
+
 return M
