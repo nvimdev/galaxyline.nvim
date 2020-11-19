@@ -1,4 +1,4 @@
-local vim,api = vim,vim.api
+local vim= vim
 local common = require('galaxyline.common')
 local M = {}
 
@@ -84,6 +84,21 @@ function M.get_git_dir(path)
         or has_git_file(path)
         -- Otherwise go up one level and make a recursive call
         or (parent_path ~= path and M.get_git_dir(parent_path) or nil)
+end
+
+function M.check_git_workspace()
+  local current_file = vim.fn.expand('%:p')
+  local current_dir
+  -- if file is a symlinks
+  if vim.fn.getftype(current_file) == 'link' then
+    local real_file = vim.fn.resolve(current_file)
+    current_dir = vim.fn.fnamemodify(real_file,':h')
+  else
+    current_dir = vim.fn.expand('%:p:h')
+  end
+  local result = M.get_git_dir(current_dir)
+  if not result then return false end
+  return true
 end
 
 function M.get_git_branch()
