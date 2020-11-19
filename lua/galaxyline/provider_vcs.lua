@@ -88,7 +88,17 @@ end
 
 function M.get_git_branch()
   if vim.bo.filetype == 'help' then return end
-  local current_dir = vim.fn.expand('%:p:h')
+  local current_file = vim.fn.expand('%:p')
+  local current_dir
+
+  -- if file is a symlinks
+  if vim.fn.getftype(current_file) == 'link' then
+    current_dir = vim.fn.expand('%:p:h')
+  else
+    local real_file = vim.fn.resolve(current_file)
+    current_dir = vim.fn.fnamemodify(real_file,':h')
+  end
+
   local ok,gitbranch_pwd = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_pwd')
   local ok1,gitbranch_path = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_path')
   if ok and ok1 then
