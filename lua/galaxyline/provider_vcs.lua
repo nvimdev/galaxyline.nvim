@@ -93,10 +93,10 @@ function M.get_git_branch()
 
   -- if file is a symlinks
   if vim.fn.getftype(current_file) == 'link' then
-    current_dir = vim.fn.expand('%:p:h')
-  else
     local real_file = vim.fn.resolve(current_file)
     current_dir = vim.fn.fnamemodify(real_file,':h')
+  else
+    current_dir = vim.fn.expand('%:p:h')
   end
 
   local ok,gitbranch_pwd = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_pwd')
