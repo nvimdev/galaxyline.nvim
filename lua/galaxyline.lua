@@ -200,6 +200,10 @@ function M.load_galaxyline()
   register_user_events()
 end
 
+function M.init_colorscheme()
+  colors.init_theme(get_section)
+end
+
 function M.disable_galaxyline()
   vim.wo.statusline = ''
   vim.api.nvim_command('augroup galaxyline')
