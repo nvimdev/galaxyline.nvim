@@ -60,8 +60,7 @@ function M.get_git_dir(path)
 
     -- Checks if provided directory contains git directory
     local function has_git_dir(dir)
-        local git_dir = dir..'/.git'
-        if common.is_dir(git_dir) then return git_dir end
+        if  common.is_dir(dir..'/.git') then return dir end
     end
 
     local function has_git_file(dir)
@@ -122,8 +121,9 @@ function M.get_git_branch()
       return  gitbranch_pwd
     end
   end
-  local git_dir = M.get_git_dir(current_dir)
-  if not git_dir then return end
+  local git_root = M.get_git_dir(current_dir)
+  if not git_root then return end
+  local git_dir = git_root .. '/.git'
 
   -- If git directory not found then we're probably outside of repo
   -- or something went wrong. The same is when head_file is nil
