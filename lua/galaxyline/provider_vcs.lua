@@ -117,7 +117,7 @@ function M.get_git_branch()
 
   local ok,gitbranch_pwd = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_pwd')
   local ok1,gitbranch_path = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_path')
-  if ok and ok1 then
+  if gitbranch_path and gitbranch_pwd then
     if gitbranch_path:find(current_dir) and string.len(gitbranch_pwd) ~= 0 then
       return  gitbranch_pwd
     end
