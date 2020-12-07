@@ -60,7 +60,8 @@ function M.get_git_dir(path)
 
     -- Checks if provided directory contains git directory
     local function has_git_dir(dir)
-        if  common.is_dir(dir..'/.git') then return dir end
+        local git_dir = dir..'/.git'
+        if common.is_dir(git_dir) then return git_dir end
     end
 
     local function has_git_file(dir)
@@ -116,14 +117,13 @@ function M.get_git_branch()
 
   local ok,gitbranch_pwd = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_pwd')
   local ok1,gitbranch_path = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_path')
-  if ok and ok1 then
+  if gitbranch_path and gitbranch_pwd then
     if gitbranch_path:find(current_dir) and string.len(gitbranch_pwd) ~= 0 then
       return  gitbranch_pwd
     end
   end
-  local git_root = M.get_git_dir(current_dir)
-  if not git_root then return end
-  local git_dir = git_root .. '/.git'
+  local git_dir = M.get_git_dir(current_dir)
+  if not git_dir then return end
 
   -- If git directory not found then we're probably outside of repo
   -- or something went wrong. The same is when head_file is nil
