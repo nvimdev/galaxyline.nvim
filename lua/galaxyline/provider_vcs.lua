@@ -115,8 +115,8 @@ function M.get_git_branch()
     current_dir = vim.fn.expand('%:p:h')
   end
 
-  local ok,gitbranch_pwd = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_pwd')
-  local ok1,gitbranch_path = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_path')
+  local _,gitbranch_pwd = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_pwd')
+  local _,gitbranch_path = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_path')
   if gitbranch_path and gitbranch_pwd then
     if gitbranch_path:find(current_dir) and string.len(gitbranch_pwd) ~= 0 then
       return  gitbranch_pwd
@@ -124,6 +124,11 @@ function M.get_git_branch()
   end
   local git_dir = M.get_git_dir(current_dir)
   if not git_dir then return end
+  local git_root
+  if not git_dir:find('/.git') then
+    git_root = git_dir
+  end
+  git_root = git_dir:gsub('/.git','')
 
   -- If git directory not found then we're probably outside of repo
   -- or something went wrong. The same is when head_file is nil
