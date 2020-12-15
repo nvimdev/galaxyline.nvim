@@ -144,7 +144,7 @@ component.
 
 ![spaceline](https://user-images.githubusercontent.com/41671631/97022368-9d12fb80-1586-11eb-868b-f0230c0b02e4.png)
 
-
+you can find most custom galaxyline in [here](https://github.com/glepnir/galaxyline.nvim/issues/12)
 
 # License
 
