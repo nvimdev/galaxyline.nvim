@@ -105,6 +105,13 @@ function M.component_decorator(component_name)
     end
   }
 
+  local _switch_metatable = {
+    __index = function(_type)
+      return string.format('Type %s of provider does not support',_type)
+    end
+  }
+  setmetatable(_switch,_switch_metatable)
+
   return _switch[type(provider)]()
 end
 
