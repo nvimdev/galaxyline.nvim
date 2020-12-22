@@ -74,31 +74,38 @@ function M.component_decorator(component_name)
   end
   local provider = component_info.provider or ''
   local icon = component_info.icon or ''
-  if type(provider) == 'string' then
-    if provider_group[provider] == nil then
-      print(string.format('The provider of %s does not exist in default provider group',component_name))
-      return
-    end
-    return exec_provider(icon,provider_group[provider])
-  elseif type(provider) == 'function' then
-    return exec_provider(icon,provider)
-  elseif type(provider) == 'table' then
-    local output = ''
-    for _,v in pairs(provider) do
-      if type(v) == 'string' then
-        if type(provider_group[v]) ~= 'function' then
-          print(string.format('Does not found the provider in default provider provider in %s',component_name))
-          return
-        end
-        output = output .. exec_provider(icon,provider_group[v])
-      elseif type(v) == 'function' then
-        output = output .. exec_provider(icon,v)
-      else
-        print(string.format('Wrong provider type in %s'),component_name)
+
+  local _switch = {
+    ['string'] = function()
+      if provider_group[provider] == nil then
+        print(string.format('The provider of %s does not exist in default provider group',component_name))
+        return
       end
+      return exec_provider(icon,provider_group[provider])
+    end,
+    ['function'] = function()
+      return exec_provider(icon,provider)
+    end,
+    ['table'] = function()
+      local output = ''
+      for _,v in pairs(provider) do
+        if type(v) == 'string' then
+          if type(provider_group[v]) ~= 'function' then
+            print(string.format('Does not found the provider in default provider provider in %s',component_name))
+            return
+          end
+          output = output .. exec_provider(icon,provider_group[v])
+        elseif type(v) == 'function' then
+          output = output .. exec_provider(icon,v)
+        else
+          print(string.format('Wrong provider type in %s'),component_name)
+        end
+      end
+      return output
     end
-    return output
-  end
+  }
+
+  return _switch[type(provider)]()
 end
 
 local function generate_section(component_name)
@@ -121,6 +128,7 @@ local function section_complete_with_option(component,component_info,position)
   -- get the component condition and dynamicswitch
   local condition = component_info.condition or nil
   local separator = component_info.separator or ''
+
   if condition ~= nil then
     if condition() then
       tmp_line = tmp_line .. generate_section(component)
@@ -130,19 +138,20 @@ local function section_complete_with_option(component,component_info,position)
         else
           tmp_line = generate_separator_section(component,separator) .. tmp_line
         end
-    end
-    end
-    return tmp_line
-  else
-    tmp_line = tmp_line .. generate_section(component)
-    if string.len(separator) ~= 0 then
-      if position == 'left' then
-        tmp_line = tmp_line .. generate_separator_section(component,separator)
-      else
-        tmp_line = generate_separator_section(component,separator) .. tmp_line
       end
     end
+    return tmp_line
   end
+
+  tmp_line = tmp_line .. generate_section(component)
+  if string.len(separator) ~= 0 then
+    if position == 'left' then
+      tmp_line = tmp_line .. generate_separator_section(component,separator)
+    else
+      tmp_line = generate_separator_section(component,separator) .. tmp_line
+    end
+  end
+
   return tmp_line
 end
 
@@ -189,11 +198,10 @@ function M.load_galaxyline()
     local right_section = load_section(M.section.right,'right')
     local short_left_section = load_section(M.section.short_line_left,'left')
     local short_right_section = load_section(M.section.short_line_right,'right')
-    if common.has_value(M.short_line_list,vim.bo.filetype) then
-      return short_left_section .. '%=' .. short_right_section
-    else
+    if not common.has_value(M.short_line_list,vim.bo.filetype) then
       return  left_section .. '%=' .. right_section
     end
+    return short_left_section .. '%=' .. short_right_section
   end
   vim.wo.statusline = combination()
   colors.init_theme(get_section)
