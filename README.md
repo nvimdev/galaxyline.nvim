@@ -4,6 +4,8 @@ galaxyline is a light-weight and super fast statusline plugin ,galaxyline compon
 
 Means you can use the api provided by galaxyline to make the statusline that you want easily.
 
+**Require neovim 5.0+**
+
 ## Install
 * vim-plug
 ```vim
