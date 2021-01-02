@@ -1,19 +1,6 @@
 local vim = vim
 local M = {}
 
--- get buffer number
-function M.get_buffer_number()
-  local num_bufs,idx = 0,1
-  while (idx <= vim.fn.bufnr('$'))
-  do
-    if vim.fn.buflisted(idx) then
-      num_bufs = num_bufs + 1
-    end
-    idx = idx + 1
-  end
-  return num_bufs
-end
-
 local buf_icon = {
   help             = '  ',
   defx             = '  ',
@@ -33,6 +20,22 @@ end
 
 function M.get_buffer_filetype()
   return vim.bo.filetype:upper()
+end
+
+-- get buffer number
+function M.get_buffer_number()
+  local buffers = {}
+  for _,val in ipairs(vim.fn.range(1,vim.fn.bufnr('$'))) do
+    if vim.fn.bufexists(val) == 1 and vim.fn.buflisted(val) == 1 then
+      table.insert(buffers,val)
+    end
+  end
+
+  for idx,nr in ipairs(buffers) do
+    if nr == vim.fn.bufnr('') then
+      return idx
+    end
+  end
 end
 
 return M
