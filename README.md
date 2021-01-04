@@ -1,8 +1,10 @@
 # galaxyline.nvim
 
-galaxyline is a light-weight and super fast statusline plugin ,galaxyline componentizes vim's statusline, the text of each area is provided by a component.
+galaxyline is a light-weight and super fast statusline plugin. galaxyline
+componentizes vim's statusline by having a provider for each text area.
 
-Means you can use the api provided by galaxyline to make the statusline that you want easily.
+This Means you can use the api provided by galaxyline to make the statusline
+that you want easily.
 
 **Require neovim 5.0+**
 
@@ -31,23 +33,25 @@ use {
 
 ### Section Variables
 
-Type of these variables both are array table
+The Type of all these variables array tables.
 
-- `require('galaxyline').short_line_list`  some special filetypes tha show a short statusline like 
-`LuaTree defx coc-explorer vista` etc.
+- `require('galaxyline').short_line_list` some special filetypes that show a
+    short statusline like `LuaTree defx coc-explorer vista` etc.
 
-- `require('galaxyline').section.left` is the statusline left section.
+- `require('galaxyline').section.left` the statusline left section.
 
-- `require('galaxyline').section.right` is the stautsline right section.
+- `require('galaxyline').section.right` the stautsline right section.
 
-- `require('galaxyline').section.short_line_left` statusline left section when filetype in `short_line_list`
+- `require('galaxyline').section.short_line_left` the statusline left section
+    when filetype is in `short_line_list`
 
-- `require('galaxyline').section.short_line_right` statusline right section when filetype in `short_line_list`
+- `require('galaxyline').section.short_line_right` statusline right section when
+    filetype is in `short_line_list`
 
 
 ### Component keyword
 
-like a FileSize component in left section.
+Example of a FileSize component in the left section.
 
 ```lua
 require('galaxyline').section.left[1]= {
@@ -66,13 +70,12 @@ require('galaxyline').section.left[1]= {
   }
 }
 ```
-- `provider` can be string or function or table. When it's string,it will match the default provider
+`provider` can be a string, function or table. When it's a string, it will match
+the default provider group. If it doesn't match an existing group you will get
+an error. You can also use multiple default providers in `provider`. If you are
+using multiple then you must provide an array table for `provider`.
 
-group.If not match,you will got an error. Also you can use mulitple default providers in `provider`
-
-then you must use an array table for `provider`.
-
-defualt provider group:
+#### Default provider groups:
 
 ```lua
 -- source provider function
@@ -110,33 +113,34 @@ DiagnosticInfo = diagnostic.get_diagnostic_info,
 
 -- public libs
 
--- find git root,you can use this check project in git
+-- find git root, you can use this to check if the project is a git workspace
 require('galaxyline.provider_vcs').check_git_workspace() 
 require('galaxyline.provider_fileinfo').get_file_icon_color -- get file icon color
 -- custom file icon with color
 local my_icons = require('galaxyline.provider_fileinfo').define_file_icon() -- get file icon color
 my_icons['your file type here'] = { color code, icon}
--- if your filetype does not define in neovim  you can use file extensions
+-- if your filetype does is not defined in neovim  you can use file extensions
 my_icons['your file ext  in here'] = { color code, icon}
 ```
 
-Also you can use source of provider  function.
+You can also use the source of the provider function.
 
-- `condition` is a function , It must return a boolean. when it return true that will load this
-component.
+- `condition` is a function. It must return a boolean. When it returns true that
+    will load the component.
 
-- `icon` is a string, It will add to head of the provider result.
+- `icon` is a string. It will add to the head of the provider result.
 
-- `highlight` the first element is `fg`,second is `bg`,third is `gui`
+- `highlight` the first element is `fg`, the second is `bg`, and the third is `gui`.
 
-- `separator` string. Not just a separator, any statusline item, like `%<`,`%{}`,`%n` and so on, you can define in here.
+- `separator` is a string. Not just a separator, any statusline item can be
+    defined here like `%<`,`%{}`,`%n` and so on.
 
 - `separator_highlight` same as highlight
 
-- `event` type is string ,you config some plugins event that reload statusline.
+- `event` type is string. You config some plugins event that reload the statusline.
 
 
-## Example
+## Examples
 
 [eviline.lua](./example/eviline.lua)
 
@@ -146,7 +150,7 @@ component.
 
 ![spaceline](https://user-images.githubusercontent.com/41671631/97022368-9d12fb80-1586-11eb-868b-f0230c0b02e4.png)
 
-you can find most custom galaxyline in [here](https://github.com/glepnir/galaxyline.nvim/issues/12)
+You can find more custom galaxyline examples [here](https://github.com/glepnir/galaxyline.nvim/issues/12)
 
 # License
 
