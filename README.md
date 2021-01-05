@@ -1,19 +1,19 @@
 # galaxyline.nvim
 
-galaxyline is a light-weight and super fast statusline plugin. galaxyline
-componentizes vim's statusline by having a provider for each text area.
+galaxyline is a light-weight and super fast statusline plugin. Galaxyline
+componentizes Vim's statusline by having a provider for each text area.
 
-This Means you can use the api provided by galaxyline to make the statusline
-that you want easily.
+This means you can use the api provided by galaxyline to create the statusline
+that you want, easily.
 
-**Require neovim 5.0+**
+**Requires neovim 5.0+**
 
 ## Install
 * vim-plug
 ```vim
 Plug 'glepnir/galaxyline.nvim'
 
-" If you want icons use one of these:
+" If you want to display icons, then use one of these plugins:
 Plug 'kyazdani42/nvim-web-devicons' " lua
 Plug 'ryanoasis/vim-devicons' " vimscript
 ```
@@ -33,7 +33,7 @@ use {
 
 ### Section Variables
 
-The Type of all these variables array tables.
+The type of all of these section variables:
 
 - `require('galaxyline').short_line_list` some special filetypes that show a
     short statusline like `LuaTree defx coc-explorer vista` etc.
@@ -51,7 +51,7 @@ The Type of all these variables array tables.
 
 ### Component keyword
 
-Example of a FileSize component in the left section.
+Example of a FileSize component in the left section:
 
 ```lua
 require('galaxyline').section.left[1]= {
@@ -125,19 +125,19 @@ my_icons['your file ext  in here'] = { color code, icon}
 
 You can also use the source of the provider function.
 
-- `condition` is a function. It must return a boolean. When it returns true that
+- `condition` is a function that must return a boolean. If it returns true then it
     will load the component.
 
-- `icon` is a string. It will add to the head of the provider result.
+- `icon` is a string that will be added to the head of the provider result.
 
 - `highlight` the first element is `fg`, the second is `bg`, and the third is `gui`.
 
-- `separator` is a string. Not just a separator, any statusline item can be
-    defined here like `%<`,`%{}`,`%n` and so on.
+- `separator` is a string. It is not just a separator. Any statusline item can be
+    defined here, like `%<`,`%{}`,`%n`, and so on.
 
 - `separator_highlight` same as highlight
 
-- `event` type is string. You config some plugins event that reload the statusline.
+- `event` type is string. You configure a plugin's event that will reload the statusline.
 
 
 ## Examples
