@@ -15,7 +15,6 @@ end
 -- see https://github.com/neovim/nvim-lspconfig
 local function get_nvim_lsp_diagnostic(diag_type)
   if next(lsp.buf_get_clients(0)) == nil then return '' end
-
   local active_clients = lsp.get_active_clients()
 
   if active_clients then

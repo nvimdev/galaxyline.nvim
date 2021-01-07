@@ -6,6 +6,7 @@ local fileinfo = require('galaxyline.provider_fileinfo')
 local extension = require('galaxyline.provider_extensions')
 local colors = require('galaxyline.colors')
 local buffer = require('galaxyline.provider_buffer')
+local uv = vim.loop
 local M = {}
 
 M.section = {}
@@ -15,28 +16,34 @@ M.section.short_line_left = {}
 M.section.short_line_right = {}
 M.short_line_list = {}
 
-local provider_group = {
-  BufferIcon  = buffer.get_buffer_type_icon,
-  BufferNumber = buffer.get_buffer_number,
-  FileTypeName = buffer.get_buffer_filetype,
-  GitBranch = vcs.get_git_branch,
-  DiffAdd = vcs.diff_add,
-  DiffModified = vcs.diff_modified,
-  DiffRemove = vcs.diff_remove,
-  LineColumn = fileinfo.line_column,
-  FileFormat = fileinfo.get_file_format,
-  FileEncode = fileinfo.get_file_encode,
-  FileSize = fileinfo.get_file_size,
-  FileIcon = fileinfo.get_file_icon,
-  FileName = fileinfo.get_current_file_name,
-  LinePercent = fileinfo.current_line_percent,
-  ScrollBar = extension.scrollbar_instance,
-  VistaPlugin = extension.vista_nearest,
-  DiagnosticError = diagnostic.get_diagnostic_error,
-  DiagnosticWarn = diagnostic.get_diagnostic_warn,
-  DiagnosticHint = diagnostic.get_diagnostic_hint,
-  DiagnosticInfo = diagnostic.get_diagnostic_info,
-}
+local provider_group
+
+local async_load_provider = uv.new_async(function ()
+  provider_group = {
+    BufferIcon  = buffer.get_buffer_type_icon,
+    BufferNumber = buffer.get_buffer_number,
+    FileTypeName = buffer.get_buffer_filetype,
+    GitBranch = vcs.get_git_branch,
+    DiffAdd = vcs.diff_add,
+    DiffModified = vcs.diff_modified,
+    DiffRemove = vcs.diff_remove,
+    LineColumn = fileinfo.line_column,
+    FileFormat = fileinfo.get_file_format,
+    FileEncode = fileinfo.get_file_encode,
+    FileSize = fileinfo.get_file_size,
+    FileIcon = fileinfo.get_file_icon,
+    FileName = fileinfo.get_current_file_name,
+    LinePercent = fileinfo.current_line_percent,
+    ScrollBar = extension.scrollbar_instance,
+    VistaPlugin = extension.vista_nearest,
+    DiagnosticError = diagnostic.get_diagnostic_error,
+    DiagnosticWarn = diagnostic.get_diagnostic_warn,
+    DiagnosticHint = diagnostic.get_diagnostic_hint,
+    DiagnosticInfo = diagnostic.get_diagnostic_info,
+  }
+end)
+
+async_load_provider:send()
 
 local function get_section()
   return M.section
@@ -89,16 +96,21 @@ function M.component_decorator(component_name)
     ['table'] = function()
       local output = ''
       for _,v in pairs(provider) do
+        if type(v) ~= 'string' and type(v) ~= 'function' then
+          print(string.format('Wrong provider type in %s',component_name))
+          return
+        end
+
         if type(v) == 'string' then
           if type(provider_group[v]) ~= 'function' then
             print(string.format('Does not found the provider in default provider provider in %s',component_name))
             return
           end
           output = output .. exec_provider(icon,provider_group[v])
-        elseif type(v) == 'function' then
+        end
+
+        if type(v) == 'function' then
           output = output .. exec_provider(icon,v)
-        else
-          print(string.format('Wrong provider type in %s'),component_name)
         end
       end
       return output
@@ -107,7 +119,7 @@ function M.component_decorator(component_name)
 
   local _switch_metatable = {
     __index = function(_type)
-      return string.format('Type %s of provider does not support',_type)
+      return print(string.format('Type %s of provider does not support',_type))
     end
   }
   setmetatable(_switch,_switch_metatable)
