@@ -88,6 +88,7 @@ function M.get_git_dir(path)
 end
 
 function M.check_git_workspace()
+  if vim.bo.buftype == 'terminal' then return false end
   local current_file = vim.fn.expand('%:p')
   local current_dir
   -- if file is a symlinks
