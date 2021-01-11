@@ -239,7 +239,8 @@ function M.disable_galaxyline()
 end
 
 function M.galaxyline_augroup()
-  local events = { 'FileType','BufWinEnter','BufReadPost','BufWritePost','BufEnter','WinEnter','FileChangedShellPost','VimResized' }
+  local events = { 'FileType','BufWinEnter','BufReadPost','BufWritePost',
+                  'BufEnter','WinEnter','FileChangedShellPost','VimResized','TermOpen'}
   vim.api.nvim_command('augroup galaxyline')
   vim.api.nvim_command('autocmd!')
   for _, def in ipairs(events) do
