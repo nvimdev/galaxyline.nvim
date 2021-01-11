@@ -11,7 +11,7 @@ local buf_icon = {
   vista_kind       = '  ',
   dbui             = '  ',
   magit            = '  ',
-  LuaTree          = '  ',
+  NvimTree          = '  ',
 }
 
 function M.get_buffer_type_icon()

@@ -140,15 +140,23 @@ You can also use the source of the provider function.
 - `event` type is string. You configure a plugin's event that will reload the statusline.
 
 
-## Examples
+## Awesome Show
 
-[eviline.lua](./example/eviline.lua)
+- author: ChristianChiarulli
 
-![eviline](https://user-images.githubusercontent.com/41671631/97547528-dfb25900-1a08-11eb-944d-d22365ebc242.gif)
+![](https://user-images.githubusercontent.com/29136904/97791654-2b9d0380-1bab-11eb-8133-d8160d3f72cd.png)
 
-[spaceline.lua](./example/spaceline.lua)
+- author: BenoitPingris
 
-![spaceline](https://user-images.githubusercontent.com/41671631/97022368-9d12fb80-1586-11eb-868b-f0230c0b02e4.png)
+![](https://user-images.githubusercontent.com/29386109/98808605-b3d99f00-241c-11eb-81dc-0caa852fe478.png)
+
+- author: Th3Whit3Wolf
+
+![](https://user-images.githubusercontent.com/48275422/101280897-c51b8e80-37c3-11eb-8bc3-be52fb4b6465.png)
+
+- author: voitd
+
+![](https://user-images.githubusercontent.com/60138143/103373409-8d131d00-4add-11eb-8dfc-40a37422f430.png)
 
 You can find more custom galaxyline examples [here](https://github.com/glepnir/galaxyline.nvim/issues/12)
 
