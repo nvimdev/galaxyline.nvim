@@ -53,12 +53,13 @@ end
 -- get file encode
 function M.get_file_encode()
   local encode = vim.bo.fenc ~= '' and vim.bo.fenc or vim.o.enc
-  return ' ' .. encode
+  return ' ' .. encode:upper()
 end
 
 -- get file format
+-- and cover to upper
 function M.get_file_format()
-  return vim.bo.fileformat
+  return vim.bo.fileformat:upper()
 end
 
 -- show line:column
