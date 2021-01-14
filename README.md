@@ -142,6 +142,10 @@ You can also use the source of the provider function.
 
 ## Awesome Show
 
+- author: glepnir
+
+![](https://user-images.githubusercontent.com/41671631/104537422-e9854900-5654-11eb-8e17-bad8155238b1.png)
+
 - author: ChristianChiarulli
 
 ![](https://user-images.githubusercontent.com/29136904/97791654-2b9d0380-1bab-11eb-8133-d8160d3f72cd.png)
