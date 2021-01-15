@@ -167,8 +167,8 @@ local function get_hunks_data()
     return diff_data
   elseif vim.fn.exists('b:gitsigns_status') == 1 then
     local gitsigns_dict = vim.api.nvim_buf_get_var(0, 'gitsigns_status')
-    diff_data[1] = tonumber(gitsigns_dict:match('+?(%d+)')) or 0
-    diff_data[2] = tonumber(gitsigns_dict:match('%s~?(%d+)')) or 0
+    diff_data[1] = tonumber(gitsigns_dict:match('+(%d+)')) or 0
+    diff_data[2] = tonumber(gitsigns_dict:match('~(%d+)')) or 0
     diff_data[3] = tonumber(gitsigns_dict:match('-(%d+)')) or 0
   end
   return diff_data
