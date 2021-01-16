@@ -9,6 +9,11 @@ end
 
 local function set_highlight(group, color)
   local fg,bg,style
+  
+  if type(color) == 'string' then
+    vim.api.nvim_command('highlight link ' .. group .. ' ' .. color)
+    return
+  end
 
   if type(color[1]) == 'function' then
     if color[1]() ~= nil then
