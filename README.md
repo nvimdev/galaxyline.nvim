@@ -130,7 +130,7 @@ You can also use the source of the provider function.
 
 - `icon` is a string that will be added to the head of the provider result.
 
-- `highlight` the first element is `fg`, the second is `bg`, and the third is `gui`.
+- `highlight` can be used in two ways.  The first is to pass three elements: the first element is `fg`, the second is `bg`, and the third is `gui`. The second method is to pass a highlight group as a string (such as `IncSearch`) that galaxyline will link to.
 
 - `separator` is a string. It is not just a separator. Any statusline item can be
     defined here, like `%<`,`%{}`,`%n`, and so on.
