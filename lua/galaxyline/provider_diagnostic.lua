@@ -24,7 +24,7 @@ local function get_nvim_lsp_diagnostic(diag_type)
        count = count + lsp.diagnostic.get_count(api.nvim_get_current_buf(),diag_type,client.id)
     end
 
-    if count ~= 0 then return count end
+    if count ~= 0 then return count .. ' ' end
   end
 end
 
