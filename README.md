@@ -11,7 +11,7 @@ that you want, easily.
 ## Install
 * vim-plug
 ```vim
-Plug 'glepnir/galaxyline.nvim'
+Plug 'glepnir/galaxyline.nvim' , {'branch': 'main'}
 
 " If you want to display icons, then use one of these plugins:
 Plug 'kyazdani42/nvim-web-devicons' " lua
