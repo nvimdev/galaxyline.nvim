@@ -37,7 +37,7 @@ gls.left[2] = {
                           [''] = colors.blue,V=colors.blue,
                           c = colors.red,no = colors.magenta,s = colors.orange,
                           S=colors.orange,[''] = colors.orange,
-                          ic = colors.yellow,R = colors.purple,Rv = colors.purple,
+                          ic = colors.yellow,R = colors.violet,Rv = colors.violet,
                           cv = colors.red,ce=colors.red, r = colors.cyan,
                           rm = colors.cyan, ['r?'] = colors.cyan,
                           ['!']  = colors.red,t = colors.red}
@@ -98,7 +98,7 @@ gls.left[8] = {
 gls.left[9] = {
   DiagnosticWarn = {
     provider = 'DiagnosticWarn',
-    icon = '  ',
+    icon = '  ',
     highlight = {colors.yellow,colors.bg},
   }
 }
@@ -106,7 +106,7 @@ gls.left[9] = {
 gls.left[10] = {
   DiagnosticHint = {
     provider = 'DiagnosticHint',
-    icon = '  ',
+    icon = '  ',
     highlight = {colors.cyan,colors.bg},
   }
 }
@@ -175,7 +175,7 @@ gls.right[6] = {
   DiffModified = {
     provider = 'DiffModified',
     condition = checkwidth,
-    icon = '  ',
+    icon = ' 柳',
     highlight = {colors.orange,colors.bg},
   }
 }
@@ -184,7 +184,6 @@ gls.right[7] = {
     provider = 'DiffRemove',
     condition = checkwidth,
     icon = '  ',
-    separator = ' ',
     highlight = {colors.red,colors.bg},
   }
 }
