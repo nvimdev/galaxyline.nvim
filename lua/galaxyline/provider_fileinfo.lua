@@ -127,6 +127,10 @@ function M.define_file_icon()
   return  user_icons
 end
 
+local function get_file_info()
+  return vim.fn.expand('%:t'), vim.fn.expand('%:e')
+end
+
 function M.get_file_icon()
   local icon = ''
   if vim.fn.exists("*WebDevIconsGetFileTypeSymbol") == 1 then
@@ -135,7 +139,7 @@ function M.get_file_icon()
   end
   local ok,devicons = pcall(require,'nvim-web-devicons')
   if not ok then print('No icon plugin found. Please install \'kyazdani42/nvim-web-devicons\'') return '' end
-  local f_name,f_extension = vim.fn.expand('%:t'),vim.fn.expand('%:e')
+  local f_name,f_extension = get_file_info()
   icon = devicons.get_icon(f_name,f_extension)
   if icon == nil then
     if user_icons[vim.bo.filetype] ~= nil then
@@ -150,19 +154,24 @@ function M.get_file_icon()
 end
 
 function M.get_file_icon_color()
-  local icon = M.get_file_icon():match('%S+')
   local filetype = vim.bo.filetype
-  local f_ext = vim.fn.expand('%:e')
-  if user_icons[filetype] == nil and user_icons[f_ext] == nil then
-    for k,_ in pairs(icons) do
-      if vim.fn.index(icons[k],icon) ~= -1 then
-        return icon_colors[k]
-      end
+  local f_name, f_ext = get_file_info()
+
+  if user_icons[filetype] ~= nil then return user_icons[filetype][1] end
+
+  if user_icons[f_ext] ~= nil then return user_icons[f_ext][1] end
+
+  local has_devicons, devicons = pcall(require, 'nvim-web-devicons')
+  if has_devicons then
+    local icon, iconhl = devicons.get_icon(f_name, f_ext)
+    if icon ~= nil then
+      return vim.fn.synIDattr(vim.fn.hlID(iconhl), 'fg')
     end
-  elseif user_icons[filetype] ~= nil then
-    return user_icons[filetype][1]
-  elseif user_icons[f_ext] ~= nil then
-    return user_icons[f_ext][1]
+  end
+
+  local icon = M.get_file_icon():match('%S+')
+  for k, _ in pairs(icons) do
+    if vim.fn.index(icons[k], icon) ~= -1 then return icon_colors[k] end
   end
 end
 
