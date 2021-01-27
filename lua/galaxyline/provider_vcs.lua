@@ -75,7 +75,12 @@ function M.get_git_dir(path)
     end
 
     -- Set default path to current directory
-    if not path or path == '.' then path = io.popen"cd":read'*l' end
+    if not path or path == '.' then
+      local dir = io.popen("cd")
+      if dir ~= nil then
+        path = dir:read'*l'
+      end
+    end
 
     -- Calculate parent path now otherwise we won't be
     -- able to do that inside of logical operator
