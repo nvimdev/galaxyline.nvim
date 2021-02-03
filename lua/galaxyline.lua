@@ -60,7 +60,7 @@ local function exec_provider(icon,cmd)
   local output = cmd()
   if output == nil then return '' end
   if string.len(icon) ~= 0 and string.len(output) ~= 0 and output then
-    return icon .. cmd()
+    return icon .. output
   end
   return output
 end
