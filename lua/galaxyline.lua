@@ -139,7 +139,6 @@ end
 
 local function section_complete_with_option(component,component_info,position)
   local tmp_line = ''
-  Target = false
   -- get the component condition and dynamicswitch
   local condition = component_info.condition or nil
   local separator = component_info.separator or ''
