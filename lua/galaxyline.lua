@@ -45,10 +45,6 @@ end)
 
 async_load_provider:send()
 
-local function get_section()
-  return M.section
-end
-
 local function check_component_exists(component_name)
   for _,pos_value in pairs(M.section) do
     for _,v in pairs(pos_value) do
@@ -223,12 +219,12 @@ function M.load_galaxyline()
     return short_left_section .. '%=' .. short_right_section
   end
   vim.wo.statusline = combination()
-  colors.init_theme(get_section)
+  colors.init_theme(M.section)
   register_user_events()
 end
 
 function M.init_colorscheme()
-  colors.init_theme(get_section)
+  colors.init_theme(M.section)
 end
 
 function M.disable_galaxyline()

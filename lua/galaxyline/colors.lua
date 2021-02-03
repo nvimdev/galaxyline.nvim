@@ -46,8 +46,7 @@ local function set_highlight(group, color)
   vim.api.nvim_command('highlight ' .. group .. ' ' .. fg .. ' ' .. bg .. ' '..style)
 end
 
-function M.init_theme(get_section)
-  local section = get_section()
+function M.init_theme(section)
   for pos,_ in pairs(section) do
     for _,comps in pairs(section[pos]) do
       for component_name,component_info in pairs(comps) do
