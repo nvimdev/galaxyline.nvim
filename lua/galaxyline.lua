@@ -47,7 +47,7 @@ async_load = uv.new_async(vim.schedule_wrap(function ()
   async_load:close()
 end))
 
-function M.async_load_providers()
+do
   if next(provider_group) == nil then
     async_load:send()
   end
