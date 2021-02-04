@@ -12,35 +12,39 @@ M.section.short_line_right = {}
 M.short_line_list = {}
 
 local provider_group = {}
+local async_load_provider
 
-local async_load_provider = uv.new_async(vim.schedule_wrap(function ()
-  local diagnostic = require('galaxyline.provider_diagnostic')
+-- why async load providers? because found the diagnostic providers
+-- take a lot of startup time
+async_load_provider = uv.new_async(vim.schedule_wrap(function ()
   local vcs = require('galaxyline.provider_vcs')
   local fileinfo = require('galaxyline.provider_fileinfo')
   local buffer = require('galaxyline.provider_buffer')
   local extension = require('galaxyline.provider_extensions')
   provider_group = {
-    BufferIcon  = buffer.get_buffer_type_icon,
-    BufferNumber = buffer.get_buffer_number,
-    FileTypeName = buffer.get_buffer_filetype,
-    GitBranch = vcs.get_git_branch,
-    DiffAdd = vcs.diff_add,
-    DiffModified = vcs.diff_modified,
-    DiffRemove = vcs.diff_remove,
-    LineColumn = fileinfo.line_column,
-    FileFormat = fileinfo.get_file_format,
-    FileEncode = fileinfo.get_file_encode,
-    FileSize = fileinfo.get_file_size,
-    FileIcon = fileinfo.get_file_icon,
-    FileName = fileinfo.get_current_file_name,
-    LinePercent = fileinfo.current_line_percent,
-    ScrollBar = extension.scrollbar_instance,
-    VistaPlugin = extension.vista_nearest,
-    DiagnosticError = diagnostic.get_diagnostic_error,
-    DiagnosticWarn = diagnostic.get_diagnostic_warn,
-    DiagnosticHint = diagnostic.get_diagnostic_hint,
-    DiagnosticInfo = diagnostic.get_diagnostic_info,
+   BufferIcon  = buffer.get_buffer_type_icon,
+   BufferNumber = buffer.get_buffer_number,
+   FileTypeName = buffer.get_buffer_filetype,
+   GitBranch = vcs.get_git_branch,
+   DiffAdd = vcs.diff_add,
+   DiffModified = vcs.diff_modified,
+   DiffRemove = vcs.diff_remove,
+   LineColumn = fileinfo.line_column,
+   FileFormat = fileinfo.get_file_format,
+   FileEncode = fileinfo.get_file_encode,
+   FileSize = fileinfo.get_file_size,
+   FileIcon = fileinfo.get_file_icon,
+   FileName = fileinfo.get_current_file_name,
+   LinePercent = fileinfo.current_line_percent,
+   ScrollBar = extension.scrollbar_instance,
+   VistaPlugin = extension.vista_nearest,
   }
+  local diagnostic = require('galaxyline.provider_diagnostic')
+  provider_group.DiagnosticError = diagnostic.get_diagnostic_error
+  provider_group.DiagnosticWarn = diagnostic.get_diagnostic_warn
+  provider_group.DiagnosticHint = diagnostic.get_diagnostic_hint
+  provider_group.DiagnosticInfo = diagnostic.get_diagnostic_info
+  async_load_provider:close()
 end))
 
 function M.async_load_provider()
