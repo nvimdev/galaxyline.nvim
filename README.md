@@ -1,6 +1,6 @@
 # galaxyline.nvim
 
-galaxyline is a light-weight and super fast statusline plugin. Galaxyline
+galaxyline is a light-weight and **Super Fast** statusline plugin. Galaxyline
 componentizes Vim's statusline by having a provider for each text area.
 
 This means you can use the api provided by galaxyline to create the statusline
