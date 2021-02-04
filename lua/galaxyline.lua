@@ -1,11 +1,6 @@
 local vim = vim
 local common = require('galaxyline.common')
-local diagnostic = require('galaxyline.provider_diagnostic')
-local vcs = require('galaxyline.provider_vcs')
-local fileinfo = require('galaxyline.provider_fileinfo')
-local extension = require('galaxyline.provider_extensions')
 local colors = require('galaxyline.colors')
-local buffer = require('galaxyline.provider_buffer')
 local uv = vim.loop
 local M = {}
 
@@ -16,9 +11,14 @@ M.section.short_line_left = {}
 M.section.short_line_right = {}
 M.short_line_list = {}
 
-local provider_group
+local provider_group = {}
 
-local async_load_provider = uv.new_async(function ()
+local async_load_provider = uv.new_async(vim.schedule_wrap(function ()
+  local diagnostic = require('galaxyline.provider_diagnostic')
+  local vcs = require('galaxyline.provider_vcs')
+  local fileinfo = require('galaxyline.provider_fileinfo')
+  local buffer = require('galaxyline.provider_buffer')
+  local extension = require('galaxyline.provider_extensions')
   provider_group = {
     BufferIcon  = buffer.get_buffer_type_icon,
     BufferNumber = buffer.get_buffer_number,
@@ -41,9 +41,13 @@ local async_load_provider = uv.new_async(function ()
     DiagnosticHint = diagnostic.get_diagnostic_hint,
     DiagnosticInfo = diagnostic.get_diagnostic_info,
   }
-end)
+end))
 
-async_load_provider:send()
+function M.async_load_provider()
+  if next(provider_group) == nil then
+    async_load_provider:send()
+  end
+end
 
 local function check_component_exists(component_name)
   for _,pos_value in pairs(M.section) do
@@ -81,8 +85,11 @@ function M.component_decorator(component_name)
   local _switch = {
     ['string'] = function()
       if provider_group[provider] == nil then
-        print(string.format('The provider of %s does not exist in default provider group',component_name))
-        return
+        if next(provider_group) ~= nil then
+          print(string.format('The provider of %s does not exist in default provider group',component_name))
+          return ''
+        end
+        return ''
       end
       return exec_provider(icon,provider_group[provider])
     end,
@@ -94,13 +101,13 @@ function M.component_decorator(component_name)
       for _,v in pairs(provider) do
         if type(v) ~= 'string' and type(v) ~= 'function' then
           print(string.format('Wrong provider type in %s',component_name))
-          return
+          return ''
         end
 
         if type(v) == 'string' then
           if type(provider_group[v]) ~= 'function' then
             print(string.format('Does not found the provider in default provider provider in %s',component_name))
-            return
+            return ''
           end
           output = output .. exec_provider(icon,provider_group[v])
         end

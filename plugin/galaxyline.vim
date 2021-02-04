@@ -12,6 +12,7 @@ endif
 
 let g:loaded_galaxyline = 1
 
+lua require('galaxyline').async_load_provider()
 lua require('galaxyline').galaxyline_augroup()
 
 let &cpo = s:save_cpo
