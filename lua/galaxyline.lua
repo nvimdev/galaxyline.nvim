@@ -12,11 +12,11 @@ M.section.short_line_right = {}
 M.short_line_list = {}
 
 local provider_group = {}
-local async_load_provider
+local async_load
 
 -- why async load providers? because found the diagnostic providers
 -- take a lot of startup time
-async_load_provider = uv.new_async(vim.schedule_wrap(function ()
+async_load = uv.new_async(vim.schedule_wrap(function ()
   local vcs = require('galaxyline.provider_vcs')
   local fileinfo = require('galaxyline.provider_fileinfo')
   local buffer = require('galaxyline.provider_buffer')
@@ -44,12 +44,12 @@ async_load_provider = uv.new_async(vim.schedule_wrap(function ()
   provider_group.DiagnosticWarn = diagnostic.get_diagnostic_warn
   provider_group.DiagnosticHint = diagnostic.get_diagnostic_hint
   provider_group.DiagnosticInfo = diagnostic.get_diagnostic_info
-  async_load_provider:close()
+  async_load:close()
 end))
 
-function M.async_load_provider()
+function M.async_load_providers()
   if next(provider_group) == nil then
-    async_load_provider:send()
+    async_load:send()
   end
 end
 
