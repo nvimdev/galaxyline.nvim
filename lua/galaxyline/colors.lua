@@ -46,21 +46,37 @@ local function set_highlight(group, color)
   vim.api.nvim_command('highlight ' .. group .. ' ' .. fg .. ' ' .. bg .. ' '..style)
 end
 
-function M.init_theme(section)
-  for pos,_ in pairs(section) do
-    for _,comps in pairs(section[pos]) do
-      for component_name,component_info in pairs(comps) do
-        local highlight = component_info.highlight or {}
-        local separator_highlight = component_info.separator_highlight or {}
-        set_highlight('Galaxy' .. component_name,highlight)
+local send_section_color = function(section)
+  return coroutine.create(function()
+    for pos,_ in pairs(section) do
+      for _,comps in pairs(section[pos]) do
+        for component_name,component_info in pairs(comps) do
+          local highlight = component_info.highlight or {}
+          local separator_highlight = component_info.separator_highlight or {}
+          coroutine.yield('Galaxy' .. component_name,highlight)
 
-        if #separator_highlight ~= 0 then
-          set_highlight(component_name..'Separator',separator_highlight)
+          if #separator_highlight ~= 0 then
+            coroutine.yield(component_name..'Separator',separator_highlight)
+          end
+
         end
-
       end
+    end
+  end)
+end
+
+function M.init_theme(section)
+  local producer = send_section_color(section)
+  while true do
+    local status,group,highlight = coroutine.resume(producer)
+    if group and highlight then
+      set_highlight(group,highlight)
+    end
+    if coroutine.status(producer) == 'dead' then
+      break
     end
   end
 end
+
 
 return M
