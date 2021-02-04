@@ -110,7 +110,10 @@ function M.component_decorator(component_name)
 
         if type(v) == 'string' then
           if type(provider_group[v]) ~= 'function' then
-            print(string.format('Does not found the provider in default provider provider in %s',component_name))
+            if next(provider_group) ~= nil then
+              print(string.format('Does not found the provider in default provider provider in %s',component_name))
+              return ''
+            end
             return ''
           end
           output = output .. exec_provider(icon,provider_group[v])
