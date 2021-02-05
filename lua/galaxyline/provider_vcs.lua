@@ -1,95 +1,92 @@
-local vim= vim
+local vim = vim
 local common = require('galaxyline.common')
 local M = {}
 
 local function get_dir_contains(path, dirname)
 
-    -- return parent path for specified entry (either file or directory)
-    local function pathname(path)
-        local prefix = ""
-        local i = path:find("[\\/:][^\\/:]*$")
-        if i then
-            prefix = path:sub(1, i-1)
-        end
-        return prefix
+  -- return parent path for specified entry (either file or directory)
+  local function pathname(path)
+    local prefix = ""
+    local i = path:find("[\\/:][^\\/:]*$")
+    if i then
+      prefix = path:sub(1, i-1)
     end
+    return prefix
+  end
 
-    -- Navigates up one level
-    local function up_one_level(path)
-        if path == nil then path = '.' end
-        if path == '.' then path = io.popen"cd":read'*l' end
-        return pathname(path)
+  -- Navigates up one level
+  local function up_one_level(path)
+    if not path == nil or path == '.' then
+      path = vim.fn.getcwd()
     end
+    return pathname(path)
+  end
 
-    -- Checks if provided directory contains git directory
-    local function has_specified_dir(path, specified_dir)
-        if path == nil then path = '.' end
-        return  common.is_dir(path..'/'..specified_dir)
-    end
-
-    -- Set default path to current directory
+  -- Checks if provided directory contains git directory
+  local function has_specified_dir(path, specified_dir)
     if path == nil then path = '.' end
+    return  common.is_dir(path..'/'..specified_dir)
+  end
 
-    -- If we're already have .git directory here, then return current path
-    if has_specified_dir(path, dirname) then
-        return path..'/'..dirname
+  -- Set default path to current directory
+  if path == nil then path = '.' end
+
+  -- If we're already have .git directory here, then return current path
+  if has_specified_dir(path, dirname) then
+    return path..'/'..dirname
+  else
+    -- Otherwise go up one level and make a recursive call
+    local parent_path = up_one_level(path)
+    if parent_path == path then
+      return nil
     else
-        -- Otherwise go up one level and make a recursive call
-        local parent_path = up_one_level(path)
-        if parent_path == path then
-            return nil
-        else
-            return get_dir_contains(parent_path, dirname)
-        end
+      return get_dir_contains(parent_path, dirname)
     end
+  end
 end
 
 -- adapted from from clink-completions' git.lua
 function M.get_git_dir(path)
 
-    -- return parent path for specified entry (either file or directory)
-    local function pathname(path)
-        local prefix = ""
-        local i = path:find("[\\/:][^\\/:]*$")
-        if i then
-            prefix = path:sub(1, i-1)
-        end
-
-        return prefix
+  -- return parent path for specified entry (either file or directory)
+  local function pathname(path)
+    local prefix = ""
+    local i = path:find("[\\/:][^\\/:]*$")
+    if i then
+      prefix = path:sub(1, i-1)
     end
+    return prefix
+  end
 
-    -- Checks if provided directory contains git directory
-    local function has_git_dir(dir)
-        local git_dir = dir..'/.git'
-        if common.is_dir(git_dir) then return git_dir end
+  -- Checks if provided directory contains git directory
+  local function has_git_dir(dir)
+    local git_dir = dir..'/.git'
+    if common.is_dir(git_dir) then return git_dir end
+  end
+
+  local function has_git_file(dir)
+    local gitfile = io.open(dir..'/.git')
+    if gitfile ~= nil then
+      local git_dir = gitfile:read():match('gitdir: (.*)')
+      gitfile:close()
+
+      return git_dir
     end
+  end
 
-    local function has_git_file(dir)
-        local gitfile = io.open(dir..'/.git')
-        if not gitfile then return false end
+  -- Set default path to current directory
+  if not path or path == '.' then
+    path = vim.fn.getcwd()
+  end
 
-        local git_dir = gitfile:read():match('gitdir: (.*)')
-        gitfile:close()
+  -- Calculate parent path now otherwise we won't be
+  -- able to do that inside of logical operator
+  local parent_path = pathname(path)
 
-        return git_dir and dir..'/'..git_dir
-    end
-
-    -- Set default path to current directory
-    if not path or path == '.' then
-      local dir = io.popen("cd")
-      if dir ~= nil then
-        path = dir:read'*l'
-      end
-    end
-
-    -- Calculate parent path now otherwise we won't be
-    -- able to do that inside of logical operator
-    local parent_path = pathname(path)
-
-    return has_git_dir(path)
-        or has_git_file(path)
-        -- Otherwise go up one level and make a recursive call
-        or (parent_path ~= path and M.get_git_dir(parent_path) or nil)
+  return has_git_dir(path)
+    or has_git_file(path)
+    -- Otherwise go up one level and make a recursive call
+    or (parent_path ~= path and M.get_git_dir(parent_path) or nil)
 end
 
 function M.check_git_workspace()
@@ -130,11 +127,11 @@ function M.get_git_branch()
   end
   local git_dir = M.get_git_dir(current_dir)
   if not git_dir then return end
-  local git_root
-  if not git_dir:find('/.git') then
-    git_root = git_dir
-  end
-  git_root = git_dir:gsub('/.git','')
+
+  -- The function get_git_dir should return the root git path with '.git'
+  -- appended to it. Otherwise if a different gitdir is set this substitution
+  -- doesn't change the root.
+  local git_root = git_dir:gsub('/.git/?$','')
 
   -- If git directory not found then we're probably outside of repo
   -- or something went wrong. The same is when head_file is nil
