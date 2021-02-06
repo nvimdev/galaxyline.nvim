@@ -10,8 +10,7 @@ end
 
 local _switch = {
   ['string'] = function (hi_type,hi_color)
-    local color = hi_color or 'NONE'
-    return 'gui'..hi_type..'='..color
+    return 'gui'..hi_type..'='..hi_color
   end,
   ['function'] = function (hi_type,color)
     local resolved_color = color()
@@ -31,20 +30,18 @@ local _switch_metatable = {
 
 setmetatable(_switch,_switch_metatable)
 
-local function set_highlight(group, color)
+local function set_highlight(group, hi_info)
   local fg,bg,style = 'fg','bg',''
 
-  if type(color) == 'string' then
-    api.nvim_command('highlight link ' .. group .. ' ' .. color)
+  if type(hi_info) == 'string' then
+    api.nvim_command('highlight link ' .. group .. ' ' .. hi_info)
     return
   end
 
-  if type(color) == 'table' then
-    fg = _switch[type(color[1])](fg,color[1])
-    bg = _switch[type(color[2])](bg,color[2])
-    if color[3] then
-      style = _switch[type(color[3])](style,color[3])
-    end
+  if type(hi_info) == 'table' then
+    fg = hi_info[1] and _switch[type(hi_info[1])](fg,hi_info[1]) or 'guifg=NONE'
+    bg = hi_info[2] and _switch[type(hi_info[2])](bg,hi_info[2]) or 'guibg=NONE'
+    style = hi_info[3] and  _switch[type(hi_info[3])](style,hi_info[3]) or ''
   end
 
   vim.api.nvim_command('highlight ' .. group .. ' ' .. fg .. ' ' .. bg .. ' '..style)
