@@ -2,14 +2,12 @@ local vim = vim
 local common = require('galaxyline.common')
 local M = {}
 
--- Return parent path for specified entry (either file or directory)
+-- Return parent path for specified entry (either file or directory), nil if
+-- there is none
 local function parent_pathname(path)
-  local prefix = ""
   local i = path:find("[\\/:][^\\/:]*$")
-  if i then
-    prefix = path:sub(1, i-1)
-  end
-  return prefix
+  if not i then return end
+  return path:sub(1, i-1)
 end
 
 local function get_dir_contains(path, dirname)
@@ -36,12 +34,9 @@ local function get_dir_contains(path, dirname)
     return path..'/'..dirname
   else
     -- Otherwise go up one level and make a recursive call
-    local parent_path = up_one_level(path)
-    if parent_path == path then
-      return nil
-    else
-      return get_dir_contains(parent_path, dirname)
-    end
+    path = up_one_level(path)
+    if not path then return nil end
+    return get_dir_contains(path, dirname)
   end
 end
 
@@ -73,18 +68,14 @@ function M.get_git_dir(path)
   local git_dir
   -- Check in each path for a git directory, continues until found or reached
   -- root directory
-  while true do
+  while path do
     -- Try to get the git directory checking if it exists or from a git file
     git_dir = has_git_dir(path) or has_git_file(path)
     if git_dir ~= nil then
       break
     end
     -- Move to the parent directory, nil if there is none
-    local parent_path = parent_pathname(path)
-    if parent_path == path then
-      break
-    end
-    path = parent_path
+    path = parent_pathname(path)
   end
 
   if not git_dir then return end
