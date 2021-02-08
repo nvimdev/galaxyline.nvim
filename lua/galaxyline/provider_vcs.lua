@@ -2,24 +2,24 @@ local vim = vim
 local common = require('galaxyline.common')
 local M = {}
 
-local function get_dir_contains(path, dirname)
-
-  -- return parent path for specified entry (either file or directory)
-  local function pathname(path)
-    local prefix = ""
-    local i = path:find("[\\/:][^\\/:]*$")
-    if i then
-      prefix = path:sub(1, i-1)
-    end
-    return prefix
+-- Return parent path for specified entry (either file or directory)
+local function parent_pathname(path)
+  local prefix = ""
+  local i = path:find("[\\/:][^\\/:]*$")
+  if i then
+    prefix = path:sub(1, i-1)
   end
+  return prefix
+end
+
+local function get_dir_contains(path, dirname)
 
   -- Navigates up one level
   local function up_one_level(path)
     if not path == nil or path == '.' then
       path = vim.fn.getcwd()
     end
-    return pathname(path)
+    return parent_pathname(path)
   end
 
   -- Checks if provided directory contains git directory
@@ -45,18 +45,8 @@ local function get_dir_contains(path, dirname)
   end
 end
 
--- adapted from from clink-completions' git.lua
+-- Adapted from from clink-completions' git.lua
 function M.get_git_dir(path)
-
-  -- return parent path for specified entry (either file or directory)
-  local function pathname(path)
-    local prefix = ""
-    local i = path:find("[\\/:][^\\/:]*$")
-    if i then
-      prefix = path:sub(1, i-1)
-    end
-    return prefix
-  end
 
   -- Checks if provided directory contains git directory
   local function has_git_dir(dir)
@@ -64,6 +54,7 @@ function M.get_git_dir(path)
     if common.is_dir(git_dir) then return git_dir end
   end
 
+  -- Get git directory from git file if present
   local function has_git_file(dir)
     local gitfile = io.open(dir..'/.git')
     if gitfile ~= nil then
@@ -74,19 +65,35 @@ function M.get_git_dir(path)
     end
   end
 
-  -- Set default path to current directory
+  -- If path nil or '.' get the absolute path to current directory
   if not path or path == '.' then
     path = vim.fn.getcwd()
   end
 
-  -- Calculate parent path now otherwise we won't be
-  -- able to do that inside of logical operator
-  local parent_path = pathname(path)
+  local git_dir
+  -- Check in each path for a git directory, continues until found or reached
+  -- root directory
+  while true do
+    -- Try to get the git directory checking if it exists or from a git file
+    git_dir = has_git_dir(path) or has_git_file(path)
+    if git_dir ~= nil then
+      break
+    end
+    -- Move to the parent directory, nil if there is none
+    local parent_path = parent_pathname(path)
+    if parent_path == path then
+      break
+    end
+    path = parent_path
+  end
 
-  return has_git_dir(path)
-    or has_git_file(path)
-    -- Otherwise go up one level and make a recursive call
-    or (parent_path ~= path and M.get_git_dir(parent_path) or nil)
+  if not git_dir then return end
+
+  -- Check if git directory is absolute path or a relative
+  if git_dir:sub(1,1) == '/' then
+    return git_dir
+  end
+  return  path .. '/' .. git_dir
 end
 
 function M.check_git_workspace()
@@ -110,7 +117,7 @@ function M.get_git_branch()
   local current_file = vim.fn.expand('%:p')
   local current_dir
 
-  -- if file is a symlinks
+  -- If file is a symlinks
   if vim.fn.getftype(current_file) == 'link' then
     local real_file = vim.fn.resolve(current_file)
     current_dir = vim.fn.fnamemodify(real_file,':h')
@@ -133,15 +140,15 @@ function M.get_git_branch()
   -- doesn't change the root.
   local git_root = git_dir:gsub('/.git/?$','')
 
-  -- If git directory not found then we're probably outside of repo
-  -- or something went wrong. The same is when head_file is nil
-  local head_file = git_dir and io.open(git_dir..'/HEAD')
+  -- If git directory not found then we're probably outside of repo or
+  -- something went wrong. The same is when head_file is nil
+  local head_file = io.open(git_dir..'/HEAD')
   if not head_file then return end
 
   local HEAD = head_file:read()
   head_file:close()
 
-  -- if HEAD matches branch expression, then we're on named branch
+  -- If HEAD matches branch expression, then we're on named branch
   -- otherwise it is a detached commit
   local branch_name = HEAD:match('ref: refs/heads/(.+)')
   if branch_name == nil then return  end
@@ -152,7 +159,7 @@ function M.get_git_branch()
   return branch_name .. ' '
 end
 
--- get diff datas
+-- Get diff data
 -- support plugins: vim-gitgutter vim-signify coc-git
 local function get_hunks_data()
   -- diff data 1:add 2:modified 3:remove
