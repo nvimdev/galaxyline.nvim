@@ -37,4 +37,10 @@ function M.nvim_create_augroups(definition)
   vim.api.nvim_command('augroup END')
 end
 
+function M.set_cache_autocmds(augroup)
+  cmd(fmt('augroup %s', augroup))
+  cmd('autocmd!')
+  cmd(fmt('autocmd CursorHold,BufWritePost * unlet! b:%s', augroup))
+  cmd('augroup END')
+end
 return M

@@ -85,6 +85,7 @@ local fileinfo = require('galaxyline.provider_fileinfo')
 local extension = require('galaxyline.provider_extensions')
 local colors = require('galaxyline.colors')
 local buffer = require('galaxyline.provider_buffer')
+local whitespace = require('galaxyline.provider_whitespace')
 
 -- provider 
 BufferIcon  = buffer.get_buffer_type_icon,
@@ -105,6 +106,8 @@ FileName = fileinfo.get_current_file_name,
 LinePercent = fileinfo.current_line_percent,
 ScrollBar = extension.scrollbar_instance,
 VistaPlugin = extension.vista_nearest,
+-- Whitespace
+Whitespace = whitespace.get_item,
 -- Diagnostic Provider
 DiagnosticError = diagnostic.get_diagnostic_error,
 DiagnosticWarn = diagnostic.get_diagnostic_warn,
