@@ -175,4 +175,15 @@ function M.get_file_icon_color()
   end
 end
 
+function M.filename_in_special_buffer()
+  local short_list = require('galaxyline').short_line_list
+  local fname = M.get_current_file_name()
+  for _,v in ipairs(short_list) do
+    if v == vim.bo.filetype then
+      return ''
+    end
+  end
+  return fname
+end
+
 return M

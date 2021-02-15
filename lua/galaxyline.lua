@@ -36,6 +36,7 @@ async_load = uv.new_async(vim.schedule_wrap(function ()
    FileSize = fileinfo.get_file_size,
    FileIcon = fileinfo.get_file_icon,
    FileName = fileinfo.get_current_file_name,
+   SFileName = fileinfo.filename_in_special_buffer,
    LinePercent = fileinfo.current_line_percent,
    ScrollBar = extension.scrollbar_instance,
    VistaPlugin = extension.vista_nearest,
