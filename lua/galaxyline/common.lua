@@ -1,3 +1,4 @@
+local fmt = string.format
 local M = {}
 
 --- Check if a file or directory exists in this path
