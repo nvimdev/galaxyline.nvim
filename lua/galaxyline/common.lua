@@ -1,4 +1,6 @@
 local fmt = string.format
+local cmd = vim.cmd
+
 local M = {}
 
 --- Check if a file or directory exists in this path
