@@ -213,30 +213,33 @@ local function register_user_events()
   common.nvim_create_augroups(user_events)
 end
 
-function M.inactive_galaxyline()
-  local combin = function ()
-    local short_left_section = load_section(M.section.short_line_left,'left')
-    local short_right_section = load_section(M.section.short_line_right,'right')
-    local line = short_left_section .. '%=' .. short_right_section
-    return line
+local async_combin
+local short_line = ''
+
+async_combin = uv.new_async(vim.schedule_wrap(function()
+  local left_section = load_section(M.section.left,'left')
+  local right_section = load_section(M.section.right,'right')
+  local short_left_section = load_section(M.section.short_line_left,'left')
+  local short_right_section = load_section(M.section.short_line_right,'right')
+  local line = ''
+  if not common.has_value(M.short_line_list,vim.bo.filetype) then
+    line = left_section .. '%=' .. right_section
+  else
+    short_line =  short_left_section .. '%=' .. short_right_section
+    line = short_line
   end
-  vim.wo.statusline = combin()
-end
+
+  vim.wo.statusline = line
+end))
 
 function M.load_galaxyline()
-  local combination = function()
-    local left_section = load_section(M.section.left,'left')
-    local right_section = load_section(M.section.right,'right')
-    local short_left_section = load_section(M.section.short_line_left,'left')
-    local short_right_section = load_section(M.section.short_line_right,'right')
-    if not common.has_value(M.short_line_list,vim.bo.filetype) then
-      return  left_section .. '%=' .. right_section
-    end
-    return short_left_section .. '%=' .. short_right_section
-  end
-  vim.wo.statusline = combination()
+  async_combin:send()
   colors.init_theme(M.section)
   register_user_events()
+end
+
+function M.inactive_galaxyline()
+  vim.wo.statusline = short_line
 end
 
 function M.init_colorscheme()

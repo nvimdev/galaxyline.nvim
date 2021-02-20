@@ -1,5 +1,5 @@
 set rtp+=~/workstation/vim/galaxyline.nvim
-set rtp+=~/.cache/vim/dein/repos/github.com/kyazdani42/nvim-web-devicons
+set rtp+=~/.local/share/nvim/site/pack/packer/start/nvim-web-devicons
 
 " usage norcalli/profiler.nvim
 " run with env AK_PROFILER=1 nvim -u min.vim 2>&1 >/dev/null | less
