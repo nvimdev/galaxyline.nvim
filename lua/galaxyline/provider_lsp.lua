@@ -1,5 +1,5 @@
 local get_lsp_client = function ()
-  local buf_ft = api.nvim_buf_get_option(0,'filetype')
+  local buf_ft = vim.api.nvim_buf_get_option(0,'filetype')
   local buf_clients = vim.lsp.buf_get_clients()
   if next(buf_clients) == nil then
     return 'No Actice Lsp '
