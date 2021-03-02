@@ -86,6 +86,7 @@ local extension = require('galaxyline.provider_extensions')
 local colors = require('galaxyline.colors')
 local buffer = require('galaxyline.provider_buffer')
 local whitespace = require('galaxyline.provider_whitespace')
+local lspclient = require('galaxyline.provider_lsp')
 
 -- provider 
 BufferIcon  = buffer.get_buffer_type_icon,
@@ -113,6 +114,8 @@ DiagnosticError = diagnostic.get_diagnostic_error,
 DiagnosticWarn = diagnostic.get_diagnostic_warn,
 DiagnosticHint = diagnostic.get_diagnostic_hint,
 DiagnosticInfo = diagnostic.get_diagnostic_info,
+-- LSP
+GetLspClient = lspclient.get_lsp_client,
 
 -- public libs
 
