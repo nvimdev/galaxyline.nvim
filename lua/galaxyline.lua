@@ -22,6 +22,7 @@ async_load = uv.new_async(vim.schedule_wrap(function ()
   local buffer = require('galaxyline.provider_buffer')
   local extension = require('galaxyline.provider_extensions')
   local whitespace =require('galaxyline.provider_whitespace')
+  local lspclient = require('galaxyline.provider_lsp')
   provider_group = {
    BufferIcon  = buffer.get_buffer_type_icon,
    BufferNumber = buffer.get_buffer_number,
@@ -41,6 +42,7 @@ async_load = uv.new_async(vim.schedule_wrap(function ()
    ScrollBar = extension.scrollbar_instance,
    VistaPlugin = extension.vista_nearest,
    WhiteSpace = whitespace.get_item,
+   GetLspClient = lspclient.get_lsp_client,
   }
   local diagnostic = require('galaxyline.provider_diagnostic')
   provider_group.DiagnosticError = diagnostic.get_diagnostic_error
