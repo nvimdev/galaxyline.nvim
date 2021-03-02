@@ -1,5 +1,5 @@
 local get_lsp_client = function ()
-  local buf_clients = vim.lsp.get_buf_clients()
+  local buf_clients = vim.lsp.buf_get_clients()
   if next(buf_clients) == nil then
     return 'No Actice Lsp '
   end
