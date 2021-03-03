@@ -8,6 +8,6 @@ set rtp+=~/.local/share/nvim/site/pack/packer/start/nvim-web-devicons
 
 lua <<EOF
 local profiler = require('profiler')
---require('internal.eviline')
+require('modules.ui.eviline')
 profiler.wrap(require('galaxyline').load_galaxyline)
 EOF

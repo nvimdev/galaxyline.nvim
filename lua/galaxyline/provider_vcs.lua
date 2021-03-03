@@ -1,5 +1,4 @@
 local vim = vim
-local common = require('galaxyline.common')
 local M = {}
 
 -- Return parent path for specified entry (either file or directory), nil if
@@ -23,7 +22,7 @@ local function get_dir_contains(path, dirname)
   -- Checks if provided directory contains git directory
   local function has_specified_dir(path, specified_dir)
     if path == nil then path = '.' end
-    return  common.is_dir(path..'/'..specified_dir)
+    return  vim.fn.isdirectory(path..'/'..specified_dir) == 1
   end
 
   -- Set default path to current directory
@@ -46,7 +45,7 @@ function M.get_git_dir(path)
   -- Checks if provided directory contains git directory
   local function has_git_dir(dir)
     local git_dir = dir..'/.git'
-    if common.is_dir(git_dir) then return git_dir end
+    if vim.fn.isdirectory(git_dir) == 1 then return git_dir end
   end
 
   -- Get git directory from git file if present

@@ -1,7 +1,6 @@
 local fn, vim = vim.fn, vim
 local b, bo = vim.b, vim.bo
 local fmt = string.format
-local common = require('galaxyline.common')
 
 local enabled = false
 local cache = ''
@@ -52,9 +51,15 @@ local function check_conflict()
   return search('conflict', pattern)
 end
 
+local function set_cache_autocmds(augroup)
+  vim.cmd(fmt('augroup %s', augroup))
+  vim.cmd('autocmd!')
+  vim.cmd(fmt('autocmd CursorHold,BufWritePost * unlet! b:%s', augroup))
+  vim.cmd('augroup END')
+end
 local function get_item()
   if not enabled then
-    common.set_cache_autocmds('galaxyline_whitespace')
+    set_cache_autocmds('galaxyline_whitespace')
     enabled = true
   end
   if bo.readonly or not bo.modifiable then

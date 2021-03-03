@@ -1,6 +1,4 @@
 local vim = vim
-local common = require('galaxyline.common')
-local colors = require('galaxyline.colors')
 local uv = vim.loop
 local M = {}
 
@@ -11,50 +9,11 @@ M.section.short_line_left = {}
 M.section.short_line_right = {}
 M.short_line_list = {}
 
-local provider_group = {}
-local async_load
-
--- why async load providers? because found the diagnostic providers
--- take a lot of startup time
-async_load = uv.new_async(vim.schedule_wrap(function ()
-  local vcs = require('galaxyline.provider_vcs')
-  local fileinfo = require('galaxyline.provider_fileinfo')
-  local buffer = require('galaxyline.provider_buffer')
-  local extension = require('galaxyline.provider_extensions')
-  local whitespace =require('galaxyline.provider_whitespace')
-  local lspclient = require('galaxyline.provider_lsp')
-  provider_group = {
-   BufferIcon  = buffer.get_buffer_type_icon,
-   BufferNumber = buffer.get_buffer_number,
-   FileTypeName = buffer.get_buffer_filetype,
-   GitBranch = vcs.get_git_branch,
-   DiffAdd = vcs.diff_add,
-   DiffModified = vcs.diff_modified,
-   DiffRemove = vcs.diff_remove,
-   LineColumn = fileinfo.line_column,
-   FileFormat = fileinfo.get_file_format,
-   FileEncode = fileinfo.get_file_encode,
-   FileSize = fileinfo.get_file_size,
-   FileIcon = fileinfo.get_file_icon,
-   FileName = fileinfo.get_current_file_name,
-   SFileName = fileinfo.filename_in_special_buffer,
-   LinePercent = fileinfo.current_line_percent,
-   ScrollBar = extension.scrollbar_instance,
-   VistaPlugin = extension.vista_nearest,
-   WhiteSpace = whitespace.get_item,
-   GetLspClient = lspclient.get_lsp_client,
-  }
-  local diagnostic = require('galaxyline.provider_diagnostic')
-  provider_group.DiagnosticError = diagnostic.get_diagnostic_error
-  provider_group.DiagnosticWarn = diagnostic.get_diagnostic_warn
-  provider_group.DiagnosticHint = diagnostic.get_diagnostic_hint
-  provider_group.DiagnosticInfo = diagnostic.get_diagnostic_info
-  async_load:close()
-end))
+_G.galaxyline_providers = {}
 
 do
-  if next(provider_group) == nil then
-    async_load:send()
+  if next(_G.galaxyline_providers) == nil then
+    require('galaxyline.provider').async_load_providers:send()
   end
 end
 
@@ -93,14 +52,14 @@ function M.component_decorator(component_name)
 
   local _switch = {
     ['string'] = function()
-      if provider_group[provider] == nil then
-        if next(provider_group) ~= nil then
+      if _G.galaxyline_providers[provider] == nil then
+        if next(_G.galaxyline_providers) ~= nil then
           print(string.format('The provider of %s does not exist in default provider group',component_name))
           return ''
         end
         return ''
       end
-      return exec_provider(icon,provider_group[provider])
+      return exec_provider(icon,_G.galaxyline_providers[provider])
     end,
     ['function'] = function()
       return exec_provider(icon,provider)
@@ -114,14 +73,14 @@ function M.component_decorator(component_name)
         end
 
         if type(v) == 'string' then
-          if type(provider_group[v]) ~= 'function' then
-            if next(provider_group) ~= nil then
+          if type(_G.galaxyline_providers[v]) ~= 'function' then
+            if next(_G.galaxyline_providers) ~= nil then
               print(string.format('Does not found the provider in default provider provider in %s',component_name))
               return ''
             end
             return ''
           end
-          output = output .. exec_provider(icon,provider_group[v])
+          output = output .. exec_provider(icon,_G.galaxyline_providers[v])
         end
 
         if type(v) == 'function' then
@@ -188,31 +147,32 @@ local function section_complete_with_option(component,component_info,position)
   return tmp_line
 end
 
+local hi_tbl = {}
+local events = { 'ColorScheme', 'FileType','BufWinEnter','BufReadPost','BufWritePost',
+                  'BufEnter','WinEnter','FileChangedShellPost','VimResized','TermOpen'}
+
 local function load_section(section_area,pos)
   local section = ''
-  if section_area ~= nil then
-    for _,component in pairs(section_area) do
-      for component_name,component_info in pairs(component) do
-        local ls = section_complete_with_option(component_name,component_info,pos)
-        section = section .. ls
+  if section_area == nil then return section end
+
+  for _,component in pairs(section_area) do
+    for component_name,component_info in pairs(component) do
+      local ls = section_complete_with_option(component_name,component_info,pos)
+      section = section .. ls
+      local group = 'Galaxy'..component_name
+      local sgroup = component_name..'Separator'
+      if not hi_tbl[group] then
+        hi_tbl[group] = component_info.highlight or {}
+      end
+      if not hi_tbl[sgroup] then
+        hi_tbl[sgroup] = component_info.separator_highlight or {}
+      end
+      if component_info.event and vim.fn.index(events,component_info.event) == -1 then
+        events[#events+1] = component_info.event
       end
     end
   end
   return section
-end
-
-local function register_user_events()
-  local user_events = {}
-  for _,section in pairs(M.section) do
-    for _,component_info in pairs(section) do
-      local event = component_info['event'] or ''
-      if string.len(event) > 0 then
-        table.insert(user_events,event)
-      end
-    end
-  end
-  if next(user_events) == nil then return end
-  common.nvim_create_augroups(user_events)
 end
 
 local async_combin
@@ -228,17 +188,16 @@ async_combin = uv.new_async(vim.schedule_wrap(function()
   line = left_section .. '%=' .. right_section
   short_line =  short_left_section .. '%=' .. short_right_section
 
-  if common.has_value(M.short_line_list,vim.bo.filetype) then
+  if vim.fn.index(M.short_line_list,vim.bo.filetype) ~= -1 then
     line = short_line
   end
 
   vim.wo.statusline = line
+  M.init_colorscheme()
 end))
 
 function M.load_galaxyline()
   async_combin:send()
-  colors.init_theme(M.section)
-  register_user_events()
 end
 
 function M.inactive_galaxyline()
@@ -246,7 +205,8 @@ function M.inactive_galaxyline()
 end
 
 function M.init_colorscheme()
-  colors.init_theme(M.section)
+  local colors = require('galaxyline.colors')
+  colors.init_theme(hi_tbl)
 end
 
 function M.disable_galaxyline()
@@ -257,8 +217,6 @@ function M.disable_galaxyline()
 end
 
 function M.galaxyline_augroup()
-  local events = { 'ColorScheme', 'FileType','BufWinEnter','BufReadPost','BufWritePost',
-                  'BufEnter','WinEnter','FileChangedShellPost','VimResized','TermOpen'}
   vim.api.nvim_command('augroup galaxyline')
   vim.api.nvim_command('autocmd!')
   for _, def in ipairs(events) do
