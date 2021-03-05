@@ -6,7 +6,7 @@ local function file_readonly()
     return ''
   end
   if vim.bo.readonly == true then
-    return " "
+    return "  "
   end
   return ''
 end
