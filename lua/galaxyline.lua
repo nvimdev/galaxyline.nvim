@@ -54,7 +54,7 @@ function M.component_decorator(component_name)
     ['string'] = function()
       if _G.galaxyline_providers[provider] == nil then
         if next(_G.galaxyline_providers) ~= nil then
-          print(string.format('The provider of %s does not exist in default provider group',component_name))
+          print(string.format('provider of %s does not exist in default provider group',component_name))
           return ''
         end
         return ''
@@ -75,7 +75,7 @@ function M.component_decorator(component_name)
         if type(v) == 'string' then
           if type(_G.galaxyline_providers[v]) ~= 'function' then
             if next(_G.galaxyline_providers) ~= nil then
-              print(string.format('Does not found the provider in default provider provider in %s',component_name))
+              print(string.format('Does not found the provider in default provider in %s',component_name))
               return ''
             end
             return ''
