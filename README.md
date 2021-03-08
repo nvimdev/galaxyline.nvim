@@ -40,6 +40,8 @@ The type of all of these section variables:
 
 - `require('galaxyline').section.left` the statusline left section.
 
+- `require('galaxyline').section.mid` the statusline mid section.
+
 - `require('galaxyline').section.right` the stautsline right section.
 
 - `require('galaxyline').section.short_line_left` the statusline left section
@@ -158,7 +160,7 @@ You can also use the source of the provider function.
 
 - `highlight` can be used in two ways.  The first is to pass three elements: the first element is `fg`, the second is `bg`, and the third is `gui`. The second method is to pass a highlight group as a string (such as `IncSearch`) that galaxyline will link to.
 
-- `separator` is a string. It is not just a separator. Any statusline item can be
+- `separator` is a string or table. notice that table type only work in mid section, It is not just a separator. Any statusline item can be
     defined here, like `%<`,`%{}`,`%n`, and so on.
 
 - `separator_highlight` same as highlight

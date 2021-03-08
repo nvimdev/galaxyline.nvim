@@ -5,6 +5,7 @@ local M = {}
 M.section = {}
 M.section.left = {}
 M.section.right = {}
+M.section.mid = {}
 M.section.short_line_left = {}
 M.section.short_line_right = {}
 M.short_line_list = {}
@@ -119,12 +120,12 @@ local function section_complete_with_option(component,component_info,position)
   local tmp_line = ''
   -- get the component condition and dynamicswitch
   local condition = component_info.condition or nil
-  local separator = component_info.separator or ''
+  local separator = component_info.separator or nil
 
-  if condition ~= nil then
+  if condition then
     if condition() then
       tmp_line = tmp_line .. generate_section(component)
-      if string.len(separator) ~= 0 then
+      if separator then
         if position == 'left' then
           tmp_line = tmp_line .. generate_separator_section(component,separator)
         else
@@ -136,11 +137,15 @@ local function section_complete_with_option(component,component_info,position)
   end
 
   tmp_line = tmp_line .. generate_section(component)
-  if string.len(separator) ~= 0 then
+  if separator then
     if position == 'left' then
       tmp_line = tmp_line .. generate_separator_section(component,separator)
-    else
+    elseif position == 'right' then
       tmp_line = generate_separator_section(component,separator) .. tmp_line
+    else
+      if type(separator) == "table" then
+        tmp_line = generate_separator_section(component,separator[1]) ..tmp_line .. generate_separator_section(component,separator[2])
+      end
     end
   end
 
@@ -181,11 +186,17 @@ local short_line = ''
 async_combin = uv.new_async(vim.schedule_wrap(function()
   local left_section = load_section(M.section.left,'left')
   local right_section = load_section(M.section.right,'right')
+  local mid_section = next(M.section.mid) ~= nil and load_section(M.section.mid,'mid') or nil
   local short_left_section = load_section(M.section.short_line_left,'left')
   local short_right_section = load_section(M.section.short_line_right,'right')
   local line = ''
 
-  line = left_section .. '%=' .. right_section
+  if mid_section then
+    local fill_section = '%#GalaxylineFillSection#%='
+    line = left_section .. fill_section .. mid_section .. fill_section .. right_section
+  else
+    line = left_section .. '%=' .. right_section
+  end
   short_line =  short_left_section .. '%=' .. short_right_section
 
   if vim.fn.index(M.short_line_list,vim.bo.filetype) ~= -1 then
