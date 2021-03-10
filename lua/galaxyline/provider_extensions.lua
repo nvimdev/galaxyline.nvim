@@ -26,7 +26,7 @@ end
 -- show current function or method
 -- see https://github.com/liuchengxu/vista.vim
 function M.vista_nearest(vista_icon)
-  local has_vista,vista_info = pcall(vim.fn.nvim_buf_get_var,0,'vista_nearest_method_or_function')
+  local has_vista,vista_info = pcall(vim.api.nvim_buf_get_var,0,'vista_nearest_method_or_function')
   if not has_vista then return end
   local icon = vista_icon or '✪ '
   return icon .. vista_info
