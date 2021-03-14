@@ -45,10 +45,10 @@ The type of all of these section variables:
 - `require('galaxyline').section.right` the stautsline right section.
 
 - `require('galaxyline').section.short_line_left` the statusline left section
-    when filetype is in `short_line_list`
+    when filetype is in `short_line_list` and for inactive window
 
 - `require('galaxyline').section.short_line_right` statusline right section when
-    filetype is in `short_line_list`
+    filetype is in `short_line_list` and for inactive window
 
 
 ### Component keyword
