@@ -182,6 +182,7 @@ end
 
 local async_combin
 local short_line = ''
+local normal_line = ''
 
 async_combin = uv.new_async(vim.schedule_wrap(function()
   local left_section = load_section(M.section.left,'left')
@@ -197,6 +198,7 @@ async_combin = uv.new_async(vim.schedule_wrap(function()
   else
     line = left_section .. '%=' .. right_section
   end
+  normal_line = line
   short_line =  short_left_section .. '%=' .. short_right_section
 
   if vim.fn.index(M.short_line_list,vim.bo.filetype) ~= -1 then
@@ -212,7 +214,11 @@ function M.load_galaxyline()
 end
 
 function M.inactive_galaxyline()
-  vim.wo.statusline = short_line
+  if next(M.short_line_list) == nil then
+    vim.wo.statusline = normal_line
+  else
+    vim.wo.statusline = short_line
+  end
 end
 
 function M.init_colorscheme()
