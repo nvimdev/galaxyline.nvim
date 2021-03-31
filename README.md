@@ -157,6 +157,7 @@ You can also use the source of the provider function.
     will load the component.
 
 - `icon` is a string that will be added to the head of the provider result.
+    It can also be a function that returns a string.
 
 - `highlight` can be used in two ways.  The first is to pass three elements: the first element is `fg`, the second is `bg`, and the third is `gui`. The second method is to pass a highlight group as a string (such as `IncSearch`) that galaxyline will link to.
 
