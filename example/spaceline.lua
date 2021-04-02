@@ -32,17 +32,17 @@ gls.left[1] = {
 gls.left[2] = {
   ViMode = {
     provider = function()
-      local alias = {n = 'NORMAL',i = 'INSERT',c= 'COMMAND',V= 'VISUAL', [''] = 'VISUAL'}
+      local alias = {n = 'NORMAL',i = 'INSERT',c= 'COMMAND',v= 'VISUAL',V= 'VISUAL LINE', [''] = 'VISUAL BLOCK'}
       return alias[vim.fn.mode()]
     end,
     separator = '',
-    separator_highlight = {colors.yellow,function()
+    separator_highlight = {colors.purple,function()
       if not buffer_not_empty() then
         return colors.purple
       end
       return colors.darkblue
     end},
-    highlight = {colors.magenta,colors.yellow,'bold'},
+    highlight = {colors.darkblue,colors.purple,'bold'},
   },
 }
 gls.left[3] ={
