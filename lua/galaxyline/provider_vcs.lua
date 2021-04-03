@@ -88,6 +88,19 @@ function M.get_git_dir(path)
   return  path .. '/' .. git_dir
 end
 
+local function get_git_detached_head()
+  local git_branches_file = io.popen("git branch -a --no-abbrev --contains", "r")
+  if not git_branches_file then return end
+  local git_branches_data = git_branches_file:read("*l")
+  io.close(git_branches_file)
+  if not git_branches_data then return end
+
+  local branch_name = git_branches_data:match('.*HEAD detached at ([%w/-]+)')
+  if branch_name and string.len(branch_name) > 0 then
+    return branch_name
+  end
+end
+
 function M.get_git_branch()
   if vim.bo.filetype == 'help' then return end
   local current_file = vim.fn.expand('%:p')
@@ -135,7 +148,12 @@ function M.get_git_branch()
   end
 
   local branch_name = head_cache[git_root].head:match("ref: refs/heads/([^\n\r%s]+)")
-  if not branch_name then return end
+  if not branch_name then
+    -- check if detached head
+    branch_name = get_git_detached_head()
+    if not branch_name then return end
+    branch_name = "detached at " .. branch_name
+  end
 
   head_cache[git_root].branch = branch_name
   return branch_name
