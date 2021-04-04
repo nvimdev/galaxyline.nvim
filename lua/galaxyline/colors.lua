@@ -33,6 +33,10 @@ setmetatable(_switch,_switch_metatable)
 local function set_highlight(group, hi_info)
   local fg,bg,style = 'fg','bg',''
 
+  if type(hi_info) == 'function' then
+    hi_info = hi_info()
+  end
+
   if type(hi_info) == 'string' then
     api.nvim_command('highlight link ' .. group .. ' ' .. hi_info)
     return
