@@ -34,7 +34,7 @@ local function set_highlight(group, hi_info)
   local fg,bg,style = 'fg','bg',''
 
   if type(hi_info) == 'string' then
-    api.nvim_command('highlight link ' .. group .. ' ' .. hi_info)
+    api.nvim_command('highlight! link ' .. group .. ' ' .. hi_info)
     return
   end
 
