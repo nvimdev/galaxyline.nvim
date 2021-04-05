@@ -1,5 +1,7 @@
+local luv = vim.loop
 local vim = vim
 local M = {}
+local head_cache = {}
 
 -- Return parent path for specified entry (either file or directory), nil if
 -- there is none
@@ -99,13 +101,6 @@ function M.get_git_branch()
     current_dir = vim.fn.expand('%:p:h')
   end
 
-  local _,gitbranch_pwd = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_pwd')
-  local _,gitbranch_path = pcall(vim.api.nvim_buf_get_var,0,'gitbranch_path')
-  if gitbranch_path and gitbranch_pwd then
-    if gitbranch_path:find(current_dir) and string.len(gitbranch_pwd) ~= 0 then
-      return  gitbranch_pwd
-    end
-  end
   local git_dir = M.get_git_dir(current_dir)
   if not git_dir then return end
 
@@ -113,24 +108,37 @@ function M.get_git_branch()
   -- appended to it. Otherwise if a different gitdir is set this substitution
   -- doesn't change the root.
   local git_root = git_dir:gsub('/.git/?$','')
+  local head_stat = luv.fs_stat(git_dir .. "/HEAD")
 
-  -- If git directory not found then we're probably outside of repo or
-  -- something went wrong. The same is when head_file is nil
-  local head_file = io.open(git_dir..'/HEAD')
-  if not head_file then return end
+  if head_stat and head_stat.mtime then
+    if (head_cache[git_root]
+        and head_cache[git_root].mtime == head_stat.mtime.sec
+        and head_cache[git_root].branch) then
 
-  local HEAD = head_file:read()
-  head_file:close()
+      if string.len(head_cache[git_root].branch) ~= 0 then
+        return head_cache[git_root].branch
+      end
+    else
+      local head_file = luv.fs_open(git_dir .. "/HEAD", "r", 438)
+      if not head_file then return end
+      local head_data = luv.fs_read(head_file, head_stat.size, 0)
+      if not head_data then return end
+      luv.fs_close(head_file)
 
-  -- If HEAD matches branch expression, then we're on named branch
-  -- otherwise it is a detached commit
-  local branch_name = HEAD:match('ref: refs/heads/(.+)')
-  if branch_name == nil then return  end
+      head_cache[git_root] = {
+        head = head_data,
+        mtime = head_stat.mtime.sec
+      }
+    end
+  else
+    return
+  end
 
-  vim.api.nvim_buf_set_var(0,'gitbranch_pwd',branch_name)
-  vim.api.nvim_buf_set_var(0,'gitbranch_path',git_root)
+  local branch_name = head_cache[git_root].head:match("ref: refs/heads/([^\n\r%s]+)")
+  if not branch_name then return end
 
-  return branch_name .. ' '
+  head_cache[git_root].branch = branch_name
+  return branch_name
 end
 
 -- Get diff data

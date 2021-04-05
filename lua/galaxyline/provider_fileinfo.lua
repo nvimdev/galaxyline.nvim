@@ -1,26 +1,28 @@
 local vim = vim
 local M = {}
 
-local function file_readonly()
+local function file_readonly(readonly_icon)
   if vim.bo.filetype == 'help' then
     return ''
   end
+  local icon = readonly_icon or ''
   if vim.bo.readonly == true then
-    return "  "
+    return " " .. icon .. " "
   end
   return ''
 end
 
 -- get current file name
-function M.get_current_file_name()
+function M.get_current_file_name(modified_icon, readonly_icon)
   local file = vim.fn.expand('%:t')
   if vim.fn.empty(file) == 1 then return '' end
-  if string.len(file_readonly()) ~= 0 then
-    return file .. file_readonly()
+  if string.len(file_readonly(readonly_icon)) ~= 0 then
+    return file .. file_readonly(readonly_icon)
   end
+  local icon = modified_icon or ''
   if vim.bo.modifiable then
     if vim.bo.modified then
-      return file .. '   '
+      return file .. ' ' .. icon .. '  '
     end
   end
   return file .. ' '

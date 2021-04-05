@@ -40,7 +40,8 @@ end
 
 -- component decorator
 -- that will output the component result with icon
--- component provider and icon can be string or table
+-- component provider can be string or table
+-- component icon can be string or function
 function M.component_decorator(component_name)
   -- if section doesn't have component just return
   local ok,component_info = check_component_exists(component_name)
@@ -50,6 +51,8 @@ function M.component_decorator(component_name)
   end
   local provider = component_info.provider or ''
   local icon = component_info.icon or ''
+  if type(icon) == 'function' then icon = icon() end
+  if type(icon) ~= 'string' then icon = '' end
 
   local _switch = {
     ['string'] = function()
