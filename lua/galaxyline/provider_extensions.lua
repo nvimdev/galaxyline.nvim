@@ -32,4 +32,49 @@ function M.vista_nearest(vista_icon)
   return icon .. vista_info
 end
 
+-- extension for vimtex
+-- show current mode
+-- see https://github.com/lervag/vimtex
+function M.vimtex_status(icon_main,icon_sub_main,icon_sub_local,icon_compiled,icon_continuous,icon_viewer,icon_none)
+  local ic_main = icon_main or ''
+  local ic_sub_main = icon_sub_main or 'm'
+  local ic_sub_local = icon_sub_local or 'l'
+  local ic_compiled = icon_compiled or 'c₁'
+  local ic_continuous = icon_continuous or 'c'
+  local ic_viewer = icon_viewer or 'v'
+  local ic_none = icon_none or '0'
+
+  local status = {}
+  
+  local has_vt_local,vt_local = pcall(vim.api.nvim_buf_get_var,0,'vimtex_local')
+  if has_vt_local then
+    if vt_local['active'] then
+      table.insert(status,ic_sub_local)
+    else
+      table.insert(status,ic_sub_main)
+    end
+  else
+    table.insert(status,ic_main)
+  end
+
+  local has_vt, vt = pcall(vim.api.nvim_buf_get_var,0,'vimtex')
+  if has_vt then
+    if vt['compiler'] then
+      if vim.api.nvim_eval('b:vimtex.compiler.is_running()') == 1 then
+        if vt['compiler']['continuous'] then
+          table.insert(status,ic_continuous)
+        else
+          table.insert(status,ic_compiled)
+        end
+      end
+    end
+  end
+  status = table.concat(status)
+  if status == '' then
+    status = ic_none
+  end
+  return status
+end
+
+
 return M
