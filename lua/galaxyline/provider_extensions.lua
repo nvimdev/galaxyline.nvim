@@ -76,5 +76,11 @@ function M.vimtex_status(icon_main,icon_sub_main,icon_sub_local,icon_compiled,ic
   return status
 end
 
+-- extension for coc.nvim
+-- now it can just show status
+-- see https://github.com/neoclide/coc.nvim
+function M.coc_status()
+  return vim.fn['coc#status']();
+end
 
 return M
