@@ -61,6 +61,20 @@ function M.get_git_dir(path)
     end
   end
 
+  -- Check if git directory is absolute path or a relative
+  local function is_path_absolute(dir)
+    local patterns = {
+      '^/',        -- unix
+      '^%a:[/\\]', -- windows
+    }
+    for _, pattern in ipairs(patterns) do
+      if string.find(dir, pattern) then
+        return true
+      end
+    end
+    return false
+  end
+
   -- If path nil or '.' get the absolute path to current directory
   if not path or path == '.' then
     path = vim.fn.getcwd()
@@ -81,8 +95,7 @@ function M.get_git_dir(path)
 
   if not git_dir then return end
 
-  -- Check if git directory is absolute path or a relative
-  if git_dir:sub(1,1) == '/' then
+  if is_path_absolute(git_dir) then
     return git_dir
   end
   return  path .. '/' .. git_dir
