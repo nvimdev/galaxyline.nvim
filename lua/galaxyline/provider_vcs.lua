@@ -95,7 +95,7 @@ local function get_git_detached_head()
   io.close(git_branches_file)
   if not git_branches_data then return end
 
-  local branch_name = git_branches_data:match('.*HEAD detached at ([%w/-]+)')
+  local branch_name = git_branches_data:match('.*HEAD (detached %w+ [%w/-]+)')
   if branch_name and string.len(branch_name) > 0 then
     return branch_name
   end
@@ -128,9 +128,7 @@ function M.get_git_branch()
         and head_cache[git_root].mtime == head_stat.mtime.sec
         and head_cache[git_root].branch) then
 
-      if string.len(head_cache[git_root].branch) ~= 0 then
-        return head_cache[git_root].branch
-      end
+      return head_cache[git_root].branch
     else
       local head_file = luv.fs_open(git_dir .. "/HEAD", "r", 438)
       if not head_file then return end
@@ -152,7 +150,6 @@ function M.get_git_branch()
     -- check if detached head
     branch_name = get_git_detached_head()
     if not branch_name then return end
-    branch_name = "detached at " .. branch_name
   end
 
   head_cache[git_root].branch = branch_name
