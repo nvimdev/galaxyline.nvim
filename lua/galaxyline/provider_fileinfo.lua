@@ -28,6 +28,23 @@ function M.get_current_file_name(modified_icon, readonly_icon)
   return file .. ' '
 end
 
+-- get current file path
+function M.get_current_file_path(modified_icon, readonly_icon)
+  local filepath = vim.fn.fnamemodify(vim.fn.expand '%', ':~:.')
+  if vim.fn.empty(filepath) == 1 then return '' end
+
+  if string.len(file_readonly(readonly_icon)) ~= 0 then
+    return filepath .. file_readonly(readonly_icon)
+  end
+  local icon = modified_icon or ''
+  if vim.bo.modifiable then
+    if vim.bo.modified then
+      return filepath .. ' ' .. icon .. '  '
+    end
+  end
+  return filepath .. ' '
+end
+
 -- format print current file size
 function M.format_file_size(file)
   local size = vim.fn.getfsize(file)
