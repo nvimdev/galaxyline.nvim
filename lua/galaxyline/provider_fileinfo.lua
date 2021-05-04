@@ -15,14 +15,14 @@ local function file_with_icons(file, modified_icon, readonly_icon)
   readonly_icon = readonly_icon or ''
 
   if buffer_is_readonly() then
-    return " " .. readonly_icon .. " " .. file .. " "
+    file = readonly_icon .. ' ' ..file
   end
 
   if vim.bo.modifiable  and vim.bo.modified then
-    return file .. ' ' .. modified_icon .. '  '
+    file = file .. ' ' ..modified_icon
   end
 
-  return file .. ' '
+  return ' ' .. file .. ' '
 end
 
 -- get current file name
