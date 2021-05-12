@@ -9,6 +9,7 @@ M.section.mid = {}
 M.section.short_line_left = {}
 M.section.short_line_right = {}
 M.short_line_list = {}
+M.exclude_filetypes = {}
 
 _G.galaxyline_providers = {}
 
@@ -208,8 +209,10 @@ async_combin = uv.new_async(vim.schedule_wrap(function()
     line = short_line
   end
 
-  vim.wo.statusline = line
-  M.init_colorscheme()
+  if vim.fn.index(M.exclude_filetypes, vim.bo.filetype) == -1 then
+    vim.wo.statusline = line
+    M.init_colorscheme()
+  end
 end))
 
 function M.load_galaxyline()
