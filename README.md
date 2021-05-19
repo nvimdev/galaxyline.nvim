@@ -110,7 +110,7 @@ LinePercent = fileinfo.current_line_percent,
 ScrollBar = extension.scrollbar_instance,
 VistaPlugin = extension.vista_nearest,
 -- Whitespace
-Whitespace = whitespace.get_item,
+WhiteSpace = whitespace.get_item,
 -- Diagnostic Provider
 DiagnosticError = diagnostic.get_diagnostic_error,
 DiagnosticWarn = diagnostic.get_diagnostic_warn,
