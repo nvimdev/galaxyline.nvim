@@ -157,7 +157,7 @@ end
 
 local hi_tbl = {}
 local events = { 'ColorScheme', 'FileType','BufWinEnter','BufReadPost','BufWritePost',
-                  'BufEnter','WinEnter','FileChangedShellPost','VimResized','TermOpen'}
+                  'BufEnter','WinEnter','FileChangedShellPost','VimResized','TermOpen', 'BufHidden'}
 
 local function load_section(section_area,pos)
   local section = ''
