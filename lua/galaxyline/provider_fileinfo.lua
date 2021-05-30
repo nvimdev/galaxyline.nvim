@@ -134,23 +134,23 @@ local function get_file_info()
 end
 
 function M.get_file_icon()
-  local icon = ''
-  if vim.fn.exists("*WebDevIconsGetFileTypeSymbol") == 1 then
-    icon = vim.fn.WebDevIconsGetFileTypeSymbol()
-    return icon .. ' '
-  end
-  local ok,devicons = pcall(require,'nvim-web-devicons')
-  if not ok then print('No icon plugin found. Please install \'kyazdani42/nvim-web-devicons\'') return '' end
+  local icon = nil
   local f_name,f_extension = get_file_info()
-  icon = devicons.get_icon(f_name,f_extension)
+  if user_icons[vim.bo.filetype] ~= nil then
+	  icon = user_icons[vim.bo.filetype][2]
+  elseif user_icons[f_extension] ~= nil then
+	  icon = user_icons[f_extension][2]
+  end
   if icon == nil then
-    if user_icons[vim.bo.filetype] ~= nil then
-      icon = user_icons[vim.bo.filetype][2]
-    elseif user_icons[f_extension] ~= nil then
-      icon = user_icons[f_extension][2]
-    else
-      icon = ''
-    end
+	  local ok,devicons = pcall(require,'nvim-web-devicons')
+	  if ok then 
+		  icon = devicons.get_icon(f_name,f_extension,{default=true})
+	  elseif vim.fn.exists("*WebDevIconsGetFileTypeSymbol") == 1 then
+	    icon = vim.fn.WebDevIconsGetFileTypeSymbol()
+	  end
+  end
+  if icon == nil then
+	  icon = ''
   end
   return icon .. ' '
 end
