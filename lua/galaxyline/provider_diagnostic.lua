@@ -13,16 +13,15 @@ end
 local function get_nvim_lsp_diagnostic(diag_type)
   if next(lsp.buf_get_clients(0)) == nil then return '' end
   local active_clients = lsp.get_active_clients()
+  local count = 0
 
   if active_clients then
-    local count = 0
-
     for _, client in ipairs(active_clients) do
        count = count + lsp.diagnostic.get_count(api.nvim_get_current_buf(),diag_type,client.id)
     end
-
-    return count
   end
+
+  return count
 end
 
 function M.get_diagnostic(diag_type)
@@ -34,13 +33,13 @@ function M.get_diagnostic(diag_type)
     count = get_nvim_lsp_diagnostic(diag_type)
   end
 
-  if count ~= 0 then return count end
+  return count
 end
 
 local function get_formatted_diagnostic(diag_type)
   local count = M.get_diagnostic(diag_type)
 
-  if count ~= nil then return count .. ' ' else return '' end
+  if count ~= 0 then return count .. ' ' else return '' end
 end
 
 function M.get_diagnostic_error()
