@@ -5,10 +5,7 @@ local M = {}
 local function get_coc_diagnostic(diag_type)
   local has_info,info = pcall(vim.api.nvim_buf_get_var,0,'coc_diagnostic_info')
   if not has_info then return end
-  if info[diag_type] > 0 then
-    return  info[diag_type]
-  end
-  return ''
+  return info[diag_type]
 end
 
 -- nvim-lspconfig
@@ -24,33 +21,42 @@ local function get_nvim_lsp_diagnostic(diag_type)
        count = count + lsp.diagnostic.get_count(api.nvim_get_current_buf(),diag_type,client.id)
     end
 
-    if count ~= 0 then return count .. ' ' end
+    return count
   end
 end
 
-local function get_diagnostic(diag_type)
+function M.get_diagnostic(diag_type)
+  local count = 0
+
   if vim.fn.exists('*coc#rpc#start_server') == 1 then
-    return get_coc_diagnostic(diag_type:lower())
+    count =  get_coc_diagnostic(diag_type:lower())
   elseif not vim.tbl_isempty(lsp.buf_get_clients(0)) then
-    return get_nvim_lsp_diagnostic(diag_type)
+    count = get_nvim_lsp_diagnostic(diag_type)
   end
-  return ''
+
+  if count ~= 0 then return count end
+end
+
+local function get_formatted_diagnostic(diag_type)
+  local count = M.get_diagnostic(diag_type)
+
+  if count ~= nil then return count .. ' ' else return '' end
 end
 
 function M.get_diagnostic_error()
-  return get_diagnostic('Error')
+  return get_formatted_diagnostic('Error')
 end
 
 function M.get_diagnostic_warn()
-  return get_diagnostic('Warning')
+  return get_formatted_diagnostic('Warning')
 end
 
 function M.get_diagnostic_hint()
-  return get_diagnostic('Hint')
+  return get_formatted_diagnostic('Hint')
 end
 
 function M.get_diagnostic_info()
-  return get_diagnostic('Information')
+  return get_formatted_diagnostic('Information')
 end
 
 return M
