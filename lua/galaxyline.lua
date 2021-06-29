@@ -1,5 +1,4 @@
 local vim = vim
-local uv = vim.loop
 local M = {}
 
 M.section = {}
@@ -183,11 +182,10 @@ local function load_section(section_area,pos)
   return section
 end
 
-local async_combin
 local short_line = ''
 local normal_line = ''
 
-async_combin = uv.new_async(vim.schedule_wrap(function()
+local function combin()
   local left_section = load_section(M.section.left,'left')
   local right_section = load_section(M.section.right,'right')
   local mid_section = next(M.section.mid) ~= nil and load_section(M.section.mid,'mid') or nil
@@ -210,10 +208,10 @@ async_combin = uv.new_async(vim.schedule_wrap(function()
 
   vim.wo.statusline = line
   M.init_colorscheme()
-end))
+end
 
 function M.load_galaxyline()
-  async_combin:send()
+  combin()
 end
 
 function M.inactive_galaxyline()
