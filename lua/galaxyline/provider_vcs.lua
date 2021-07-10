@@ -108,7 +108,7 @@ local function get_git_detached_head()
   io.close(git_branches_file)
   if not git_branches_data then return end
 
-  local branch_name = git_branches_data:match('.*HEAD (detached %w+ [%w/-]+)')
+  local branch_name = git_branches_data:match('.*HEAD (detached .+)%)')
   if branch_name and string.len(branch_name) > 0 then
     return branch_name
   end
