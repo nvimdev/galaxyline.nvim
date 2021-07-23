@@ -5,6 +5,7 @@ async_load_providers = uv.new_async(vim.schedule_wrap(function ()
   local vcs = require('galaxyline.provider_vcs')
   local fileinfo = require('galaxyline.provider_fileinfo')
   local buffer = require('galaxyline.provider_buffer')
+  local search = require('galaxyline.provider_search')
   local extension = require('galaxyline.provider_extensions')
   local whitespace =require('galaxyline.provider_whitespace')
   local lspclient = require('galaxyline.provider_lsp')
@@ -27,6 +28,7 @@ async_load_providers = uv.new_async(vim.schedule_wrap(function ()
   ScrollBar = extension.scrollbar_instance,
   VistaPlugin = extension.vista_nearest,
   WhiteSpace = whitespace.get_item,
+  SearchResults = search.get_search_results,
   GetLspClient = lspclient.get_lsp_client,
   }
   local diagnostic = require('galaxyline.provider_diagnostic')
