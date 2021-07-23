@@ -83,6 +83,7 @@ using multiple then you must provide an array table for `provider`.
 -- source provider function
 local diagnostic = require('galaxyline.provider_diagnostic')
 local vcs = require('galaxyline.provider_vcs')
+local search = require('galaxyline.provider_search')
 local fileinfo = require('galaxyline.provider_fileinfo')
 local extension = require('galaxyline.provider_extensions')
 local colors = require('galaxyline.colors')
@@ -90,7 +91,7 @@ local buffer = require('galaxyline.provider_buffer')
 local whitespace = require('galaxyline.provider_whitespace')
 local lspclient = require('galaxyline.provider_lsp')
 
--- provider 
+-- provider
 BufferIcon  = buffer.get_buffer_type_icon,
 BufferNumber = buffer.get_buffer_number,
 FileTypeName = buffer.get_buffer_filetype,
@@ -99,6 +100,8 @@ GitBranch = vcs.get_git_branch,
 DiffAdd = vcs.diff_add,             -- support vim-gitgutter vim-signify gitsigns
 DiffModified = vcs.diff_modified,   -- support vim-gitgutter vim-signify gitsigns
 DiffRemove = vcs.diff_remove,       -- support vim-gitgutter vim-signify gitsigns
+-- Search Provider
+SearchResults = search.get_search_results,
 -- File Provider
 LineColumn = fileinfo.line_column,
 FileFormat = fileinfo.get_file_format,
@@ -133,7 +136,7 @@ local condition = require('galaxyline.condition')
 condition.buffer_not_empty  -- if buffer not empty return true else false
 condition.hide_in_width  -- if winwidth(0)/ 2 > 40 true else false
 -- find git root, you can use this to check if the project is a git workspace
-condition.check_git_workspace() 
+condition.check_git_workspace()
 
 -- built-in theme
 local colors = require('galaxyline.theme').default
