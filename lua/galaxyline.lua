@@ -9,6 +9,8 @@ M.section.mid = {}
 M.section.short_line_left = {}
 M.section.short_line_right = {}
 M.short_line_list = {}
+M.short_line_buftypes = {}
+M.inactive_window_shortline = true
 
 _G.galaxyline_providers = {}
 
@@ -206,6 +208,8 @@ async_combin = uv.new_async(vim.schedule_wrap(function()
 
   if vim.fn.index(M.short_line_list,vim.bo.filetype) ~= -1 then
     line = short_line
+  elseif vim.fn.index(M.short_line_buftypes,vim.bo.buftype) ~= -1 then
+    line = short_line
   end
 
   vim.wo.statusline = line
@@ -217,7 +221,11 @@ function M.load_galaxyline()
 end
 
 function M.inactive_galaxyline()
-  if next(M.short_line_list) == nil then
+  if not M.inactive_window_shortline then
+    return
+  end
+
+  if next(M.short_line_list) == nil and next(M.short_line_buftypes) == nil then
     vim.wo.statusline = normal_line
   else
     vim.wo.statusline = short_line

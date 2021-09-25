@@ -38,6 +38,8 @@ The type of all of these section variables:
 - `require('galaxyline').short_line_list` some special filetypes that show a
     short statusline like `LuaTree defx coc-explorer vista` etc.
 
+- `require('galaxyline').short_line_buftypes` list of buftypes that act like `short_line_list`
+
 - `require('galaxyline').section.left` the statusline left section.
 
 - `require('galaxyline').section.mid` the statusline mid section.
@@ -49,6 +51,8 @@ The type of all of these section variables:
 
 - `require('galaxyline').section.short_line_right` statusline right section when
     filetype is in `short_line_list` and for inactive window
+
+- `require('galaxyline').inactive_window_shortline` whether inactive windows should use short statusline (default: `true`)
 
 
 ### Component keyword

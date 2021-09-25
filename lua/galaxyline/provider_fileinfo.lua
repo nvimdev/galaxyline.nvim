@@ -185,6 +185,12 @@ function M.filename_in_special_buffer()
       return ''
     end
   end
+  local short_list_buftypes = require('galaxyline').short_list_buftypes
+  for _,v in ipairs(short_list_buftypes) do
+    if v == vim.bo.buftype then
+      return ''
+    end
+  end
   return fname
 end
 
