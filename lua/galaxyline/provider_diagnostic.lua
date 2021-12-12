@@ -15,7 +15,14 @@ end
 -- nvim-lspconfig
 -- see https://github.com/neovim/nvim-lspconfig
 local function get_nvim_lsp_diagnostic(severity)
-  return vim.tbl_count(diag.get(0, { severity = severity }))
+  if next(lsp.buf_get_clients(0)) == nil then return '' end
+  local active_clients = lsp.get_active_clients()
+
+  if active_clients then
+    local count = vim.tbl_count(diag.get(0, { severity = severity }))
+
+    if count ~= 0 then return count .. ' ' end
+  end
 end
 
 function M.get_diagnostic_error()
