@@ -10,7 +10,7 @@ local get_lsp_client = function (msg)
   for _,client in ipairs(clients) do
     local filetypes = client.config.filetypes
     if filetypes and vim.fn.index(filetypes,buf_ft) ~= -1 then
-      client_name = client_name .. client.name .. ', '
+      client_name = client_name .. client.name .. ','
     end
   end
   local len = client_name:len()
