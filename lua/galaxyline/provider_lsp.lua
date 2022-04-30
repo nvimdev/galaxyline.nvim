@@ -15,7 +15,7 @@ local get_lsp_client = function (msg)
   end
   local len = client_name:len()
   if len > 1 then
-    return client_name:sub(0, len - 2)
+    return client_name:sub(0, len - 1)
   else
     return msg
   end
