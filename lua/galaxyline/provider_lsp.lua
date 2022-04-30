@@ -1,3 +1,12 @@
+function pconcat(tab)
+  local ctab, n = {}, 1
+  for k, _ in pairs(tab) do
+      ctab[n] = k
+      n = n + 1
+  end
+  return table.concat(ctab, ',')
+end
+
 local get_lsp_client = function (msg)
   msg = msg or 'No Active Lsp'
   local buf_ft = vim.api.nvim_buf_get_option(0,'filetype')
@@ -6,16 +15,17 @@ local get_lsp_client = function (msg)
     return msg
   end
 
-  local client_name = ''
+  local tbl_names = {}
   for _,client in ipairs(clients) do
     local filetypes = client.config.filetypes
     if filetypes and vim.fn.index(filetypes,buf_ft) ~= -1 then
-      client_name = client_name .. client.name .. ','
+      tbl_names[client.name] = true
     end
   end
-  local len = client_name:len()
-  if len > 1 then
-    return client_name:sub(0, len - 1)
+
+  client_name = pconcat(tbl_names)
+  if client_name:len() > 0 then
+    return client_name
   else
     return msg
   end
