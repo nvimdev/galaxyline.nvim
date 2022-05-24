@@ -36,7 +36,8 @@ use {
 The type of all of these section variables:
 
 - `require('galaxyline').short_line_list` some special filetypes that show a
-    short statusline like `LuaTree defx coc-explorer vista` etc.
+    short statusline like `LuaTree defx coc-explorer vista` etc. Note: if empty,
+    the short statusline will not be used for inactive windows either.
 
 - `require('galaxyline').section.left` the statusline left section.
 
