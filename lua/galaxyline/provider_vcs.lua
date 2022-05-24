@@ -101,16 +101,23 @@ function M.get_git_dir(path)
   return  path .. '/' .. git_dir
 end
 
-local function get_git_detached_head()
+local function get_git_head_state()
   local git_branches_file = io.popen("git branch -a --no-abbrev --contains", "r")
   if not git_branches_file then return end
   local git_branches_data = git_branches_file:read("*l")
   io.close(git_branches_file)
   if not git_branches_data then return end
 
-  local branch_name = git_branches_data:match('.*HEAD (detached %w+ [%w/-]+)')
-  if branch_name and string.len(branch_name) > 0 then
-    return branch_name
+  local patterns = {
+    '.*no branch, (rebasing .+)%)',
+    '.*HEAD (detached .+)%)'
+  }
+
+  for _, pattern in ipairs(patterns) do
+    local branch_name = git_branches_data:match(pattern)
+    if branch_name and string.len(branch_name) > 0 then
+      return branch_name
+    end
   end
 end
 
@@ -160,8 +167,8 @@ function M.get_git_branch()
 
   local branch_name = head_cache[git_root].head:match("ref: refs/heads/([^\n\r%s]+)")
   if not branch_name then
-    -- check if detached head
-    branch_name = get_git_detached_head()
+    -- check if detached head or rebase in progress
+    branch_name = get_git_head_state()
     if not branch_name then return end
   end
 
