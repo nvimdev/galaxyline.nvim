@@ -162,7 +162,11 @@ function M.get_git_branch()
   if not branch_name then
     -- check if detached head
     branch_name = get_git_detached_head()
-    if not branch_name then return end
+    if not branch_name then
+      -- cache empty as get_git_detached_head() is a heavy operation
+      head_cache[git_root].branch = ""
+      return
+    end
   end
 
   head_cache[git_root].branch = branch_name

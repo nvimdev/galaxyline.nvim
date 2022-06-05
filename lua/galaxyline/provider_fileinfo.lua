@@ -1,31 +1,40 @@
 local vim = vim
 local M = {}
 
-local function file_readonly(readonly_icon)
+local function buffer_is_readonly()
   if vim.bo.filetype == 'help' then
-    return ''
+    return false
   end
-  local icon = readonly_icon or ''
-  if vim.bo.readonly == true then
-    return " " .. icon .. " "
+  return vim.bo.readonly
+end
+
+local function file_with_icons(file, modified_icon, readonly_icon)
+  if vim.fn.empty(file) == 1 then return '' end
+
+  modified_icon = modified_icon or ''
+  readonly_icon = readonly_icon or ''
+
+  if buffer_is_readonly() then
+    file = readonly_icon .. ' ' ..file
   end
-  return ''
+
+  if vim.bo.modifiable  and vim.bo.modified then
+    file = file .. ' ' ..modified_icon
+  end
+
+  return ' ' .. file .. ' '
 end
 
 -- get current file name
 function M.get_current_file_name(modified_icon, readonly_icon)
   local file = vim.fn.expand('%:t')
-  if vim.fn.empty(file) == 1 then return '' end
-  if string.len(file_readonly(readonly_icon)) ~= 0 then
-    return file .. file_readonly(readonly_icon)
-  end
-  local icon = modified_icon or ''
-  if vim.bo.modifiable then
-    if vim.bo.modified then
-      return file .. ' ' .. icon .. '  '
-    end
-  end
-  return file .. ' '
+  return file_with_icons(file, modified_icon, readonly_icon)
+end
+
+-- get current file path
+function M.get_current_file_path(modified_icon, readonly_icon)
+  local filepath = vim.fn.fnamemodify(vim.fn.expand '%', ':~:.')
+  return file_with_icons(filepath, modified_icon, readonly_icon)
 end
 
 -- format print current file size
@@ -134,23 +143,23 @@ local function get_file_info()
 end
 
 function M.get_file_icon()
-  local icon = ''
-  if vim.fn.exists("*WebDevIconsGetFileTypeSymbol") == 1 then
-    icon = vim.fn.WebDevIconsGetFileTypeSymbol()
-    return icon .. ' '
-  end
-  local ok,devicons = pcall(require,'nvim-web-devicons')
-  if not ok then print('No icon plugin found. Please install \'kyazdani42/nvim-web-devicons\'') return '' end
+  local icon = nil
   local f_name,f_extension = get_file_info()
-  icon = devicons.get_icon(f_name,f_extension)
+  if user_icons[vim.bo.filetype] ~= nil then
+	  icon = user_icons[vim.bo.filetype][2]
+  elseif user_icons[f_extension] ~= nil then
+	  icon = user_icons[f_extension][2]
+  end
   if icon == nil then
-    if user_icons[vim.bo.filetype] ~= nil then
-      icon = user_icons[vim.bo.filetype][2]
-    elseif user_icons[f_extension] ~= nil then
-      icon = user_icons[f_extension][2]
-    else
-      icon = ''
-    end
+	  local ok,devicons = pcall(require,'nvim-web-devicons')
+	  if ok then 
+		  icon = devicons.get_icon(f_name,f_extension,{default=true})
+	  elseif vim.fn.exists("*WebDevIconsGetFileTypeSymbol") == 1 then
+	    icon = vim.fn.WebDevIconsGetFileTypeSymbol()
+	  end
+  end
+  if icon == nil then
+	  icon = ''
   end
   return icon .. ' '
 end
