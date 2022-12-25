@@ -18,8 +18,8 @@ local function get_nvim_lsp_diagnostic(diag_type)
   local active_clients = lsp.get_active_clients()
 
   if active_clients then
-    local count = #diagnostic.get(vim.api.nvim_get_current_buf(), { severity = diag_type })
-    if count ~= 0 then return count .. ' ' end
+    local result = diagnostic.get(vim.api.nvim_get_current_buf(), { severity = diag_type })
+    if result and #result ~= 0 then return result .. ' ' end
   end
 end
 
