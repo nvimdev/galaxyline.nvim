@@ -19,7 +19,7 @@ local function get_nvim_lsp_diagnostic(diag_type)
 
   if active_clients then
     local result = diagnostic.get(vim.api.nvim_get_current_buf(), { severity = diag_type })
-    if result and #result ~= 0 then return result .. ' ' end
+    if result and #result ~= 0 then return #result .. ' ' end
   end
 end
 
