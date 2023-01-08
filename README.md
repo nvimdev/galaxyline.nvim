@@ -55,7 +55,7 @@ that you want, easily.
 Plug 'glepnir/galaxyline.nvim' , { 'branch': 'main' }
 
 " If you want to display icons, then use one of these plugins:
-Plug 'kyazdani42/nvim-web-devicons' " lua
+Plug 'nvim-tree/nvim-web-devicons' " lua
 Plug 'ryanoasis/vim-devicons'       " vimscript
 ```
 
@@ -70,7 +70,7 @@ use({
     require('my_statusline')
   end,
   -- some optional icons
-  requires = { 'kyazdani42/nvim-web-devicons', opt = true },
+  requires = { 'nvim-tree/nvim-web-devicons', opt = true },
 })
 ```
 
