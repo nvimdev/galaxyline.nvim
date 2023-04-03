@@ -156,8 +156,26 @@ local function section_complete_with_option(component,component_info,position)
 end
 
 local hi_tbl = {}
+local dynamic_hi_tbl = {}
 local events = { 'ColorScheme', 'FileType','BufWinEnter','BufReadPost','BufWritePost',
                   'BufEnter','WinEnter','FileChangedShellPost','VimResized','TermOpen'}
+
+local function highlight_requires_update(highlight)
+	highlight = highlight or ''
+	local _switch = {
+		['string'] = function() return false end,
+		['function'] = function() return true end,
+		['table'] = function ()
+			for _,hl in pairs(highlight) do
+				if type(hl) == "function" then
+					return true
+				end
+			end
+			return false
+		end
+	}
+	return _switch[type(highlight)]()
+end
 
 local function load_section(section_area,pos)
   local section = ''
@@ -169,6 +187,12 @@ local function load_section(section_area,pos)
       section = section .. ls
       local group = 'Galaxy'..component_name
       local sgroup = component_name..'Separator'
+	  if highlight_requires_update(component_info.highlight) then
+		  dynamic_hi_tbl[group] = component_info.highlight
+	  end
+	  if highlight_requires_update(component_info.separator_highlight) then
+		  dynamic_hi_tbl[sgroup] = component_info.separator_highlight
+	  end
       if not hi_tbl[group] then
         hi_tbl[group] = component_info.highlight or {}
       end
@@ -208,6 +232,10 @@ async_combin = uv.new_async(vim.schedule_wrap(function()
     line = short_line
   end
 
+  if next(dynamic_hi_tbl) ~= nil then
+	  line = line .. [[%{luaeval('require"galaxyline".update_colorscheme()')}]]
+  end
+
   vim.wo.statusline = line
   M.init_colorscheme()
 end))
@@ -227,6 +255,11 @@ end
 function M.init_colorscheme()
   local colors = require('galaxyline.colors')
   colors.init_theme(hi_tbl)
+end
+
+function M.update_colorscheme()
+	require('galaxyline.colors').init_theme(dynamic_hi_tbl)
+	return ''
 end
 
 function M.disable_galaxyline()
