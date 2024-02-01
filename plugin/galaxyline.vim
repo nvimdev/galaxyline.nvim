@@ -12,6 +12,10 @@ endif
 
 let g:loaded_galaxyline = 1
 
+if &laststatus == 3
+    lua require('galaxyline').global_status_line = true
+endif
+
 lua require('galaxyline').galaxyline_augroup()
 
 let &cpo = s:save_cpo
