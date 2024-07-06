@@ -74,6 +74,27 @@ use({
 })
 ```
 
+- [lazy.nvim](https://github.com/folke/lazy.nvim)
+
+```lua
+require('lazy').setup({
+  spec = {
+    -- some optional icons
+    { 'nvim-tree/nvim-web-devicons', lazy = true },
+    {
+      'glepnir/galaxyline.nvim',
+        branch = 'main',
+        -- your statusline
+        config = function()
+          require('my_statusline')
+        end,
+    },
+    -- Other plugins
+  },
+  -- Other options for `lazy`
+})
+```
+
 ## 🧭 Api
 
 ### Section Variables
