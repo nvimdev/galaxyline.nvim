@@ -33,7 +33,7 @@ function M.hide_in_width()
 end
 
 function M.check_active_lsp()
-  local clients = vim.lsp.buf_get_clients()
+  local clients = vim.lsp.get_clients()
   if next(clients) == nil then
     return false
   end
