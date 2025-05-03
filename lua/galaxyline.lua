@@ -2,6 +2,7 @@ local vim = vim
 local uv = vim.loop
 local M = {}
 
+M.global_status_line = false
 M.section = {}
 M.section.left = {}
 M.section.right = {}
@@ -208,7 +209,12 @@ async_combin = uv.new_async(vim.schedule_wrap(function()
     line = short_line
   end
 
-  vim.wo.statusline = line
+  if M.global_status_line then
+    vim.go.statusline = line
+  else
+    vim.wo.statusline = line
+  end
+
   M.init_colorscheme()
 end))
 
@@ -230,7 +236,12 @@ function M.init_colorscheme()
 end
 
 function M.disable_galaxyline()
-  vim.wo.statusline = ''
+  if M.global_status_line then
+    vim.go.statusline = ''
+  else
+    vim.wo.statusline = ''
+  end
+
   vim.api.nvim_command('augroup galaxyline')
   vim.api.nvim_command('autocmd!')
   vim.api.nvim_command('augroup END!')
@@ -243,7 +254,11 @@ function M.galaxyline_augroup()
     local command = string.format('autocmd %s * lua require("galaxyline").load_galaxyline()',def)
     vim.api.nvim_command(command)
   end
-  vim.api.nvim_command('autocmd WinLeave * lua require("galaxyline").inactive_galaxyline()')
+
+  if not M.global_status_line then
+    vim.api.nvim_command('autocmd WinLeave * lua require("galaxyline").inactive_galaxyline()')
+  end
+
   vim.api.nvim_command('augroup END')
 end
 
