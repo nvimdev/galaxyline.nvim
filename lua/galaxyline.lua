@@ -12,6 +12,16 @@ M.short_line_list = {}
 
 _G.galaxyline_providers = {}
 
+_G.__galaxyline_click_map = {}
+_G.__galaxyline_click_id = 0
+
+_G.galaxyline_click_handler = function(minwid, clicks, button, mods)
+  local fn = _G.__galaxyline_click_map[minwid]
+  if fn then
+    fn(minwid, clicks, button, mods)
+  end
+end
+
 do
   if next(_G.galaxyline_providers) == nil then
     require('galaxyline.provider').async_load_providers:send()
@@ -106,9 +116,25 @@ function M.component_decorator(component_name)
 end
 
 local function generate_section(component_name)
+  local ok, component_info = check_component_exists(component_name)
+  if not ok then return '' end
+
   local line = ''
+  local click_id = nil
+
+  if component_info.clickFunction then
+    _G.__galaxyline_click_id = _G.__galaxyline_click_id + 1
+    click_id = _G.__galaxyline_click_id
+    _G.__galaxyline_click_map[click_id] = component_info.clickFunction
+
+    line = line .. '%' .. click_id .. '@v:lua.galaxyline_click_handler@'
+  end
+
   line = line .. '%#'..'Galaxy'.. component_name..'#'
   line = line .. [[%{luaeval('require("galaxyline").component_decorator')]]..'("'..component_name..'")}'
+
+  if click_id then line = line .. '%T' end
+
   return line
 end
 
